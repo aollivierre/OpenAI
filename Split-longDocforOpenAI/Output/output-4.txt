@@ -1,0 +1,89 @@
+This is part number 4
+
+okay one of the other benefits of saved queries is that the columns that are
+visible are per saved query so you remember I pointed out the problem with the last name column that then got added
+to computers that doesn't happen and save queries and save queries I can have a different set of columns for computers
+and a different set of columns for users so I can get very specific and give myself the information that I need in
+order to administer my environment correctly so save queries have a lot of
+benefits and the slide deck steps you through some of the things that I was just showing you now the final tip that
+I want to give you related to working effectively as an administrator is how to bring it commands
+you need into the tools that you use and let's start with in a really sort of
+simple example which is as administrators we often want to Remote
+Desktop to another machine that's very very common and we you know we can pull up the remote desktop console and we can
+type in all kinds of information and we can connect it to another machine but it would be nice to be able to right-click
+in Active Directory and say connect me to that machine we can do that as long
+as we have a command that supports a variable so for example the MS TSC
+command is the command that allows us to connect with remote desktop from the command line it takes a switch /v colon
+and then the computer name it takes a variable knowing that we can create that
+command in our console and let me show you how that works and what I'm going to show you is document it in the slide
+deck so when you want to try this the instructions are all there what we do is we create what's called a task pad we
+create a new task pad view so I'm gonna create a view we'll call it ends work
+computers and then once you've created
+the task pad view you get this area on the left that we can fill with tasks and
+we'd fill those tasks by editing the task pad view and on the tasks tab creating a new task and the type of task
+you want to create is called a shell command and again don't worry too much about the steps they are in the slides
+and the shell command this is where the magic happens here the command and the parameters so
+our command is M stsc dot exe our parameters are /v colon and then the
+computer name and the way we insert the variable of the computer name is by clicking this button and choosing name
+now windows does the rest it makes it it does this for us and you don't have to
+worry about that that's hard-coded it's done automatically and now we've got the command the parameter
+this variable of the name of the computer with that task we give it a
+friendly name let's call it remote desktop we pick an icon and when we're
+all done we can pick a computer and notice when I pick a computer my task
+appears here and this task will run that command and the variable will be the name of that computer I'm not sure I
+actually have remote desktop enabled on that server will cancel that but you can see that it's working now you take that
+further and you can add all kinds of tasks to your console to give you things
+that you need done so here's one that will show you as well opening the C Drive and opening a remote command
+prompt it's common that you want to be able to connect to the C Drive of a machine when you're trying to support it
+the way we add that task is we create
+again a new shell command the command is going to be hopefully I can remember
+this Explorer dot exe and then the parameters are backslash backslash the
+computer name backslash c colon now I'm
+doing this off the top of my head I might actually not have this perfect but we insert the variable into the command
+that we want to execute oh shoot well since I messed that up let's look at the right one to be sure
+see drive this is the 1i pre-created yep that was the right command so once we've
+got that we again can pick a computer when we pick a computer the tasks we've
+created light up and we can't open that computer see drive straight from Explorer and or straight from the MMC
+and another good example is a remote command prompt now hopefully you've
+heard of the tool PS exec PS exec is a great tool from mark russinovich who is
+now back at Microsoft you can get it from tech tech net it's free and you can
+use PS exact to run a command on a remote machine and we'll do a simple example of this which is and since we're
+running short on time I'm just gonna show you the the preset PS exec dot exe
+backslash backslash the computer name cmd.exe so this command will run PS exec
+on the remote machine and we can then do anything we need on that machine so just to show you how that works I
+click the task it opens up PS exec and PS exec is kind of like remote desktop
+except it's remote command prompt so I'm now starting a command prompt that actually is running on that machine
+contoso DC and assuming that it works here
+I can prove to you that I'm on that machine by typing the command hostname and that shows me that I am in fact on
+contoso DC so any command that you have that can accept a variable you can add
+as a task so I've got things like ipconfig /all shutdown / restart MST SC
+and gpupdate exe I've got all kinds of things that can take variables or that
+can be used with PS exec that I can do to a single machine in my environment straight from within my toolset so
+hopefully this helps you see that you can take tools that you've got and commands that you've learned and put
+them right at your fingertips so that they're much easier to use and much more discoverable and you don't have to go
+diving into your Start menu every time you need to administer your systems now the final thing I'll leave you with is
+the idea that there are often tools that you need to load as an administrator
+that are truly outside of the normal tool set there are things you need to run as an administrator like the command
+prompt itself a lot of times you just need to open up a command prompt as an administrator let me show you a great way to do that within these MMC consoles
+you can create you can add I should say a folder snap in which you can then
+rename I'm just gonna call it ant work so I've just added this folder snap in
+and I'm gonna create a task pad out of that folder and i'm gonna create what's
+called a no list task pad which basically just gives me a big blank
+window so that all i've done is create a task pad with nothing in it I'm now
+going to edit that task pad and I'm going to add any command that I as an administrator want to be able to run as
+an administrator so as a simple example CMD dot exe all by itself command prompt
+and I can even go pick the icon CMD dot exe
+so now I can launch this and because the console is already running as an
+administrator anything I launched from the task pad will also be running as an administrator so we can see it is in
+fact running as administrator so there's some great things you can do with the tools that Microsoft has given us that
+they don't document particularly well that allow you to administer your environments much more effectively could
+save queries with custom columns tasks pads that bring tools in and finally
+there is of course PowerShell which opens up all kinds of additional capabilities for automating and PowerShell can also be brought into this
+framework and you can be launching commits launching commands that in fact start a PowerShell session so for
+example I can start an interactive power sell shell session on this computer so
+hopefully this inspired you to start going looking outside the box with the
+tools that that you have as an as a Windows administrator just as a quick reminder my email address my Twitter
+handle I'm always here to answer questions for you the the tools that I've shown you I will put into a zip
+file and post later on this week so they will be up there for you and I hope that you've really enjoyed students to
+business 2011 thank you guys very much for coming and I look forward to following your success as Active
+Directory administrators thank you very much [Applause]

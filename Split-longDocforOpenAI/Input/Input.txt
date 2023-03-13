@@ -1,0 +1,516 @@
+hello and welcome to the last session of the event have you guys had a good time so far I hope so
+I hope it's been good for you my name is Dan Holm and as you can tell from my accent I come from the United States in
+fact I live in Hawaii on the island of Maui so I flew in day before yesterday
+halfway around the world and if I sound a little hoarse it's because I picked up a cold on the airplane but it's my
+pleasure to be with you here today and to share with you my insights into best
+practices in administering Active Directory a little bit about myself I
+have spent 17 years as a consultant an author and a trainer serving global fortune 500 sized organizations the one
+I can talk about in public is NBC television which is one of the major networks in the US for whom I'm the
+Microsoft technologies consultant during the broadcast of the Olympic Games and so I've been involved in Torino Beijing
+Vancouver and now we're getting ready for London and that involves implementing many of the best practices
+that we're going to be talking about here today I also have my own consulting firm in tell'em I'm the chief evangelist
+for SharePoint for a company called outpoint and I'm an author for Microsoft press the my book is listed up there and
+for those of you who will be administering Active Directory I highly
+recommend this book solely because it's one of the few books out there that tells you how to do things that you
+can't do out of the box with Active Directory so many of the tricks I'll be showing you today if you like them
+there's a lot more in that in that particular resource my email address is up here as well and I encourage you to
+always feel comfortable to email me my job is to help the community do better
+with the technology so I'm more than happy to answer questions whenever I can and I will be posting the slides and the
+scripts to my SkyDrive later on today or perhaps tomorrow so the URL is there and
+I will tweet that URL right after the session my twitter handle is at dan home so with that we've got about 53 minutes
+to cram in about 20 years worth of or 10 years worth of the industry's experience
+with active rectory I began working with Active Directory in 1998 when it was windows in
+t5 Oh alpha and then of course Active Directory came out with Windows 2000 in
+production and since then a lot has changed and you all are entering a
+really exciting time in the in the world of Active Directory things have changed things are changing it in faster and I
+want to help you understand first of all what has changed over the 10 years that have passed so that when you hear people
+and you see people implementing practices that are old that you know how to do it better and also you know why it
+was done that way in the past so that you can help your your employers and and
+your enterprises do better so we'll start with Active Directory design building a domain and a forest from the
+ground up and then we will also spend a lot of time with tricks and tips for how
+you can go beyond the out of box tool set and administer Active Directory more
+effectively so the first thing we'll talk about in your Active Directory is the domain controllers themselves when
+you install Active Directory on a domain controller you should really entrain controllers
+clean that means don't have your domain controller doing other things that makes it a bigger security risk
+it adds risk for updates and and so keep your domain controllers clean and doing
+their jobs and one way you can help that happen is leveraging virtualization
+virtualization is obviously the way of the future and in the case of domain controllers you can virtualize a domain
+controller and thereby keep that virtual machine focused on the one task of supporting your Active Directory so even
+in a small business where maybe you have very few servers instead of having your
+domain controller be a file server and a print server and an exchange server instead put your domain controller in a
+virtual machine and and allow other roles to be hosted either on the
+physical box or on other virtual machines another thing you can do to help out your the security of your
+domain controllers is to use read only domain controllers which allow you to put a domain
+controller in a physical location that is less secure so if you have a remote office for example you can put our drum
+read only domain controller there and it will be able to authenticate users but if it gets compromised that domain
+controller cannot infect and and corrupt the rest of your directory now the one
+piece of advice I'll give you about remote read only domain controllers is that you must be sure you've tested them
+in production before you expect them to work there are some applications out
+there some third-party applications and services that don't that weren't really coded correctly they don't work
+effectively against read only domain controllers and the only way to know that is to actually test it so read only
+domain controllers are a great feature Microsoft is right to talk about the value that they provide but do make sure
+that you that you're confident they will work for you in production up to the -
+up to the domain level itself I'd like to talk about forest and domain design because ten years ago when people
+started with Active Directory the design goals were quite different than they are now
+and so let me actually whiteboard this here and we'll describe it in the early
+days of Active Directory and was common to use multi domain forests where you
+would have a single domain and then you would have child domains and within a single forest and your force might even
+be just two domains and this top domain was often called an empty forest root
+where it would be a domain without any real users or computers or resources but
+it would represent the enterprise where as all of the real users and computers would be in child domains one or more
+child domains the design concept at the time was that Active Directory would eventually allow
+us to merge with another company and simply take their domain and graft it to
+our forest that capability never came out and so the the potential that a
+multi domain and forest and an empty domain root had would has generally not been real
+in the community in fact what we found over the years of experience is that as
+soon as you have more than one domain in your forest you actually make security and manageability much more difficult so
+multi-domain forests are really out and instead you really should dominate design a single domain and within that
+domain secure the service accounts secure the major administrative accounts
+effectively in order to isolate them rather than put them in a separate domain another thing that used to be
+very common is if we had our company company a and we were partnered with another company Company B we would
+create trusts between those domains windows trusts and windows trust relationships would allow us to have
+user accounts from our partner company and we could assign those accounts
+permissions to a resource in our domain as long as we trusted that domain that
+was a very common model for many many years even going back before Active Directory and these days that model is
+starting to break down for a number of reasons first of all it is difficult to secure perfectly then there are a couple
+of features that you can add including a selective authentication and advanced
+encryption of the trusts to make them more secure however it still involves
+going through firewalls with ports that most companies aren't comfortable opening up and so the new the new world
+is really about federating identity and using Active Directory Federation services and similar authentication
+services to authenticate users rather than windows trusts so with Active Directory Federation services you can
+authenticate users against a partner domain using standard protocols and ports and a set of standard services so
+keep your eye on Active Directory Federation services it's part of Active Directory it is now in version 2 it's a
+very important technology and my guess is that in Windows 9 we're going to see
+that Active Directory looks a lot more like Active Directory Federation services does today and a lot less that then Active
+Directory looks like today the world is moving towards claims based authentication and I believe that that's
+where Microsoft will end up taking the product as well just as an industry observer so old-school domains
+old-school trusts are really out and you really should be looking at single domain forests and when you need to
+partner with another organization look at identity Federation with tools like Active Directory Federation services
+within a single domain within your domain you have to think about your design of your organizational units and
+this is where we will jump into an eel domain here when you design your active
+directory and you look at the structure of organizational units you want to be sure that you've designed your
+organizational units to manage security first now the reason I emphasize that is
+in the early days of Active Directory people would also design Active Directory to support group policy and
+they would create oh use solely so that they could link a group policy object to the öyou and that has turned out to be
+in most cases a less than effective design so let's take a look at an actual
+Active Directory design here if we go into our domain we can see that the
+organizational units are are really focused on object classes for example we
+see user accounts and servers the reason that it's important to design Active
+Directory for security is that permissions must be propagated through
+the directory you're going to assign permissions on this oh you for example that your helpdesk can reset user
+passwords and you want that permission to be propagated effectively through the objects in your Active Directory so
+rather than splitting out user accounts we put user accounts in a location that
+allows our helpdesk to have a single point of delegation and we can manage that delegation and those permissions
+effectively when we look inside these OU's we'll see a little bit more detail for example and our client computers oh
+you we have the ability to as Universal permissions for example we
+might have again a centralized helpdesk that is able to perform tasks for any computer but we might also have regional
+offices for example an office in London or an office in Sydney and we have
+helpdesk we have a local desktop support there and we want that local desktop support to be able to join a machine to
+the domain for example by creating a know you to delegate that permission to we've given ourselves an effective way
+to delegate one time to that local desktop Support Group so it's quite
+common to see a know you for client computers that's divided into regions to
+reflect the local desktop support delegation needs when we look at something like the servers oh you this
+is something you would see that would be fairly common where each type of server is in its own oh you because typically
+there are teams of administrators who manage those servers and so they can be given permissions to their o you to do
+things like join a server to the domain so we end up finding that object based
+models and often reflect the delegation needs of businesses so this is a very
+common model but the real point is that you need to focus on delegation and on
+the assigning of permissions and making it as simple and effective as possible because that's what Active Directory is
+really designed to do as a database is create a structure through which
+permissions can be propagated now when it comes to group policy when you get
+down into your design after you've already after you have designed it for security you might find that you have a
+know you that you can link a group policy to and that's great if your design also supports group policy that's
+excellent but as we'll see in a moment most organizations have found that it's
+more effective and more manageable to work with group policies by link by
+filtering them to a group rather than to linking them to a know you so for example if we go up to our group policy
+management
+we can see that at the level of our domain we've linked oh use for example
+we've linked group policies for example a group policy that deploys Adobe Acrobat or that deploys VLC player these
+group policies are linked to the domain and filtered to a group so that in order to when we want a user or a computer to
+receive these applications we put them into the group and it doesn't matter where in the domain they're located
+because a computer or user can only live in one organizational unit but it can belong to multiple groups so most
+organizations have found that filtering group policies based on group membership
+is a more effective way to manage group policies let me take a quick look and yeah so let's uh let's move on to the
+concept of group policy group policies and we've just been talking about
+scoping group policies and scoping group policies is the concept of deciding how
+a group policy object applies to your environment and you can scope a group
+policy several different ways you can scope a group policy based on linking it to a site and domain or an
+organizational unit but that and in some cases that works but in most cases it's not really flexible or manageable enough
+you can also scope a group policy based on WMI filters and WMI filters allow you
+to query the hardware and determine whether a group policy applies so for example we could say apply this group
+policy only if a machine has more than two gigabytes of RAM or if it has 20 gigs of free hard disk space WMI filters
+are interesting they're effective but they're the most performance intensive
+way of filtering group policy objects because if you use a WMI filter the
+computer the client has to actually run that query during the group policy application process which can take time
+so it's a it's a the best practice is not to use WMI filters unless you have
+something that is truly dynamic and is likely to change regularly so for
+example instead of creating a group policy that uses a WMI to decide whether a machine is Windows 7
+that's very performance intensive create a group of computers that are Windows 7 that doesn't change very often when you
+upgrade a machine you can add it to the group and you then don't need to be running a WMI filter all the time so
+groups end up being the most effective way to filter Group Policy objects and and two points about using groups to
+filter Group Policy objects let's create a new group policy we'll call this an
+thwart policies and let's say that we want this group policy to apply to users
+and computers in antwort now I've already got a group called let's see
+where is it oh I reset my virtual machine so we'll create the group first we'll create a
+group for Antwerp users and computers and then when we want to filter this
+group policy object by default a group policy object will apply to all users
+and computers the authenticated users group we remove that and we add the one
+group that we do want Antwerp users and computers now if you do this this will
+work for the group policy the group policy will now only apply to those users and computers but the problem is
+an administrator who isn't in that group when they open the group policy
+management console what they will see is
+something that indicates that this is an unknown group policy they won't actually
+be able to see this they'll see a blank spot in the group policy which makes it
+tough to for an administrator to work with it makes it difficult to troubleshoot the group policies so if
+you filter a group policy object to apply to only one set of users you
+should also go to the delegation tab and give the authenticated users group read
+permission you give that group read permission but you do not give the group so if I can find
+it here there we go you do not give the group apply group policy permission so this policy will
+not apply but they will be able to read it and that simply means that an administrator will be able to see that
+the group policy exists in the troubleshooting tools you won't get messages about unknown group policy
+objects so when you do filter a group policy object do give the authenticated users group read permission that makes
+your life a lot easier the other thing that you want to do with group policies occasionally is you want to deny group
+policies from applying to a group so in this case let's say we've got this group policy object and we want to prevent it
+from applying to the Antwerp users in order to do that we can't we cannot use
+this user interface we have to go back to the delegation tab to the advanced button and we add our ant work group and
+we deny that group the apply group policy permission so that's how we block
+the group policy from applying to a single group when you do that
+unfortunately it doesn't show up here so when you look at the group policy object
+you can't really tell that it applies to everyone except and for abusers you actually have to dig deeper into the
+into the user interface to find that which is unfortunate but that's the way the interface works now whenever you
+create a group policy object I encourage you to have one group created that will
+allow you to deny that group policy even if you know one needs to be denied now there usually comes a time when there's
+problems that need to be solved and in troubleshooting you want to start removing Group Policy objects from a
+user or a computer so my recommendation is every time you create a group policy object create some kind of group that
+allows you to deny permissions so that
+you can exclude a user or computer if necessary from a particular group policy so we've looked at the domain we've
+looked at we've looked at Active Directory we've looked at group policy
+and we looked at OU's our next step is going to be to look at sites but before I do that are there any questions about
+the pieces we've talked about so far and if there are you might have to shout out because I can't necessarily see
+everybody okay now on sites active
+directory sites are logged well sorry my pinout active directory sites are
+logical objects that represent areas of high connectivity and these tend to lead
+to a lot of confusion and organizations because they think when an organization thinks of the word site they think oh we
+have a site in Antwerp and we have a site in Brussels and we have a site in New York City so they think about sites
+geographically active directory sites are logical objects that don't represent
+a geographic area they represent an area of high connectivity so if you have high
+connectivity in Antwerp and Brussels those two geographic locations might be
+a single active directory site but if there's a slower or more expensive link to New York New York might also have be
+its own active directory site now in the early days of active directory the industry was very
+concerned that Microsoft would bring down their networks with lots of replication traffic people didn't trust
+Microsoft to do it right but what what have proved is that Microsoft did a very
+good job in designing Active Directory replication it's very robust it's very efficient and in addition over time
+networks have gotten much better so the kinds of connectivity we see even in our own homes is better than most businesses
+had 10 years ago so because both people's understanding of replication
+has it changed and network technologies
+have improved we now have a situation where when you look at your environment
+you might think well we have good connectivity between all of these sites and if that's the case we could get by
+with a single active directory site and many organizations are doing that now be
+because they have such good connectivity the problem is that sites are for more
+than replication of traffic sites are also used to help locate resources close
+to you when those resources are replicated and distributed in multiple locations so for example you can have a
+file server that contains important information in Brussels and if the in
+flight if the information is that important you might also have it replicated into a server and Antwerp
+using DFS are distributed file system replication and you might also have it
+replicated in New York with DFS R now if
+users are accessing these resources using DFS in distributed file system
+namespaces DFS n will allow you to get users to the closest copy of that
+resource the DFS n is site aware as are several other technologies within
+windows but if you only have one site a user in New York might very well connect
+with the copy of the resource and Antwerp which might not be so efficient and so even though you might be able to
+get by with one site from a replication perspective you actually find these days
+you need more sites in order to support localization of services so that users
+are getting things from the most efficient location so I've been in a number of companies that are starting to
+create single sites and then realizing that they need to go and create more sites than maybe they even had before
+simply to support localization and in addition we're finding that you'll when
+you do that you create sites that don't have domain controllers so for example if Antwerp and Brussels are highly
+connected you might have your domain controller only in Antwerp you may not
+have a domain controller in Brussels but you may create two separate sites in order to support localization of a
+service like DFS so you end up with sites without domain controllers and when you do that you can implement
+what's called coverage where you tell the Brussels site that it should use the
+domain controller in and rather than the domain controller in New York City so we think about sites as a
+way of localizing resources be aware of what you have out there and and and what
+sites are really used for related to sites are subnets each site is actually
+defined by the IP addresses that it has so if we have a range of addresses like
+ten dot zero dot one dot zero it that
+would define the Antwerp site and maybe 10.0 2.0 defines Brussels and it is the
+linkage between the subnet and the site that allows a computer to know what site it's in and therefore to get resources
+more effectively so if we go in and look at our interface in Active Directory sites and services we see subnets are
+defined and each subnet object is linked whoops each subnet is linked to one and
+only one site so when you the key takeaway here is that it's very
+important that every address that a computer might get in your enterprise has a subnet that associates it with a
+site because if a computer gets an IP address that isn't defined as a site it
+basically has no clue where it is and it makes very bad decisions about where to authenticate and where to get resources
+from so whenever in a large organization where you have DHCP servers and and
+you're adding scopes to your DHCP servers it's important that every time you add a scope you also associate it
+with a site and have some sort of process to ensure that happens in Active Directory
+so those are some tips on sites and subnets and then finally there is
+replication and as I mentioned replication has proven to be quite good
+our networks are quite fast and if you have multiple sites let's go back yet
+one more time here if have multiple sites defined so we've now
+defined three sites Antwerp new Brussels and New York and we have domain
+controllers in Antwerp and New York they are going to replicate with each other using what's called inter site
+replication within a site if you've got multiple domain controllers let's say
+you've with two domain controllers in Antwerp two domain controllers in New York those domain controllers will
+replicate with what's called entrust site replication now in trust site replication is very very very fast when
+a domain controller gets a change it tells its partners I've got to change
+you want to come get it and the partners come and get the change and that usually happens within about fifteen or thirty
+seconds so replication is very fast using what's called notification based replication one domain controller
+notifies its partner that it has changes between sites it's very different between sites there's a process called
+poling where the bridge head server from one site calls up the bridge head server
+from the other site and says do you have any changes and that poling can only happen at a minimum of 15 minutes so
+there can be a very big time lapse between when a user is added to a group
+in New York and when that user can actually be part of that group in Antwerp that time lapses can be very
+painful and and it really doesn't help much if you have relatively good connectivity if you have good
+connectivity between these two sites there's no reason why you should be waiting 15 minutes to get those changes
+and what you can do is you can implement what's called notification based replication between the sites so that
+allows the inter site replication to happen at the same 15 to 30 second
+interval as the intra site replication and I have one customer who has offices
+all over the world they changed their site replication to entrust to
+notification based replication and now their entire global Active Directory converges in 37 seconds and what that
+means is any change that's made anywhere in the world within an average of 37 seconds makes it to every other domain
+controller in the world and as long as you have relatively decent connectivity that's perfectly
+fine because the amount of traffic that is replicated doesn't increase that much
+when you use notification based replication the same changes have to make it across the wire the difference
+is you're not waiting 15 minutes and getting a whole bunch of changes you're getting changes as they happen a more
+steady stream of small changes so notification based replication is another big change that I encourage you
+to help your your employers in your enterprises understand any questions on
+site subnets replication that those kinds of pieces okay
+now on to administrative roles you're you are or you're going to be an administrator of Active Directory it's
+very important that you follow the best practice of having multiple accounts you need to have one account for you as a
+user and you need to have other accounts that have privileges and that's a very common best practice I hope you've all
+learned that so you you log on as a user without privileges and then you use run
+as to run your administrative tools with higher-level credentials and if you are
+also a domain administrator I encourage you to have a third account that is at
+that level because on a day-to-day basis you don't need to be a domain administrator you can be you can have an
+administrative account that has the permissions it needs to manage users and manage groups and manage computers and
+you can use that second account on a day to day basis the only time you need to be a domain or
+an enterprise administrator is when you're making very significant changes and so it's best to isolate that into
+yet a third account if you are that privileged in your organization now in addition there are certain accounts in
+Active Directory that already are highly privileged of course including the domain administrator account the
+administrator account in the domain that account is super privileged so it is an
+account you really never should log on as you can create your own account that has lots of privileges but keep that
+account reserved for emergencies and I have a lot of my big clients lock it
+down to the point we're in order to log on as the domain administrator two people each have part
+of a password that together can be used to break into that one account and log on to it you also have groups in Active
+Directory that have a lot of power domain administrators Enterprise admins schema admins and these groups should be
+kept empty for the most part so let's take a quick look at these groups here
+so we have domain admins Enterprise admins schema admins also falls into
+this group there's really no need for these accounts to have very many users
+in them so keep them as empty as possible and again perhaps with special
+identities that you really only need when they're necessary with this schema admins group specifically can remain
+completely empty until the time when you Ackman need to make a schema change and then there are some specific groups that
+are legacy groups that you need to watch out for these are the built-in groups and they all have the word operators in
+them these print operators server operators backup operators these
+accounts are highly problematic they were put into Active Directory in order
+to support backward compatibility with Windows and T they have too many privileges in Active Directory they're
+over credentialed they don't align with business requirements today and additionally if you put an account in
+one of these groups it becomes protected in such a way that the permissions that apply to that account are different than they would
+normally be it becomes more difficult to change that accounts password and all kinds of other things happen as well and
+if you want some details on the on exactly what I'm talking about you can look up admin SD holder which is the
+problem that happens when you add an account to these so instead of using these groups don't and create your own
+groups that have the privileges they need to do a backup you can give any group the right to backup a server you
+can give any group the right to log on to a server you can delegate management of user accounts do it with custom
+groups rather than using these legacy groups and Active Directory and also do
+be sure to audit changes to these groups particularly domain admins Windows Server now includes directory
+service change auditing where you can audit exactly who added a specific user
+or group to domain admins and who took them out and you want to make sure you're auditing that and keeping it an
+eye on it sorry I hit escape accident
+okay on the topic of user accounts most
+of us were all familiar with user accounts and we know that users have a logon name the problem with the logon
+name is that it has to be unique within the domain and a lot of companies don't have very good standards to ensure
+uniqueness I know companies who use first name last initial for example Dan H and that becomes
+difficult because as soon as you have another Dan h1 user has to have a name that's not really their name so what I
+encourage you to to the head towards is the old user logon name should be something that
+is unique in the domain and unique for that user such as their employee ID or I
+have some clients who actually allow users to pick their own user name like you would on Twitter or something like that and then you don't use that to log
+on instead use the user principal name to log on the user principal name is another attribute of your user account
+and it has to be unique within the forest but the advantage of user principal name is that it looks like and
+it can be your email address so if I look at one of my employees accounts we
+can see that their user logon name is Adam bar at contoso com which is also
+his email address so that becomes very easy for users to remember they just log on with their email address and their
+password and they think of it as their email address it just happens that the user principal name is the same as their
+email address also consider renaming the administrator account that doesn't
+technically add any security but it adds manageability too so that if someone is
+accidentally logging on as administrator on their workstation but they forgot to choose the local machine and they're
+still logging on to the domain they don't start creating audit trees in the domain so I do encourage you to rename the administrator couches
+for manageability and then come passwords you have users within usernames and passwords and all of us
+are used to this idea of you need an eight character password with complexity those eight character or six character
+passwords with complexity aren't really that secure and the problem with complexity is that it becomes difficult
+for users to remember and difficult for them to type and one of the biggest
+risks for passwords is actually users having so much trouble remembering them
+that they write them down right stick them on a post-it note under their keyboard or on their monitor instead encourage users to use phrases to use
+sentences when you do the math a three word password is far more secure than a
+6 character complex password so if my password is Antwerp is fun that's a very
+very very secure password it's easy for me to remember and it's easy for me to type quickly so that if someone is you
+know watching me it's tougher for them to see what I'm doing instead of me having to hold down ctrl or shift and
+you know exclamation point so short phrases are actually more secure more
+memorable and your users will appreciate it the other thing to think about is fine-grained password policies which are
+a feature of Windows Server now relatively new that allow you to set more strict polyp policies for your
+administrative accounts and your service accounts now moving into Active
+Directory a little bit deeper one of the bad practices that I see is naming users
+with their last name first just so that you can see them in Active Directory so
+when you look at Active Directory users are sorted by name and they're sorted by the first letter in their name so if
+you're looking for Bill Gates is he under B for Bill or W for William it's kind of difficult to figure out and so
+what some companies will do is they'll do last name comma first name the problem with that and this is
+illustrated on the slide is that when you when you look under the hood at what's going on what Active Directory
+stores is actually their last name backslash , because the comma is a reserved
+character in the distinguished name it separates the components of this distinguished name so if you have a
+comma in the name it has to be escaped and that makes it tough to work with scripts and tough to work with other
+things so instead of doing last name comma first name for the username we'll find another solution for that
+which is to customize the MMC view so we can go into our views
+let's take employees for example and we can simply add the last name column so
+that when we need to sort by last name whoops I added the wrong column sorry
+last name surname so when we want to
+find a user by last name we can simply sort by that column to find them more effectively now it is okay to have the
+display name be last comma first so the display name which it shows up in the
+exchange global address list for example that's totally fine it's the common name
+of the object which is how the object is listed here that you do not want to use last name comma first name now when we
+added the last name column we actually exposed another problem with the toolset
+which is when I added the last name column to the employees oh you it also adds the last name column to every other
+view so now I see a last name column for my computer's which probably isn't very
+helpful so we're gonna need to fix that as well but that's an option for us now the last
+fifteen minutes of this session I want to start moving in two things you can do to actually administer active directly
+directory more effectively and this takes us into a concept that I call extreme and then the C consoles so the
+MMC console as I'm sure you know are the is the framework within which tools administrative tools snap in in Windows
+so if you open an empty MMC console you can start adding snap ins and you can
+say okay Active Directory users and computers I need group policy management I need let's say DFS management and you
+can create your own tools now by doing this you can create a single console
+that you can save and when you need to run your Administrative Tools you open that one console it has all the tools
+you need and of course you need to open it with your administrative credentials so you do that one time instead of every
+time you need to launch a tool having to enter a new set of a username and passwords for your administrative credentials just have one console with
+all of your tools in it so it makes it easier to run as an administrator if you have all your tools in one place and
+what we see here is a console that I built and you can see there are a lot of snap ins that I've added Active
+Directory group policy several other Active Directory tools ADSI DNS
+everything is here in one place so this is how I administer an environment like the Olympics for example so you add your
+consoles in and then it allows you to log on one time as your administrative
+account and that's much more secure and manageable for your environment and then
+in the slides which you'll be able to download there are some pointers about how to work with these consoles more
+effectively I'm not going to detail this right now just because of time but what
+I do want to show you a couple of tricks in the console the first of which is the
+link to web address snap in and out let me up the link to web address snap in is
+designed to show you a web etre a website so if you go to add the snap in
+we find link to web address click Add and we put in a URL and that will then
+create a node in the console that shows a web page which might be helpful if we have documentation that we want to
+incorporate into the MMC or an intranet site that we want to expose in the MMC but keep in mind that your MMC console
+is running as an administrator so you don't necessarily want to be going out to BitTorrent downloading things from
+this particular webpage because it will be running with your administrative credentials now one of the tricks that
+is there that is not very well documented about this nappin is that you can add a UNC path so for example I can
+I can create a path to backslash
+backslash server a one backslash data to a share and what that does is it creates
+a node that exposes the share in the MMC console now think about why this is
+helpful if I am NOT in my console and I try to go to that share I'm connecting
+to this share as my user account and my user account probably doesn't have permissions to do what I needed to do in
+this share and Windows Explorer doesn't let you run a window and explore with different credentials you can only be
+running one set of credentials in a Windows Explorer but the console is running as administrator as my
+administrative account so now I can do things like set permissions and all of that within my administrative console
+with this link to web address and happen so that's a really nice handy way to
+work with being able to connect to a server as an administrator in addition
+you want to start using saved queries now saved queries are a way of
+virtualizing your complex environment so we already saw how complex this
+environment is we have all these different OU's with the different computers we've got user accounts split
+between contractors and employees and most Windows administrators are focused
+on o use when they do administration and they constantly have to navigate down into their environment to find the right
+account and it's tough to find things instead I encourage you to never use
+your OU's instead create saved queries saved queries allow you to create a view
+based on any criteria so for example I have a view of all computers in my
+environment it doesn't matter which oh you they're in just all computers so I can quickly find
+a computer by name without any to go deep into my oh you structure so save
+queries allow you to create a view for example all users all computers all groups you can also use saved queries to
+create reports so if my manager wants me to assess wants me to report users that
+haven't logged logged on in 90 days I can actually create a saved query to do
+that I can create a new query we'll call it users who haven't logged on in 90
+days and then I can go define the query and I can pick 90 days since last logon
+so you can create reports and then you can export these reports straight from
+the MMC console with the export actually notice further down here we can create
+other types of views that show us a subset of our environment so this is a
+view that shows me administrative accounts this shows me a certain type of set of groups so I can create very nice
+virtual views of my environment and then I can administer the objects from there
+without having to worry about how complex my öyou structure actually is does that make sense
+okay one of the other benefits of saved queries is that the columns that are
+visible are per saved query so you remember I pointed out the problem with the last name column that then got added
+to computers that doesn't happen and save queries and save queries I can have a different set of columns for computers
+and a different set of columns for users so I can get very specific and give myself the information that I need in
+order to administer my environment correctly so save queries have a lot of
+benefits and the slide deck steps you through some of the things that I was just showing you now the final tip that
+I want to give you related to working effectively as an administrator is how to bring it commands
+you need into the tools that you use and let's start with in a really sort of
+simple example which is as administrators we often want to Remote
+Desktop to another machine that's very very common and we you know we can pull up the remote desktop console and we can
+type in all kinds of information and we can connect it to another machine but it would be nice to be able to right-click
+in Active Directory and say connect me to that machine we can do that as long
+as we have a command that supports a variable so for example the MS TSC
+command is the command that allows us to connect with remote desktop from the command line it takes a switch /v colon
+and then the computer name it takes a variable knowing that we can create that
+command in our console and let me show you how that works and what I'm going to show you is document it in the slide
+deck so when you want to try this the instructions are all there what we do is we create what's called a task pad we
+create a new task pad view so I'm gonna create a view we'll call it ends work
+computers and then once you've created
+the task pad view you get this area on the left that we can fill with tasks and
+we'd fill those tasks by editing the task pad view and on the tasks tab creating a new task and the type of task
+you want to create is called a shell command and again don't worry too much about the steps they are in the slides
+and the shell command this is where the magic happens here the command and the parameters so
+our command is M stsc dot exe our parameters are /v colon and then the
+computer name and the way we insert the variable of the computer name is by clicking this button and choosing name
+now windows does the rest it makes it it does this for us and you don't have to
+worry about that that's hard-coded it's done automatically and now we've got the command the parameter
+this variable of the name of the computer with that task we give it a
+friendly name let's call it remote desktop we pick an icon and when we're
+all done we can pick a computer and notice when I pick a computer my task
+appears here and this task will run that command and the variable will be the name of that computer I'm not sure I
+actually have remote desktop enabled on that server will cancel that but you can see that it's working now you take that
+further and you can add all kinds of tasks to your console to give you things
+that you need done so here's one that will show you as well opening the C Drive and opening a remote command
+prompt it's common that you want to be able to connect to the C Drive of a machine when you're trying to support it
+the way we add that task is we create
+again a new shell command the command is going to be hopefully I can remember
+this Explorer dot exe and then the parameters are backslash backslash the
+computer name backslash c colon now I'm
+doing this off the top of my head I might actually not have this perfect but we insert the variable into the command
+that we want to execute oh shoot well since I messed that up let's look at the right one to be sure
+see drive this is the 1i pre-created yep that was the right command so once we've
+got that we again can pick a computer when we pick a computer the tasks we've
+created light up and we can't open that computer see drive straight from Explorer and or straight from the MMC
+and another good example is a remote command prompt now hopefully you've
+heard of the tool PS exec PS exec is a great tool from mark russinovich who is
+now back at Microsoft you can get it from tech tech net it's free and you can
+use PS exact to run a command on a remote machine and we'll do a simple example of this which is and since we're
+running short on time I'm just gonna show you the the preset PS exec dot exe
+backslash backslash the computer name cmd.exe so this command will run PS exec
+on the remote machine and we can then do anything we need on that machine so just to show you how that works I
+click the task it opens up PS exec and PS exec is kind of like remote desktop
+except it's remote command prompt so I'm now starting a command prompt that actually is running on that machine
+contoso DC and assuming that it works here
+I can prove to you that I'm on that machine by typing the command hostname and that shows me that I am in fact on
+contoso DC so any command that you have that can accept a variable you can add
+as a task so I've got things like ipconfig /all shutdown / restart MST SC
+and gpupdate exe I've got all kinds of things that can take variables or that
+can be used with PS exec that I can do to a single machine in my environment straight from within my toolset so
+hopefully this helps you see that you can take tools that you've got and commands that you've learned and put
+them right at your fingertips so that they're much easier to use and much more discoverable and you don't have to go
+diving into your Start menu every time you need to administer your systems now the final thing I'll leave you with is
+the idea that there are often tools that you need to load as an administrator
+that are truly outside of the normal tool set there are things you need to run as an administrator like the command
+prompt itself a lot of times you just need to open up a command prompt as an administrator let me show you a great way to do that within these MMC consoles
+you can create you can add I should say a folder snap in which you can then
+rename I'm just gonna call it ant work so I've just added this folder snap in
+and I'm gonna create a task pad out of that folder and i'm gonna create what's
+called a no list task pad which basically just gives me a big blank
+window so that all i've done is create a task pad with nothing in it I'm now
+going to edit that task pad and I'm going to add any command that I as an administrator want to be able to run as
+an administrator so as a simple example CMD dot exe all by itself command prompt
+and I can even go pick the icon CMD dot exe
+so now I can launch this and because the console is already running as an
+administrator anything I launched from the task pad will also be running as an administrator so we can see it is in
+fact running as administrator so there's some great things you can do with the tools that Microsoft has given us that
+they don't document particularly well that allow you to administer your environments much more effectively could
+save queries with custom columns tasks pads that bring tools in and finally
+there is of course PowerShell which opens up all kinds of additional capabilities for automating and PowerShell can also be brought into this
+framework and you can be launching commits launching commands that in fact start a PowerShell session so for
+example I can start an interactive power sell shell session on this computer so
+hopefully this inspired you to start going looking outside the box with the
+tools that that you have as an as a Windows administrator just as a quick reminder my email address my Twitter
+handle I'm always here to answer questions for you the the tools that I've shown you I will put into a zip
+file and post later on this week so they will be up there for you and I hope that you've really enjoyed students to
+business 2011 thank you guys very much for coming and I look forward to following your success as Active
+Directory administrators thank you very much [Applause]
