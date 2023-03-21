@@ -1,144 +1,77 @@
 This is part number 1
 
-hello and welcome to the last session of the event have you guys had a good time so far I hope so
-I hope it's been good for you my name is Dan Holm and as you can tell from my accent I come from the United States in
-fact I live in Hawaii on the island of Maui so I flew in day before yesterday
-halfway around the world and if I sound a little hoarse it's because I picked up a cold on the airplane but it's my
-pleasure to be with you here today and to share with you my insights into best
-practices in administering Active Directory a little bit about myself I
-have spent 17 years as a consultant an author and a trainer serving global fortune 500 sized organizations the one
-I can talk about in public is NBC television which is one of the major networks in the US for whom I'm the
-Microsoft technologies consultant during the broadcast of the Olympic Games and so I've been involved in Torino Beijing
-Vancouver and now we're getting ready for London and that involves implementing many of the best practices
-that we're going to be talking about here today I also have my own consulting firm in tell'em I'm the chief evangelist
-for SharePoint for a company called outpoint and I'm an author for Microsoft press the my book is listed up there and
-for those of you who will be administering Active Directory I highly
-recommend this book solely because it's one of the few books out there that tells you how to do things that you
-can't do out of the box with Active Directory so many of the tricks I'll be showing you today if you like them
-there's a lot more in that in that particular resource my email address is up here as well and I encourage you to
-always feel comfortable to email me my job is to help the community do better
-with the technology so I'm more than happy to answer questions whenever I can and I will be posting the slides and the
-scripts to my SkyDrive later on today or perhaps tomorrow so the URL is there and
-I will tweet that URL right after the session my twitter handle is at dan home so with that we've got about 53 minutes
-to cram in about 20 years worth of or 10 years worth of the industry's experience
-with active rectory I began working with Active Directory in 1998 when it was windows in
-t5 Oh alpha and then of course Active Directory came out with Windows 2000 in
-production and since then a lot has changed and you all are entering a
-really exciting time in the in the world of Active Directory things have changed things are changing it in faster and I
-want to help you understand first of all what has changed over the 10 years that have passed so that when you hear people
-and you see people implementing practices that are old that you know how to do it better and also you know why it
-was done that way in the past so that you can help your your employers and and
-your enterprises do better so we'll start with Active Directory design building a domain and a forest from the
-ground up and then we will also spend a lot of time with tricks and tips for how
-you can go beyond the out of box tool set and administer Active Directory more
-effectively so the first thing we'll talk about in your Active Directory is the domain controllers themselves when
-you install Active Directory on a domain controller you should really entrain controllers
-clean that means don't have your domain controller doing other things that makes it a bigger security risk
-it adds risk for updates and and so keep your domain controllers clean and doing
-their jobs and one way you can help that happen is leveraging virtualization
-virtualization is obviously the way of the future and in the case of domain controllers you can virtualize a domain
-controller and thereby keep that virtual machine focused on the one task of supporting your Active Directory so even
-in a small business where maybe you have very few servers instead of having your
-domain controller be a file server and a print server and an exchange server instead put your domain controller in a
-virtual machine and and allow other roles to be hosted either on the
-physical box or on other virtual machines another thing you can do to help out your the security of your
-domain controllers is to use read only domain controllers which allow you to put a domain
-controller in a physical location that is less secure so if you have a remote office for example you can put our drum
-read only domain controller there and it will be able to authenticate users but if it gets compromised that domain
-controller cannot infect and and corrupt the rest of your directory now the one
-piece of advice I'll give you about remote read only domain controllers is that you must be sure you've tested them
-in production before you expect them to work there are some applications out
-there some third-party applications and services that don't that weren't really coded correctly they don't work
-effectively against read only domain controllers and the only way to know that is to actually test it so read only
-domain controllers are a great feature Microsoft is right to talk about the value that they provide but do make sure
-that you that you're confident they will work for you in production up to the -
-up to the domain level itself I'd like to talk about forest and domain design because ten years ago when people
-started with Active Directory the design goals were quite different than they are now
-and so let me actually whiteboard this here and we'll describe it in the early
-days of Active Directory and was common to use multi domain forests where you
-would have a single domain and then you would have child domains and within a single forest and your force might even
-be just two domains and this top domain was often called an empty forest root
-where it would be a domain without any real users or computers or resources but
-it would represent the enterprise where as all of the real users and computers would be in child domains one or more
-child domains the design concept at the time was that Active Directory would eventually allow
-us to merge with another company and simply take their domain and graft it to
-our forest that capability never came out and so the the potential that a
-multi domain and forest and an empty domain root had would has generally not been real
-in the community in fact what we found over the years of experience is that as
-soon as you have more than one domain in your forest you actually make security and manageability much more difficult so
-multi-domain forests are really out and instead you really should dominate design a single domain and within that
-domain secure the service accounts secure the major administrative accounts
-effectively in order to isolate them rather than put them in a separate domain another thing that used to be
-very common is if we had our company company a and we were partnered with another company Company B we would
-create trusts between those domains windows trusts and windows trust relationships would allow us to have
-user accounts from our partner company and we could assign those accounts
-permissions to a resource in our domain as long as we trusted that domain that
-was a very common model for many many years even going back before Active Directory and these days that model is
-starting to break down for a number of reasons first of all it is difficult to secure perfectly then there are a couple
-of features that you can add including a selective authentication and advanced
-encryption of the trusts to make them more secure however it still involves
-going through firewalls with ports that most companies aren't comfortable opening up and so the new the new world
-is really about federating identity and using Active Directory Federation services and similar authentication
-services to authenticate users rather than windows trusts so with Active Directory Federation services you can
-authenticate users against a partner domain using standard protocols and ports and a set of standard services so
-keep your eye on Active Directory Federation services it's part of Active Directory it is now in version 2 it's a
-very important technology and my guess is that in Windows 9 we're going to see
-that Active Directory looks a lot more like Active Directory Federation services does today and a lot less that then Active
-Directory looks like today the world is moving towards claims based authentication and I believe that that's
-where Microsoft will end up taking the product as well just as an industry observer so old-school domains
-old-school trusts are really out and you really should be looking at single domain forests and when you need to
-partner with another organization look at identity Federation with tools like Active Directory Federation services
-within a single domain within your domain you have to think about your design of your organizational units and
-this is where we will jump into an eel domain here when you design your active
-directory and you look at the structure of organizational units you want to be sure that you've designed your
-organizational units to manage security first now the reason I emphasize that is
-in the early days of Active Directory people would also design Active Directory to support group policy and
-they would create oh use solely so that they could link a group policy object to the öyou and that has turned out to be
-in most cases a less than effective design so let's take a look at an actual
-Active Directory design here if we go into our domain we can see that the
-organizational units are are really focused on object classes for example we
-see user accounts and servers the reason that it's important to design Active
-Directory for security is that permissions must be propagated through
-the directory you're going to assign permissions on this oh you for example that your helpdesk can reset user
-passwords and you want that permission to be propagated effectively through the objects in your Active Directory so
-rather than splitting out user accounts we put user accounts in a location that
-allows our helpdesk to have a single point of delegation and we can manage that delegation and those permissions
-effectively when we look inside these OU's we'll see a little bit more detail for example and our client computers oh
-you we have the ability to as Universal permissions for example we
-might have again a centralized helpdesk that is able to perform tasks for any computer but we might also have regional
-offices for example an office in London or an office in Sydney and we have
-helpdesk we have a local desktop support there and we want that local desktop support to be able to join a machine to
-the domain for example by creating a know you to delegate that permission to we've given ourselves an effective way
-to delegate one time to that local desktop Support Group so it's quite
-common to see a know you for client computers that's divided into regions to
-reflect the local desktop support delegation needs when we look at something like the servers oh you this
-is something you would see that would be fairly common where each type of server is in its own oh you because typically
-there are teams of administrators who manage those servers and so they can be given permissions to their o you to do
-things like join a server to the domain so we end up finding that object based
-models and often reflect the delegation needs of businesses so this is a very
-common model but the real point is that you need to focus on delegation and on
-the assigning of permissions and making it as simple and effective as possible because that's what Active Directory is
-really designed to do as a database is create a structure through which
-permissions can be propagated now when it comes to group policy when you get
-down into your design after you've already after you have designed it for security you might find that you have a
-know you that you can link a group policy to and that's great if your design also supports group policy that's
-excellent but as we'll see in a moment most organizations have found that it's
-more effective and more manageable to work with group policies by link by
-filtering them to a group rather than to linking them to a know you so for example if we go up to our group policy
-management
-we can see that at the level of our domain we've linked oh use for example
-we've linked group policies for example a group policy that deploys Adobe Acrobat or that deploys VLC player these
-group policies are linked to the domain and filtered to a group so that in order to when we want a user or a computer to
-receive these applications we put them into the group and it doesn't matter where in the domain they're located
-because a computer or user can only live in one organizational unit but it can belong to multiple groups so most
-organizations have found that filtering group policies based on group membership
-is a more effective way to manage group policies let me take a quick look and yeah so let's uh let's move on to the
-concept of group policy group policies and we've just been talking about
-scoping group policies and scoping group policies is the concept of deciding how
-a group policy object applies to your environment and you can scope a group
-policy several different ways you can scope a group policy based on linking it to a site and domain or an
-organizational unit but that and in some cases that works but in most cases it's not really flexible or manageable enough
-you can also scope a group policy based on WMI filters and WMI filters allow you
-to query the hardware and determine whether a group policy applies so for example we could say apply this group
-policy only if a machine has more than two gigabytes of RAM or if it has 20 gigs of free hard disk space WMI filters
-are interesting they're effective but they're the most performance intensive
+# Active Directory Cleanup and Level Set for Windows 10 Computers 21-03-2023
+
+  Meeting started: 3/21/2023, 10:58:48 AM
+  Duration: 73 minutes
+  Participants: Abdullah Ollivierre, Darren Walker
+
+  [View original transcript](https://app.tactiq.io/api/2/u/m/r/X39xYVmUKJrLd71pDktC?o=txt)
+
+  
+
+  
+  
+  
+    ## Highlights
+
+    > 04:49 Abdullah Ollivierre: And and of course we have we have automated scripts for that. So really the goal is you know the intention is you don't you guys don't have to go in and manually clean up devices because we can automate all of that for you, but it's more so.
+> 13:27 Abdullah Ollivierre: In one of those packages for Microsoft is 5 like business premium or you can buy into it as a standalone license. Uh, it just just just into license and then assign that license to to those specific users and that way you don't now you can manage them through into and as opposed to group policy in WSS.
+> 17:28 Abdullah Ollivierre: To manage. So I'm just gonna give it a bogus name here called the test, and here you can manage the end user experience. And when I see the end user experience, I'm referring to those. To those notifications that you get on the right hand side in your notification center so you know when you see when you see, you know, here's a new Windows update for you or something like that. Actually, let's let's go here. No container windows. Updates. They call them the toast toast notifications. So you're you're you're basically managing. This right here.
+> 18:03 Abdullah Ollivierre: Your organization requires your advice to restart in in number of days, so this right here pick a time restart tonight, restart now those end user experiences with Windows Update for business. It is what you're managing right here. It's basically you're saying I'm gonna have an update ring for example. I'm going to have a pilot update ring for my IT people.
+> 18:54 Abdullah Ollivierre: Deferral of seven days meaning. After the update is released from Microsoft for seven days, then offer it or make it mandatory for those users right here essentially to basically apply and install the update and restart the computer to apply the update. And so in here you're essentially you're managing right there, the user experience for how it's gonna, how are you going to configure the automatic update? When is the deadline for the updates and how long?
+> 25:46 Abdullah Ollivierre: No, that's a good question. Yeah. So if you just want to get the standalone Intune license, one of the things that you will not get is the identity side, the conditional access. That's a very important feature in my opinion, because this.
+> 28:26 Abdullah Ollivierre: Yeah. So just, just going back, I think I think my recommendation is to start looking at because you know we the end, the end goal here is we would like to know.
+> 29:29 Darren Walker: So those are not connected to the domain. In past former five months for sure. Since November 7th go live date so.
+> 29:41 Darren Walker: But they are on the domain they are over here. So if it if I need to replace with another device I can do that. But the issue is. Can we at least do something that we can create a policy that it is forcing the device that are currently on the domain they are connected to the Internet and everything forced pushed the policy. They don't have to do anything. It is forced push and force installed.
+> 32:21 Abdullah Ollivierre: So you can. Yeah. So I know. I know. Because sometimes when I send these reports to to customers, they look at the report and they like Abdul. It's all grouped together. I I need the source data. I need the. I need to go back to the source. So if you need the source of those summary summary views, so actually you can delete that you can double click on any one of these summarized groupings here and it will take you back to the source data for those specific ones.
+> 47:08 Abdullah Ollivierre: Exactly. But as I said, you know the user cleanup, it's important, but it's not a requirement for the WSUS and the group policy. What I mean, generally speaking, the clean up is not an absolute requirement, but it's highly recommended that we clean up as much as we can, both specifically stale devices in before we start level set all our computers which is our desired state of the latest version of Windows 10.
+> 53:53 Darren Walker: Yes, I know that is the issue.
+> 54:41 Darren Walker: And so the the issue. The we don't have anything.
+> 57:03 Abdullah Ollivierre: Gotcha. Gotcha. OK. And with this policy right here, we're also configuring the quality update feature, update deadlines and grace periods as you saw earlier with Microsoft Intune. So this is a similar similar experience here where we're basically controlling the deadline for the update, meaning that's it. You have it within three days you must. This is your deadline, right? This you must or or in this case for you. It's zero days, so meaning it's it's immediate.
+> 58:43 Abdullah Ollivierre: So this this either option one, option two if you wanna really expedite those security patching and security updates. So those computers like the feature update is not. As urgent, it's important, but it's not as urgent as the quality update. The quality update is much more urgent than the feature update feature update does include security updates as well. Executive features, I would say, but it's more features than critical patching.
+> 01:04:50 Abdullah Ollivierre: You can you can definitely manage that. Absolutely. Absolutely. She's take a look at the schedule. So it's the synchronization schedule is automatic and synchronization per day. So does one sync per day. From Microsoft update so so it basically your WSS server will check with Microsoft update servers at least once at least once a day. Up to one once, once a day. So basically every day it will sync automatically at least once with the with with the with the windows with the Microsoft update servers and so from here you can. I check you have your KDH workstations right there. And. Those are the updates. Updates needed six. Most likely this one here is. For the most part, you have Windows 10. Uh Pro, which is which is important, of course, all updates.
+> 01:08:04 Abdullah Ollivierre: Yeah, exactly. Once, once you're caught up and you have these these regular monthly or quarterly whatever. Audits and reviews on the on the environment. But then, you know, going back to here, you can troubleshoot connection issues, synchronization issues. Umm. Let's see here. Anything unapproved approved, declined. And then according to this you have 121. So it's different numbers and different places. It's not, you know. You know, it's not. It's not a systematic or it's not a bug in the system that is reporting, you know, inconsistent numbers are different numbers. It's just the fact that. The computer, you know, it's just due to the different. Different statuses, right? It's just the where where the computer is it's it's but but the numbers are.
+> 01:10:23 Darren Walker: Yes, but the issue with the servers is if we get a some updates that might break. Few things right with the servers.
+
+  ## Transcript
+
+  00:00 Abdullah Ollivierre: Hello and.
+00:02 Darren Walker: Hello.
+00:02 Abdullah Ollivierre: Hey, how's it going?
+00:03 Darren Walker: Are you? Awesome. Awesome. I got he. Man with me here. What we share an office, just so you know.
+00:11 Abdullah Ollivierre: Nice. Yeah. Cubicle to cubicle right?
+00:16 Darren Walker: No, not even a cubicle, just a.
+00:20 Abdullah Ollivierre: Just. Yeah, at desk and two chairs.
+00:25 Darren Walker: Basically, yeah, yeah, no. You have two disk and two chairs, but. Yep.
+00:30 Abdullah Ollivierre: Yeah.
+00:33 Darren Walker: So. How? How? Ohh by the way, the Philips guy. He sent me a text. He's running late. He'll be here around 12:31. O'clock so. Just give me FYI. Tweet. So what's on the agenda this time with you? I see Active Directory clean up and level setting for Windows 10.
+01:01 Abdullah Ollivierre: Yeah. Yeah. First of all, you know. Welcome and thank you. Of course, for for being on the call. Really, for today, I don't know if you if you got a chance to just go go over my.
+01:16 Darren Walker: Yeah, we did.
+01:18 Abdullah Ollivierre: My my e-mail from yeah from Wednesday. Perfect. Sorry, I was just getting another call there. Sorry about that. Yeah, really. Just following up on our recent discussion about the updates for Windows 10 computers at at the hospital. I I did compile a detailed report on the Active Directory environment there. Now, as I mentioned, while it's not mandatory, it is highly recommended that we clean up the ad on Prem environment. But specifically focusing on stale devices. Ideally of course, we can clean up stale users as well.
+01:56 Abdullah Ollivierre: But but but I did. If we can do that before we level set all client machines to latest latest you know latest Windows 10 latest version of Windows 10. Now as of now the latest version is. AT22H2. Which translates to a 19045 is the build number and that's the latest servicing channel with with GA and and I see from.
+02:22 Darren Walker: Sorry, I've delusional. Is that Microsoft like final update or is there other updates after that?
+02:27 Abdullah Ollivierre: The the the latest feature update for Windows 10 is is 2022 H 2 correct? That's the.
+02:34 Darren Walker: Ohh that's latest song OK.
+02:34 Abdullah Ollivierre: That's the that's the latest one, right? Unless of course. You have some devices that are. I noticed that some I think we're on Windows 11, so obviously, but but those are.
+02:47 Darren Walker: No, we don't have any Windows 11 and moment not yet. Thank a lot.
+02:51 Abdullah Ollivierre: OK. Uh, yeah, actually me one second here. Pull this report over here. Uh, yeah. Did I see anything that were? Yeah, maybe that was a different environment. Never mind. Yeah. No, I don't see anyone. Just.
+03:07 Darren Walker: I think there was one Windows 11 there, but it was a test machine and we. Send it back.
+03:14 Abdullah Ollivierre: The test machine. OK, got it. Got it. So really, yeah, maybe I can. I can also hear share my screen as well.
+03:24 Darren Walker: Yes, please.
+03:26 Abdullah Ollivierre: 2nd. Uh.
+03:28 Darren Walker: Can you show us how did you compile that report? From where? Where did you compile that report?
+03:32 Abdullah Ollivierre: Yeah. Yeah. No, that's that's a great question. You much, let me actually show you here. I just gonna share my screen over and.
+03:42 Darren Walker: He does have access to. So yeah. Yeah. So OK.
+03:48 Abdullah Ollivierre: Share share screen. And that would be.
+03:56 Darren Walker: I'm sorry. That's true, right?
+04:02 Abdullah Ollivierre: Screen 2. Uh, see here. Let me know if you guys can see my screen.
+04:14 Darren Walker: Yes, we can.
+04:16 Abdullah Ollivierre: OK, perfect. I don't. So I have the the windows. When the server updates services, yeah the the when the server yeah update service is right there and and I'm not sure if you guys been here before or or pulled any reports but there are some some number of useful reports here. Now to answer your question on how did I got that report in the 1st place. So what I did I went over here on the domain controller.
+04:49 Darren Walker: Yeah.
+04:49 Abdullah Ollivierre: And and of course we have we have automated scripts for that. So really the goal is you know the intention is you don't you guys don't have to go in and manually clean up devices because we can automate all of that for you, but it's more so.
+05:07 Abdullah Ollivierre: You know, reviewing the report and and just give us the the go ahead and the green lights say, hey Abdullah, I need all these you know. And number of devices that are that have not logged in in in in X number of days to be disabled or the other way around you so either highlight the active computers and then we can let the script disable everything else or highlight the inactive ones and then basically let the script disable those and exclude everything else so we can do it either way. If you know the active ones great, we can exclude the inactive ones.
+05:44 Abdullah Ollivierre: Or sorry hit just the inactive ones and some of those or or or the other way. Uh, so if we log in here on Nova Networks on the domain admin here. Yeah, I think that's the one perfect. So what I did, I came over here on the Active Directory domain controller. Uh, do you see 01? And I generated that report based on. Based on the last logon timestamp, now something to keep in mind in Active Directory. Interestingly enough, there are two.
+06:21 Abdullah Ollivierre: Log last log on time stamps and and if you ask me why I I have no idea why they have two different ones that report two different values, but but what we do usually is that when we generate the report, we look at whatever whichever is the most recent out of the tool for each computer and then we take that.
+06:43 Abdullah Ollivierre: So based on whatever the most recent out of these two different attributes of of the last logon timestamp. Uh, we look at whatever the most recent and then and then essentially we we we we we include that in the report now I can have the report over on my screen over here. So this report is based on. It's coming directly from from your domain controllers, DC-1 and DC CO2. And So what? What I.
+07:10 Darren Walker: The last logon time means is it on the domain? I mean in the carriage environment itself. For the laptops that are outside KDH and does those count as well?

@@ -1,89 +1,72 @@
 This is part number 4
 
-okay one of the other benefits of saved queries is that the columns that are
-visible are per saved query so you remember I pointed out the problem with the last name column that then got added
-to computers that doesn't happen and save queries and save queries I can have a different set of columns for computers
-and a different set of columns for users so I can get very specific and give myself the information that I need in
-order to administer my environment correctly so save queries have a lot of
-benefits and the slide deck steps you through some of the things that I was just showing you now the final tip that
-I want to give you related to working effectively as an administrator is how to bring it commands
-you need into the tools that you use and let's start with in a really sort of
-simple example which is as administrators we often want to Remote
-Desktop to another machine that's very very common and we you know we can pull up the remote desktop console and we can
-type in all kinds of information and we can connect it to another machine but it would be nice to be able to right-click
-in Active Directory and say connect me to that machine we can do that as long
-as we have a command that supports a variable so for example the MS TSC
-command is the command that allows us to connect with remote desktop from the command line it takes a switch /v colon
-and then the computer name it takes a variable knowing that we can create that
-command in our console and let me show you how that works and what I'm going to show you is document it in the slide
-deck so when you want to try this the instructions are all there what we do is we create what's called a task pad we
-create a new task pad view so I'm gonna create a view we'll call it ends work
-computers and then once you've created
-the task pad view you get this area on the left that we can fill with tasks and
-we'd fill those tasks by editing the task pad view and on the tasks tab creating a new task and the type of task
-you want to create is called a shell command and again don't worry too much about the steps they are in the slides
-and the shell command this is where the magic happens here the command and the parameters so
-our command is M stsc dot exe our parameters are /v colon and then the
-computer name and the way we insert the variable of the computer name is by clicking this button and choosing name
-now windows does the rest it makes it it does this for us and you don't have to
-worry about that that's hard-coded it's done automatically and now we've got the command the parameter
-this variable of the name of the computer with that task we give it a
-friendly name let's call it remote desktop we pick an icon and when we're
-all done we can pick a computer and notice when I pick a computer my task
-appears here and this task will run that command and the variable will be the name of that computer I'm not sure I
-actually have remote desktop enabled on that server will cancel that but you can see that it's working now you take that
-further and you can add all kinds of tasks to your console to give you things
-that you need done so here's one that will show you as well opening the C Drive and opening a remote command
-prompt it's common that you want to be able to connect to the C Drive of a machine when you're trying to support it
-the way we add that task is we create
-again a new shell command the command is going to be hopefully I can remember
-this Explorer dot exe and then the parameters are backslash backslash the
-computer name backslash c colon now I'm
-doing this off the top of my head I might actually not have this perfect but we insert the variable into the command
-that we want to execute oh shoot well since I messed that up let's look at the right one to be sure
-see drive this is the 1i pre-created yep that was the right command so once we've
-got that we again can pick a computer when we pick a computer the tasks we've
-created light up and we can't open that computer see drive straight from Explorer and or straight from the MMC
-and another good example is a remote command prompt now hopefully you've
-heard of the tool PS exec PS exec is a great tool from mark russinovich who is
-now back at Microsoft you can get it from tech tech net it's free and you can
-use PS exact to run a command on a remote machine and we'll do a simple example of this which is and since we're
-running short on time I'm just gonna show you the the preset PS exec dot exe
-backslash backslash the computer name cmd.exe so this command will run PS exec
-on the remote machine and we can then do anything we need on that machine so just to show you how that works I
-click the task it opens up PS exec and PS exec is kind of like remote desktop
-except it's remote command prompt so I'm now starting a command prompt that actually is running on that machine
-contoso DC and assuming that it works here
-I can prove to you that I'm on that machine by typing the command hostname and that shows me that I am in fact on
-contoso DC so any command that you have that can accept a variable you can add
-as a task so I've got things like ipconfig /all shutdown / restart MST SC
-and gpupdate exe I've got all kinds of things that can take variables or that
-can be used with PS exec that I can do to a single machine in my environment straight from within my toolset so
-hopefully this helps you see that you can take tools that you've got and commands that you've learned and put
-them right at your fingertips so that they're much easier to use and much more discoverable and you don't have to go
-diving into your Start menu every time you need to administer your systems now the final thing I'll leave you with is
-the idea that there are often tools that you need to load as an administrator
-that are truly outside of the normal tool set there are things you need to run as an administrator like the command
-prompt itself a lot of times you just need to open up a command prompt as an administrator let me show you a great way to do that within these MMC consoles
-you can create you can add I should say a folder snap in which you can then
-rename I'm just gonna call it ant work so I've just added this folder snap in
-and I'm gonna create a task pad out of that folder and i'm gonna create what's
-called a no list task pad which basically just gives me a big blank
-window so that all i've done is create a task pad with nothing in it I'm now
-going to edit that task pad and I'm going to add any command that I as an administrator want to be able to run as
-an administrator so as a simple example CMD dot exe all by itself command prompt
-and I can even go pick the icon CMD dot exe
-so now I can launch this and because the console is already running as an
-administrator anything I launched from the task pad will also be running as an administrator so we can see it is in
-fact running as administrator so there's some great things you can do with the tools that Microsoft has given us that
-they don't document particularly well that allow you to administer your environments much more effectively could
-save queries with custom columns tasks pads that bring tools in and finally
-there is of course PowerShell which opens up all kinds of additional capabilities for automating and PowerShell can also be brought into this
-framework and you can be launching commits launching commands that in fact start a PowerShell session so for
-example I can start an interactive power sell shell session on this computer so
-hopefully this inspired you to start going looking outside the box with the
-tools that that you have as an as a Windows administrator just as a quick reminder my email address my Twitter
-handle I'm always here to answer questions for you the the tools that I've shown you I will put into a zip
-file and post later on this week so they will be up there for you and I hope that you've really enjoyed students to
-business 2011 thank you guys very much for coming and I look forward to following your success as Active
-Directory administrators thank you very much [Applause]
+33:38 Abdullah Ollivierre: Gotcha. So that's that's why I meant what that by by cleaning up, right? That's why we need to do some clean up to to get to get a more accurate reflection of true device count before we start tackling. You know, policies and WSS. You know what I mean? So we need to do as as much tidy up as possible. So what I what I what I can do to help. As I said, there's two options. You can either go in on the Active Directory domain controller and clean them up manually one by one. Or if you want to highlight them on the report we can have automated scripts to do the cleanup for you as well. So there are two options you can do that.
+34:18 Darren Walker: Uh, uh. What? I was thinking is, can we create a policy that I mentioned that we can push the updates, force push the updates and install them and see within next 15 days which computers have not received the updates? We can disable them.
+34:34 Abdullah Ollivierre: Got it. Got it. I see now.
+34:36 Darren Walker: Because I don't have the computer names that are on the floor, and to be honest I don't have that much time to go to each office and check what computer is connected to two which didn't. They are used or not.
+34:49 Abdullah Ollivierre: Uh-huh
+34:54 Darren Walker: It will be much more painful than, but I know all the computers that are connected are connected with the Internet, so if we can push the policy and within next 15 days we can see which computers have not received the policy, we can disable those at A at at one shot.
+35:08 Abdullah Ollivierre: I see. OK. That's a good strategy, I think. Yeah. So right here, we can. Let's actually take a look at the. At the so you can see here. I don't know if you if you looked at the WSU S. Reporting or or the management console here before. So we have. Right there, computers needing updates. According to WSU S is 100. So again, this may or may not be exactly accurate, right? Based based on on on on the clean up. Maybe after the cleanup or maybe after we push that policy. But to answer your question, we can definitely create a policy right here. I see there are a number of group policies already in place.
+35:52 Darren Walker: Yeah.
+35:52 Abdullah Ollivierre: Uh, that are. Uh, configuring other? Settings, but I don't see. I don't see.
+36:03 Darren Walker: To this.
+36:04 Abdullah Ollivierre: W. WSU S maybe we can take a look at. Maybe those are the ones that are actually, let's look at the right there. Just see a full catalog of your policies. And.
+36:20 Darren Walker: I think WSS policy would be.
+36:23 Abdullah Ollivierre: Right there.
+36:24 Darren Walker: And yeah.
+36:25 Abdullah Ollivierre: So we have one for servers and then we have one for workstations. Now our our focus here my based on my understanding is is Windows 10 yeah, Windows 10 client workstations. We're not gonna worry too much about servers today.
+36:39 Darren Walker: Yeah.
+36:39 Abdullah Ollivierre: We're just gonna focus on, you know, essentially on on, on Windows, Windows, Windows 10 workstations. So actually, let's take a look at here at the settings and just to see what is this policy doing and who is it targeting. So. Right there. So, right there, this policy, it's it's at the computer level and it's configuring automatic updates right there. And it says. Option #4. So there are a number of options you can configure and then you have option #3 here so auto download and notify. And then auto download and schedule. So actually is is what it said to right now. So configure automatic update with option #3 auto download and notify for install. So it's not forcing the install.
+37:26 Abdullah Ollivierre: It's it's just automatically downloading the update, but it's not forcing the installation of the update right now, so we can change that if you like.
+37:35 Darren Walker: Yes, please.
+37:36 Abdullah Ollivierre: Yeah, we can definitely change that. So right here under the workstations policy, actually before we we modify this policy, I'd like to take a look to see what the scope right now it's at the workstations level here. So actually let's take a look at the workstations OU.
+37:50 Darren Walker: All the computers are in the workstation or you.
+37:54 Abdullah Ollivierre: OK, so right there is what you have. OK, so you can see that some of the olus here are labeled disabled. So my my recommendation as a best practice is. It you know it to avoid targeting disabled devices with group policies because it slows down your group policy replication. So if you have so for example if you have 1000 computer, I'm just throwing a number and then you have say 20% of those.
+38:27 Abdullah Ollivierre: You know like like say, 200 of those are disabled and you're pushing your, your, your instructing the domain controller to be pushing policy to those disabled ones as well. It's just gonna cause it's not the best practice, it's just gonna cause performance bottlenecks. You know what I mean? So as much as they can as much as possible, try to clean up this workstations OU and we can help you with that as well by going here. This actually took a look at the so right here this policy is start getting this workstations.
+38:57 Abdullah Ollivierre: And and so if we clean up this OU as much as we can, then it's gonna help help, you know, in, in, in, in streamlining the troubleshooting as well and and bringing a more accurate reflection of the device count. And so if we look here. Workstations right now we haven't, like I can see I you can see some of them are already disabled of this, you know, arrow pointing down.
+39:20 Darren Walker: Yeah.
+39:21 Abdullah Ollivierre: So this is a disabled device. Obviously you can take a look here properties under operating system. This is a Windows 10 machine and let's take a look at the object it's sitting in this OU. Obviously it's not protected from deletions, so we can go ahead and delete it if needed or move it to a separate OU like at minimum. If you don't wanna delete it. If you're not ready to delete the device object, I would say eventually let's just delete them altogether and just let's so that way when we pull these reports every week or every month.
+39:53 Abdullah Ollivierre: We get an accurate report of of of true and active devices in the in the in the controller, but I would say at least you're not. Planning or ready to the delete them for now I would say move them outside of this workstation so you so that way this policy is not having to work so hard on on keep trying, retrying, retrying on these disabled device.
+40:18 Darren Walker: So can we create a OU mentioning disabled workstations?
+40:22 Abdullah Ollivierre: Exactly. Exactly. So right here we have disabled, can be deleted and disabled checking.
+40:27 Darren Walker: Yeah. Can we just merge them and keep it 1 outside? That was station and yeah.
+40:35 Abdullah Ollivierre: Yeah. So what I would recommend is in this case, and of course if it's a bulk job, we can, we can we have scripts for that, but we can create a new organizational unit right there at the top level.
+40:49 Darren Walker: Yeah.
+40:50 Abdullah Ollivierre: And. And we also want to make sure that those you know at the top level, they're not. Work workstations.
+41:00 Darren Walker: Don't stations disabled?
+41:02 Abdullah Ollivierre: Disabled or or something like that, right? You know right there.
+41:08 Darren Walker: So it's working in the server room. So it's working. Why Wi-Fi mean? I think in my thing is not catching the right. Yeah, yeah. Yeah.
+41:22 Abdullah Ollivierre: And right there, we can move this over here.
+41:27 Darren Walker: Yes.
+41:28 Abdullah Ollivierre: And then going forward, him and what we can do, you know, as I say, it's a shared responsibility and a collective effort just to make sure that we're. Core you know quarterly at least every three months, we're reviewing the just doing an audit on the on the domain controller and see what is disabled and just move them to this area right here. That way this policy is not working so hard to retry every time on disabled and it's a best practice, right, best practice.
+41:55 Darren Walker: Definitely yes, and I'll I'll make sure to delete those workstations from that you OU as well frequently.
+42:00 Abdullah Ollivierre: Yes, yes, exactly. Eventually, yes. So once you once you're ready, you say, you know, I know for a fact these devices are disabled and they're never gonna come back to the domain controller, just delete them all together. That way, when we pull this report right here. This number is gonna be more more accurate than. Yeah, exactly that way, because right now you have a lot of devices that are showing, like for example, 356 devices that are showing more than 180 days ago. I bet you a lot of these, maybe 99% of those 356 devices I've probably. Are ready to be deleted.
+42:33 Darren Walker: Yeah, definitely.
+42:34 Abdullah Ollivierre: You know, because I see some of them are Windows XP like 45 Windows XP machines and multiple Windows Server 2008 machines.
+42:42 Darren Walker: Uh, so Windows Server 2008. I think we still have a couple of them on the on the yeah, just a couple of them. But yeah, not all of them. And yeah, we can delete all Windows XP machine for sure.
+42:55 Abdullah Ollivierre: Exactly right. Yeah, that's that's what I thought, too. Right? I'm like, you know why? Why, why? Why do we still have Windows XP machines? Like, for example, do we look here at the OS version? And we see some of these computers already disabled, I guess by by looking at false. So these are already disabled, you've got. 176 that are disabled to just good and then you have all of these 390 that they're not disabled, but some of these are running. If we go by always version. Uh by OS right there. Windows XP right here. So we've got we've got 74 devices.
+43:36 Darren Walker: And I don't think so. We have any Windows 7 devices as well in our environment.
+43:39 Abdullah Ollivierre: Yeah, you see what I'm saying? So you already have a between Windows 7 and Windows XP. You have 190 computers that we can definitely not only disable, but, but.
+43:50 Darren Walker: I'm like can we click on Windows 7 devices please?
+43:52 Abdullah Ollivierre: Definitely we can go back to the source data here. Double click on it and now it just drills down to 116 devices for Windows 7, right? And so if I. Look at this here and and I mean obviously you can see the last logon date right there. Some of these are are from 2016. And.
+44:13 Darren Walker: One of them is 2023 as well.
+44:16 Abdullah Ollivierre: Not. Not a lot, but actually we can filter on that as well. Yeah, for sure. We can do a filter.
+44:21 Darren Walker: Which one? Epilepsy W 68. Yeah, we can delete all these off. That's fine. If they, if they are still there, I can read them to the domain.
+44:35 Abdullah Ollivierre: Yeah, exactly.
+44:37 Darren Walker: And then update them to Windows 10.
+44:38 Abdullah Ollivierre: Exactly, exactly. That's what I mean, right? So I mean, sometimes, you know, sometimes you just you try to be as careful as you can, but sometimes, you know, just disable them. And if somebody complaints, you can fix them later.
+44:50 Darren Walker: Yeah, we can disable them and put them on the different OU for sure.
+44:54 Abdullah Ollivierre: Exactly. See, that's what I mean. And this is where.
+44:56 Darren Walker: All Windows 7 and Windows XP.
+44:57 Abdullah Ollivierre: Exactly. And that's what I mean, where we can have some automated scripts to do that as well that you can run, you can run you know quarterly you can just go in and just run the script and it will scan your entire Active Directory and I'll say hey man, you've got these whatever Windows 7, Windows XP, blah blah blah. This, this, this you can just clean them up and and remove them.
+45:20 Abdullah Ollivierre: And so with that being said, as we're keeping in the upkeep of our 80 environment, as we keep you know as much as we can, if we try to keep it as clean as possible from stale users and stale devices, obviously this conversation is only focused on devices we haven't even discussed stale users yet.
+45:39 Darren Walker: Yes. So we don't have many steel users because we do delete the users, we don't disable the users, we usually delete the users from AD.
+45:49 Abdullah Ollivierre: All OK. OK, OK.
+45:50 Darren Walker: So there might be just handful of them.
+45:54 Abdullah Ollivierre: Let's take a look at the user's report here. So I pulled the this is the user report. And I see 305 users.
+46:03 Darren Walker: Just give me one second. Sorry.
+46:06 Abdullah Ollivierre: No worries.
+46:06 Darren Walker: Right. I mean.
+46:28 Darren Walker: Yeah, sorry. Go ahead.
+46:31 Abdullah Ollivierre: Uh norries. So based on the user report that I'm looking at here, human. So basically we have 305 devices. Sorry, 305 users that have not logged in in the last 180 days. Uh, that that are listed in the 80s, so that's something. But as I said, it's not a, it's not a.
+46:47 Darren Walker: So it might be the vendor accounts as well, and the group accounts. Ohh shared users account so I have to check those and delete those shared users because as I mentioned we had our own exchange before and after that we changed to Office 365 with Auto Hospital. So all the shared accounts are gone now. So we have to check those and delete those.

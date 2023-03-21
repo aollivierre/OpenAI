@@ -1,516 +1,385 @@
-hello and welcome to the last session of the event have you guys had a good time so far I hope so
-I hope it's been good for you my name is Dan Holm and as you can tell from my accent I come from the United States in
-fact I live in Hawaii on the island of Maui so I flew in day before yesterday
-halfway around the world and if I sound a little hoarse it's because I picked up a cold on the airplane but it's my
-pleasure to be with you here today and to share with you my insights into best
-practices in administering Active Directory a little bit about myself I
-have spent 17 years as a consultant an author and a trainer serving global fortune 500 sized organizations the one
-I can talk about in public is NBC television which is one of the major networks in the US for whom I'm the
-Microsoft technologies consultant during the broadcast of the Olympic Games and so I've been involved in Torino Beijing
-Vancouver and now we're getting ready for London and that involves implementing many of the best practices
-that we're going to be talking about here today I also have my own consulting firm in tell'em I'm the chief evangelist
-for SharePoint for a company called outpoint and I'm an author for Microsoft press the my book is listed up there and
-for those of you who will be administering Active Directory I highly
-recommend this book solely because it's one of the few books out there that tells you how to do things that you
-can't do out of the box with Active Directory so many of the tricks I'll be showing you today if you like them
-there's a lot more in that in that particular resource my email address is up here as well and I encourage you to
-always feel comfortable to email me my job is to help the community do better
-with the technology so I'm more than happy to answer questions whenever I can and I will be posting the slides and the
-scripts to my SkyDrive later on today or perhaps tomorrow so the URL is there and
-I will tweet that URL right after the session my twitter handle is at dan home so with that we've got about 53 minutes
-to cram in about 20 years worth of or 10 years worth of the industry's experience
-with active rectory I began working with Active Directory in 1998 when it was windows in
-t5 Oh alpha and then of course Active Directory came out with Windows 2000 in
-production and since then a lot has changed and you all are entering a
-really exciting time in the in the world of Active Directory things have changed things are changing it in faster and I
-want to help you understand first of all what has changed over the 10 years that have passed so that when you hear people
-and you see people implementing practices that are old that you know how to do it better and also you know why it
-was done that way in the past so that you can help your your employers and and
-your enterprises do better so we'll start with Active Directory design building a domain and a forest from the
-ground up and then we will also spend a lot of time with tricks and tips for how
-you can go beyond the out of box tool set and administer Active Directory more
-effectively so the first thing we'll talk about in your Active Directory is the domain controllers themselves when
-you install Active Directory on a domain controller you should really entrain controllers
-clean that means don't have your domain controller doing other things that makes it a bigger security risk
-it adds risk for updates and and so keep your domain controllers clean and doing
-their jobs and one way you can help that happen is leveraging virtualization
-virtualization is obviously the way of the future and in the case of domain controllers you can virtualize a domain
-controller and thereby keep that virtual machine focused on the one task of supporting your Active Directory so even
-in a small business where maybe you have very few servers instead of having your
-domain controller be a file server and a print server and an exchange server instead put your domain controller in a
-virtual machine and and allow other roles to be hosted either on the
-physical box or on other virtual machines another thing you can do to help out your the security of your
-domain controllers is to use read only domain controllers which allow you to put a domain
-controller in a physical location that is less secure so if you have a remote office for example you can put our drum
-read only domain controller there and it will be able to authenticate users but if it gets compromised that domain
-controller cannot infect and and corrupt the rest of your directory now the one
-piece of advice I'll give you about remote read only domain controllers is that you must be sure you've tested them
-in production before you expect them to work there are some applications out
-there some third-party applications and services that don't that weren't really coded correctly they don't work
-effectively against read only domain controllers and the only way to know that is to actually test it so read only
-domain controllers are a great feature Microsoft is right to talk about the value that they provide but do make sure
-that you that you're confident they will work for you in production up to the -
-up to the domain level itself I'd like to talk about forest and domain design because ten years ago when people
-started with Active Directory the design goals were quite different than they are now
-and so let me actually whiteboard this here and we'll describe it in the early
-days of Active Directory and was common to use multi domain forests where you
-would have a single domain and then you would have child domains and within a single forest and your force might even
-be just two domains and this top domain was often called an empty forest root
-where it would be a domain without any real users or computers or resources but
-it would represent the enterprise where as all of the real users and computers would be in child domains one or more
-child domains the design concept at the time was that Active Directory would eventually allow
-us to merge with another company and simply take their domain and graft it to
-our forest that capability never came out and so the the potential that a
-multi domain and forest and an empty domain root had would has generally not been real
-in the community in fact what we found over the years of experience is that as
-soon as you have more than one domain in your forest you actually make security and manageability much more difficult so
-multi-domain forests are really out and instead you really should dominate design a single domain and within that
-domain secure the service accounts secure the major administrative accounts
-effectively in order to isolate them rather than put them in a separate domain another thing that used to be
-very common is if we had our company company a and we were partnered with another company Company B we would
-create trusts between those domains windows trusts and windows trust relationships would allow us to have
-user accounts from our partner company and we could assign those accounts
-permissions to a resource in our domain as long as we trusted that domain that
-was a very common model for many many years even going back before Active Directory and these days that model is
-starting to break down for a number of reasons first of all it is difficult to secure perfectly then there are a couple
-of features that you can add including a selective authentication and advanced
-encryption of the trusts to make them more secure however it still involves
-going through firewalls with ports that most companies aren't comfortable opening up and so the new the new world
-is really about federating identity and using Active Directory Federation services and similar authentication
-services to authenticate users rather than windows trusts so with Active Directory Federation services you can
-authenticate users against a partner domain using standard protocols and ports and a set of standard services so
-keep your eye on Active Directory Federation services it's part of Active Directory it is now in version 2 it's a
-very important technology and my guess is that in Windows 9 we're going to see
-that Active Directory looks a lot more like Active Directory Federation services does today and a lot less that then Active
-Directory looks like today the world is moving towards claims based authentication and I believe that that's
-where Microsoft will end up taking the product as well just as an industry observer so old-school domains
-old-school trusts are really out and you really should be looking at single domain forests and when you need to
-partner with another organization look at identity Federation with tools like Active Directory Federation services
-within a single domain within your domain you have to think about your design of your organizational units and
-this is where we will jump into an eel domain here when you design your active
-directory and you look at the structure of organizational units you want to be sure that you've designed your
-organizational units to manage security first now the reason I emphasize that is
-in the early days of Active Directory people would also design Active Directory to support group policy and
-they would create oh use solely so that they could link a group policy object to the öyou and that has turned out to be
-in most cases a less than effective design so let's take a look at an actual
-Active Directory design here if we go into our domain we can see that the
-organizational units are are really focused on object classes for example we
-see user accounts and servers the reason that it's important to design Active
-Directory for security is that permissions must be propagated through
-the directory you're going to assign permissions on this oh you for example that your helpdesk can reset user
-passwords and you want that permission to be propagated effectively through the objects in your Active Directory so
-rather than splitting out user accounts we put user accounts in a location that
-allows our helpdesk to have a single point of delegation and we can manage that delegation and those permissions
-effectively when we look inside these OU's we'll see a little bit more detail for example and our client computers oh
-you we have the ability to as Universal permissions for example we
-might have again a centralized helpdesk that is able to perform tasks for any computer but we might also have regional
-offices for example an office in London or an office in Sydney and we have
-helpdesk we have a local desktop support there and we want that local desktop support to be able to join a machine to
-the domain for example by creating a know you to delegate that permission to we've given ourselves an effective way
-to delegate one time to that local desktop Support Group so it's quite
-common to see a know you for client computers that's divided into regions to
-reflect the local desktop support delegation needs when we look at something like the servers oh you this
-is something you would see that would be fairly common where each type of server is in its own oh you because typically
-there are teams of administrators who manage those servers and so they can be given permissions to their o you to do
-things like join a server to the domain so we end up finding that object based
-models and often reflect the delegation needs of businesses so this is a very
-common model but the real point is that you need to focus on delegation and on
-the assigning of permissions and making it as simple and effective as possible because that's what Active Directory is
-really designed to do as a database is create a structure through which
-permissions can be propagated now when it comes to group policy when you get
-down into your design after you've already after you have designed it for security you might find that you have a
-know you that you can link a group policy to and that's great if your design also supports group policy that's
-excellent but as we'll see in a moment most organizations have found that it's
-more effective and more manageable to work with group policies by link by
-filtering them to a group rather than to linking them to a know you so for example if we go up to our group policy
-management
-we can see that at the level of our domain we've linked oh use for example
-we've linked group policies for example a group policy that deploys Adobe Acrobat or that deploys VLC player these
-group policies are linked to the domain and filtered to a group so that in order to when we want a user or a computer to
-receive these applications we put them into the group and it doesn't matter where in the domain they're located
-because a computer or user can only live in one organizational unit but it can belong to multiple groups so most
-organizations have found that filtering group policies based on group membership
-is a more effective way to manage group policies let me take a quick look and yeah so let's uh let's move on to the
-concept of group policy group policies and we've just been talking about
-scoping group policies and scoping group policies is the concept of deciding how
-a group policy object applies to your environment and you can scope a group
-policy several different ways you can scope a group policy based on linking it to a site and domain or an
-organizational unit but that and in some cases that works but in most cases it's not really flexible or manageable enough
-you can also scope a group policy based on WMI filters and WMI filters allow you
-to query the hardware and determine whether a group policy applies so for example we could say apply this group
-policy only if a machine has more than two gigabytes of RAM or if it has 20 gigs of free hard disk space WMI filters
-are interesting they're effective but they're the most performance intensive
-way of filtering group policy objects because if you use a WMI filter the
-computer the client has to actually run that query during the group policy application process which can take time
-so it's a it's a the best practice is not to use WMI filters unless you have
-something that is truly dynamic and is likely to change regularly so for
-example instead of creating a group policy that uses a WMI to decide whether a machine is Windows 7
-that's very performance intensive create a group of computers that are Windows 7 that doesn't change very often when you
-upgrade a machine you can add it to the group and you then don't need to be running a WMI filter all the time so
-groups end up being the most effective way to filter Group Policy objects and and two points about using groups to
-filter Group Policy objects let's create a new group policy we'll call this an
-thwart policies and let's say that we want this group policy to apply to users
-and computers in antwort now I've already got a group called let's see
-where is it oh I reset my virtual machine so we'll create the group first we'll create a
-group for Antwerp users and computers and then when we want to filter this
-group policy object by default a group policy object will apply to all users
-and computers the authenticated users group we remove that and we add the one
-group that we do want Antwerp users and computers now if you do this this will
-work for the group policy the group policy will now only apply to those users and computers but the problem is
-an administrator who isn't in that group when they open the group policy
-management console what they will see is
-something that indicates that this is an unknown group policy they won't actually
-be able to see this they'll see a blank spot in the group policy which makes it
-tough to for an administrator to work with it makes it difficult to troubleshoot the group policies so if
-you filter a group policy object to apply to only one set of users you
-should also go to the delegation tab and give the authenticated users group read
-permission you give that group read permission but you do not give the group so if I can find
-it here there we go you do not give the group apply group policy permission so this policy will
-not apply but they will be able to read it and that simply means that an administrator will be able to see that
-the group policy exists in the troubleshooting tools you won't get messages about unknown group policy
-objects so when you do filter a group policy object do give the authenticated users group read permission that makes
-your life a lot easier the other thing that you want to do with group policies occasionally is you want to deny group
-policies from applying to a group so in this case let's say we've got this group policy object and we want to prevent it
-from applying to the Antwerp users in order to do that we can't we cannot use
-this user interface we have to go back to the delegation tab to the advanced button and we add our ant work group and
-we deny that group the apply group policy permission so that's how we block
-the group policy from applying to a single group when you do that
-unfortunately it doesn't show up here so when you look at the group policy object
-you can't really tell that it applies to everyone except and for abusers you actually have to dig deeper into the
-into the user interface to find that which is unfortunate but that's the way the interface works now whenever you
-create a group policy object I encourage you to have one group created that will
-allow you to deny that group policy even if you know one needs to be denied now there usually comes a time when there's
-problems that need to be solved and in troubleshooting you want to start removing Group Policy objects from a
-user or a computer so my recommendation is every time you create a group policy object create some kind of group that
-allows you to deny permissions so that
-you can exclude a user or computer if necessary from a particular group policy so we've looked at the domain we've
-looked at we've looked at Active Directory we've looked at group policy
-and we looked at OU's our next step is going to be to look at sites but before I do that are there any questions about
-the pieces we've talked about so far and if there are you might have to shout out because I can't necessarily see
-everybody okay now on sites active
-directory sites are logged well sorry my pinout active directory sites are
-logical objects that represent areas of high connectivity and these tend to lead
-to a lot of confusion and organizations because they think when an organization thinks of the word site they think oh we
-have a site in Antwerp and we have a site in Brussels and we have a site in New York City so they think about sites
-geographically active directory sites are logical objects that don't represent
-a geographic area they represent an area of high connectivity so if you have high
-connectivity in Antwerp and Brussels those two geographic locations might be
-a single active directory site but if there's a slower or more expensive link to New York New York might also have be
-its own active directory site now in the early days of active directory the industry was very
-concerned that Microsoft would bring down their networks with lots of replication traffic people didn't trust
-Microsoft to do it right but what what have proved is that Microsoft did a very
-good job in designing Active Directory replication it's very robust it's very efficient and in addition over time
-networks have gotten much better so the kinds of connectivity we see even in our own homes is better than most businesses
-had 10 years ago so because both people's understanding of replication
-has it changed and network technologies
-have improved we now have a situation where when you look at your environment
-you might think well we have good connectivity between all of these sites and if that's the case we could get by
-with a single active directory site and many organizations are doing that now be
-because they have such good connectivity the problem is that sites are for more
-than replication of traffic sites are also used to help locate resources close
-to you when those resources are replicated and distributed in multiple locations so for example you can have a
-file server that contains important information in Brussels and if the in
-flight if the information is that important you might also have it replicated into a server and Antwerp
-using DFS are distributed file system replication and you might also have it
-replicated in New York with DFS R now if
-users are accessing these resources using DFS in distributed file system
-namespaces DFS n will allow you to get users to the closest copy of that
-resource the DFS n is site aware as are several other technologies within
-windows but if you only have one site a user in New York might very well connect
-with the copy of the resource and Antwerp which might not be so efficient and so even though you might be able to
-get by with one site from a replication perspective you actually find these days
-you need more sites in order to support localization of services so that users
-are getting things from the most efficient location so I've been in a number of companies that are starting to
-create single sites and then realizing that they need to go and create more sites than maybe they even had before
-simply to support localization and in addition we're finding that you'll when
-you do that you create sites that don't have domain controllers so for example if Antwerp and Brussels are highly
-connected you might have your domain controller only in Antwerp you may not
-have a domain controller in Brussels but you may create two separate sites in order to support localization of a
-service like DFS so you end up with sites without domain controllers and when you do that you can implement
-what's called coverage where you tell the Brussels site that it should use the
-domain controller in and rather than the domain controller in New York City so we think about sites as a
-way of localizing resources be aware of what you have out there and and and what
-sites are really used for related to sites are subnets each site is actually
-defined by the IP addresses that it has so if we have a range of addresses like
-ten dot zero dot one dot zero it that
-would define the Antwerp site and maybe 10.0 2.0 defines Brussels and it is the
-linkage between the subnet and the site that allows a computer to know what site it's in and therefore to get resources
-more effectively so if we go in and look at our interface in Active Directory sites and services we see subnets are
-defined and each subnet object is linked whoops each subnet is linked to one and
-only one site so when you the key takeaway here is that it's very
-important that every address that a computer might get in your enterprise has a subnet that associates it with a
-site because if a computer gets an IP address that isn't defined as a site it
-basically has no clue where it is and it makes very bad decisions about where to authenticate and where to get resources
-from so whenever in a large organization where you have DHCP servers and and
-you're adding scopes to your DHCP servers it's important that every time you add a scope you also associate it
-with a site and have some sort of process to ensure that happens in Active Directory
-so those are some tips on sites and subnets and then finally there is
-replication and as I mentioned replication has proven to be quite good
-our networks are quite fast and if you have multiple sites let's go back yet
-one more time here if have multiple sites defined so we've now
-defined three sites Antwerp new Brussels and New York and we have domain
-controllers in Antwerp and New York they are going to replicate with each other using what's called inter site
-replication within a site if you've got multiple domain controllers let's say
-you've with two domain controllers in Antwerp two domain controllers in New York those domain controllers will
-replicate with what's called entrust site replication now in trust site replication is very very very fast when
-a domain controller gets a change it tells its partners I've got to change
-you want to come get it and the partners come and get the change and that usually happens within about fifteen or thirty
-seconds so replication is very fast using what's called notification based replication one domain controller
-notifies its partner that it has changes between sites it's very different between sites there's a process called
-poling where the bridge head server from one site calls up the bridge head server
-from the other site and says do you have any changes and that poling can only happen at a minimum of 15 minutes so
-there can be a very big time lapse between when a user is added to a group
-in New York and when that user can actually be part of that group in Antwerp that time lapses can be very
-painful and and it really doesn't help much if you have relatively good connectivity if you have good
-connectivity between these two sites there's no reason why you should be waiting 15 minutes to get those changes
-and what you can do is you can implement what's called notification based replication between the sites so that
-allows the inter site replication to happen at the same 15 to 30 second
-interval as the intra site replication and I have one customer who has offices
-all over the world they changed their site replication to entrust to
-notification based replication and now their entire global Active Directory converges in 37 seconds and what that
-means is any change that's made anywhere in the world within an average of 37 seconds makes it to every other domain
-controller in the world and as long as you have relatively decent connectivity that's perfectly
-fine because the amount of traffic that is replicated doesn't increase that much
-when you use notification based replication the same changes have to make it across the wire the difference
-is you're not waiting 15 minutes and getting a whole bunch of changes you're getting changes as they happen a more
-steady stream of small changes so notification based replication is another big change that I encourage you
-to help your your employers in your enterprises understand any questions on
-site subnets replication that those kinds of pieces okay
-now on to administrative roles you're you are or you're going to be an administrator of Active Directory it's
-very important that you follow the best practice of having multiple accounts you need to have one account for you as a
-user and you need to have other accounts that have privileges and that's a very common best practice I hope you've all
-learned that so you you log on as a user without privileges and then you use run
-as to run your administrative tools with higher-level credentials and if you are
-also a domain administrator I encourage you to have a third account that is at
-that level because on a day-to-day basis you don't need to be a domain administrator you can be you can have an
-administrative account that has the permissions it needs to manage users and manage groups and manage computers and
-you can use that second account on a day to day basis the only time you need to be a domain or
-an enterprise administrator is when you're making very significant changes and so it's best to isolate that into
-yet a third account if you are that privileged in your organization now in addition there are certain accounts in
-Active Directory that already are highly privileged of course including the domain administrator account the
-administrator account in the domain that account is super privileged so it is an
-account you really never should log on as you can create your own account that has lots of privileges but keep that
-account reserved for emergencies and I have a lot of my big clients lock it
-down to the point we're in order to log on as the domain administrator two people each have part
-of a password that together can be used to break into that one account and log on to it you also have groups in Active
-Directory that have a lot of power domain administrators Enterprise admins schema admins and these groups should be
-kept empty for the most part so let's take a quick look at these groups here
-so we have domain admins Enterprise admins schema admins also falls into
-this group there's really no need for these accounts to have very many users
-in them so keep them as empty as possible and again perhaps with special
-identities that you really only need when they're necessary with this schema admins group specifically can remain
-completely empty until the time when you Ackman need to make a schema change and then there are some specific groups that
-are legacy groups that you need to watch out for these are the built-in groups and they all have the word operators in
-them these print operators server operators backup operators these
-accounts are highly problematic they were put into Active Directory in order
-to support backward compatibility with Windows and T they have too many privileges in Active Directory they're
-over credentialed they don't align with business requirements today and additionally if you put an account in
-one of these groups it becomes protected in such a way that the permissions that apply to that account are different than they would
-normally be it becomes more difficult to change that accounts password and all kinds of other things happen as well and
-if you want some details on the on exactly what I'm talking about you can look up admin SD holder which is the
-problem that happens when you add an account to these so instead of using these groups don't and create your own
-groups that have the privileges they need to do a backup you can give any group the right to backup a server you
-can give any group the right to log on to a server you can delegate management of user accounts do it with custom
-groups rather than using these legacy groups and Active Directory and also do
-be sure to audit changes to these groups particularly domain admins Windows Server now includes directory
-service change auditing where you can audit exactly who added a specific user
-or group to domain admins and who took them out and you want to make sure you're auditing that and keeping it an
-eye on it sorry I hit escape accident
-okay on the topic of user accounts most
-of us were all familiar with user accounts and we know that users have a logon name the problem with the logon
-name is that it has to be unique within the domain and a lot of companies don't have very good standards to ensure
-uniqueness I know companies who use first name last initial for example Dan H and that becomes
-difficult because as soon as you have another Dan h1 user has to have a name that's not really their name so what I
-encourage you to to the head towards is the old user logon name should be something that
-is unique in the domain and unique for that user such as their employee ID or I
-have some clients who actually allow users to pick their own user name like you would on Twitter or something like that and then you don't use that to log
-on instead use the user principal name to log on the user principal name is another attribute of your user account
-and it has to be unique within the forest but the advantage of user principal name is that it looks like and
-it can be your email address so if I look at one of my employees accounts we
-can see that their user logon name is Adam bar at contoso com which is also
-his email address so that becomes very easy for users to remember they just log on with their email address and their
-password and they think of it as their email address it just happens that the user principal name is the same as their
-email address also consider renaming the administrator account that doesn't
-technically add any security but it adds manageability too so that if someone is
-accidentally logging on as administrator on their workstation but they forgot to choose the local machine and they're
-still logging on to the domain they don't start creating audit trees in the domain so I do encourage you to rename the administrator couches
-for manageability and then come passwords you have users within usernames and passwords and all of us
-are used to this idea of you need an eight character password with complexity those eight character or six character
-passwords with complexity aren't really that secure and the problem with complexity is that it becomes difficult
-for users to remember and difficult for them to type and one of the biggest
-risks for passwords is actually users having so much trouble remembering them
-that they write them down right stick them on a post-it note under their keyboard or on their monitor instead encourage users to use phrases to use
-sentences when you do the math a three word password is far more secure than a
-6 character complex password so if my password is Antwerp is fun that's a very
-very very secure password it's easy for me to remember and it's easy for me to type quickly so that if someone is you
-know watching me it's tougher for them to see what I'm doing instead of me having to hold down ctrl or shift and
-you know exclamation point so short phrases are actually more secure more
-memorable and your users will appreciate it the other thing to think about is fine-grained password policies which are
-a feature of Windows Server now relatively new that allow you to set more strict polyp policies for your
-administrative accounts and your service accounts now moving into Active
-Directory a little bit deeper one of the bad practices that I see is naming users
-with their last name first just so that you can see them in Active Directory so
-when you look at Active Directory users are sorted by name and they're sorted by the first letter in their name so if
-you're looking for Bill Gates is he under B for Bill or W for William it's kind of difficult to figure out and so
-what some companies will do is they'll do last name comma first name the problem with that and this is
-illustrated on the slide is that when you when you look under the hood at what's going on what Active Directory
-stores is actually their last name backslash , because the comma is a reserved
-character in the distinguished name it separates the components of this distinguished name so if you have a
-comma in the name it has to be escaped and that makes it tough to work with scripts and tough to work with other
-things so instead of doing last name comma first name for the username we'll find another solution for that
-which is to customize the MMC view so we can go into our views
-let's take employees for example and we can simply add the last name column so
-that when we need to sort by last name whoops I added the wrong column sorry
-last name surname so when we want to
-find a user by last name we can simply sort by that column to find them more effectively now it is okay to have the
-display name be last comma first so the display name which it shows up in the
-exchange global address list for example that's totally fine it's the common name
-of the object which is how the object is listed here that you do not want to use last name comma first name now when we
-added the last name column we actually exposed another problem with the toolset
-which is when I added the last name column to the employees oh you it also adds the last name column to every other
-view so now I see a last name column for my computer's which probably isn't very
-helpful so we're gonna need to fix that as well but that's an option for us now the last
-fifteen minutes of this session I want to start moving in two things you can do to actually administer active directly
-directory more effectively and this takes us into a concept that I call extreme and then the C consoles so the
-MMC console as I'm sure you know are the is the framework within which tools administrative tools snap in in Windows
-so if you open an empty MMC console you can start adding snap ins and you can
-say okay Active Directory users and computers I need group policy management I need let's say DFS management and you
-can create your own tools now by doing this you can create a single console
-that you can save and when you need to run your Administrative Tools you open that one console it has all the tools
-you need and of course you need to open it with your administrative credentials so you do that one time instead of every
-time you need to launch a tool having to enter a new set of a username and passwords for your administrative credentials just have one console with
-all of your tools in it so it makes it easier to run as an administrator if you have all your tools in one place and
-what we see here is a console that I built and you can see there are a lot of snap ins that I've added Active
-Directory group policy several other Active Directory tools ADSI DNS
-everything is here in one place so this is how I administer an environment like the Olympics for example so you add your
-consoles in and then it allows you to log on one time as your administrative
-account and that's much more secure and manageable for your environment and then
-in the slides which you'll be able to download there are some pointers about how to work with these consoles more
-effectively I'm not going to detail this right now just because of time but what
-I do want to show you a couple of tricks in the console the first of which is the
-link to web address snap in and out let me up the link to web address snap in is
-designed to show you a web etre a website so if you go to add the snap in
-we find link to web address click Add and we put in a URL and that will then
-create a node in the console that shows a web page which might be helpful if we have documentation that we want to
-incorporate into the MMC or an intranet site that we want to expose in the MMC but keep in mind that your MMC console
-is running as an administrator so you don't necessarily want to be going out to BitTorrent downloading things from
-this particular webpage because it will be running with your administrative credentials now one of the tricks that
-is there that is not very well documented about this nappin is that you can add a UNC path so for example I can
-I can create a path to backslash
-backslash server a one backslash data to a share and what that does is it creates
-a node that exposes the share in the MMC console now think about why this is
-helpful if I am NOT in my console and I try to go to that share I'm connecting
-to this share as my user account and my user account probably doesn't have permissions to do what I needed to do in
-this share and Windows Explorer doesn't let you run a window and explore with different credentials you can only be
-running one set of credentials in a Windows Explorer but the console is running as administrator as my
-administrative account so now I can do things like set permissions and all of that within my administrative console
-with this link to web address and happen so that's a really nice handy way to
-work with being able to connect to a server as an administrator in addition
-you want to start using saved queries now saved queries are a way of
-virtualizing your complex environment so we already saw how complex this
-environment is we have all these different OU's with the different computers we've got user accounts split
-between contractors and employees and most Windows administrators are focused
-on o use when they do administration and they constantly have to navigate down into their environment to find the right
-account and it's tough to find things instead I encourage you to never use
-your OU's instead create saved queries saved queries allow you to create a view
-based on any criteria so for example I have a view of all computers in my
-environment it doesn't matter which oh you they're in just all computers so I can quickly find
-a computer by name without any to go deep into my oh you structure so save
-queries allow you to create a view for example all users all computers all groups you can also use saved queries to
-create reports so if my manager wants me to assess wants me to report users that
-haven't logged logged on in 90 days I can actually create a saved query to do
-that I can create a new query we'll call it users who haven't logged on in 90
-days and then I can go define the query and I can pick 90 days since last logon
-so you can create reports and then you can export these reports straight from
-the MMC console with the export actually notice further down here we can create
-other types of views that show us a subset of our environment so this is a
-view that shows me administrative accounts this shows me a certain type of set of groups so I can create very nice
-virtual views of my environment and then I can administer the objects from there
-without having to worry about how complex my öyou structure actually is does that make sense
-okay one of the other benefits of saved queries is that the columns that are
-visible are per saved query so you remember I pointed out the problem with the last name column that then got added
-to computers that doesn't happen and save queries and save queries I can have a different set of columns for computers
-and a different set of columns for users so I can get very specific and give myself the information that I need in
-order to administer my environment correctly so save queries have a lot of
-benefits and the slide deck steps you through some of the things that I was just showing you now the final tip that
-I want to give you related to working effectively as an administrator is how to bring it commands
-you need into the tools that you use and let's start with in a really sort of
-simple example which is as administrators we often want to Remote
-Desktop to another machine that's very very common and we you know we can pull up the remote desktop console and we can
-type in all kinds of information and we can connect it to another machine but it would be nice to be able to right-click
-in Active Directory and say connect me to that machine we can do that as long
-as we have a command that supports a variable so for example the MS TSC
-command is the command that allows us to connect with remote desktop from the command line it takes a switch /v colon
-and then the computer name it takes a variable knowing that we can create that
-command in our console and let me show you how that works and what I'm going to show you is document it in the slide
-deck so when you want to try this the instructions are all there what we do is we create what's called a task pad we
-create a new task pad view so I'm gonna create a view we'll call it ends work
-computers and then once you've created
-the task pad view you get this area on the left that we can fill with tasks and
-we'd fill those tasks by editing the task pad view and on the tasks tab creating a new task and the type of task
-you want to create is called a shell command and again don't worry too much about the steps they are in the slides
-and the shell command this is where the magic happens here the command and the parameters so
-our command is M stsc dot exe our parameters are /v colon and then the
-computer name and the way we insert the variable of the computer name is by clicking this button and choosing name
-now windows does the rest it makes it it does this for us and you don't have to
-worry about that that's hard-coded it's done automatically and now we've got the command the parameter
-this variable of the name of the computer with that task we give it a
-friendly name let's call it remote desktop we pick an icon and when we're
-all done we can pick a computer and notice when I pick a computer my task
-appears here and this task will run that command and the variable will be the name of that computer I'm not sure I
-actually have remote desktop enabled on that server will cancel that but you can see that it's working now you take that
-further and you can add all kinds of tasks to your console to give you things
-that you need done so here's one that will show you as well opening the C Drive and opening a remote command
-prompt it's common that you want to be able to connect to the C Drive of a machine when you're trying to support it
-the way we add that task is we create
-again a new shell command the command is going to be hopefully I can remember
-this Explorer dot exe and then the parameters are backslash backslash the
-computer name backslash c colon now I'm
-doing this off the top of my head I might actually not have this perfect but we insert the variable into the command
-that we want to execute oh shoot well since I messed that up let's look at the right one to be sure
-see drive this is the 1i pre-created yep that was the right command so once we've
-got that we again can pick a computer when we pick a computer the tasks we've
-created light up and we can't open that computer see drive straight from Explorer and or straight from the MMC
-and another good example is a remote command prompt now hopefully you've
-heard of the tool PS exec PS exec is a great tool from mark russinovich who is
-now back at Microsoft you can get it from tech tech net it's free and you can
-use PS exact to run a command on a remote machine and we'll do a simple example of this which is and since we're
-running short on time I'm just gonna show you the the preset PS exec dot exe
-backslash backslash the computer name cmd.exe so this command will run PS exec
-on the remote machine and we can then do anything we need on that machine so just to show you how that works I
-click the task it opens up PS exec and PS exec is kind of like remote desktop
-except it's remote command prompt so I'm now starting a command prompt that actually is running on that machine
-contoso DC and assuming that it works here
-I can prove to you that I'm on that machine by typing the command hostname and that shows me that I am in fact on
-contoso DC so any command that you have that can accept a variable you can add
-as a task so I've got things like ipconfig /all shutdown / restart MST SC
-and gpupdate exe I've got all kinds of things that can take variables or that
-can be used with PS exec that I can do to a single machine in my environment straight from within my toolset so
-hopefully this helps you see that you can take tools that you've got and commands that you've learned and put
-them right at your fingertips so that they're much easier to use and much more discoverable and you don't have to go
-diving into your Start menu every time you need to administer your systems now the final thing I'll leave you with is
-the idea that there are often tools that you need to load as an administrator
-that are truly outside of the normal tool set there are things you need to run as an administrator like the command
-prompt itself a lot of times you just need to open up a command prompt as an administrator let me show you a great way to do that within these MMC consoles
-you can create you can add I should say a folder snap in which you can then
-rename I'm just gonna call it ant work so I've just added this folder snap in
-and I'm gonna create a task pad out of that folder and i'm gonna create what's
-called a no list task pad which basically just gives me a big blank
-window so that all i've done is create a task pad with nothing in it I'm now
-going to edit that task pad and I'm going to add any command that I as an administrator want to be able to run as
-an administrator so as a simple example CMD dot exe all by itself command prompt
-and I can even go pick the icon CMD dot exe
-so now I can launch this and because the console is already running as an
-administrator anything I launched from the task pad will also be running as an administrator so we can see it is in
-fact running as administrator so there's some great things you can do with the tools that Microsoft has given us that
-they don't document particularly well that allow you to administer your environments much more effectively could
-save queries with custom columns tasks pads that bring tools in and finally
-there is of course PowerShell which opens up all kinds of additional capabilities for automating and PowerShell can also be brought into this
-framework and you can be launching commits launching commands that in fact start a PowerShell session so for
-example I can start an interactive power sell shell session on this computer so
-hopefully this inspired you to start going looking outside the box with the
-tools that that you have as an as a Windows administrator just as a quick reminder my email address my Twitter
-handle I'm always here to answer questions for you the the tools that I've shown you I will put into a zip
-file and post later on this week so they will be up there for you and I hope that you've really enjoyed students to
-business 2011 thank you guys very much for coming and I look forward to following your success as Active
-Directory administrators thank you very much [Applause]
+# Active Directory Cleanup and Level Set for Windows 10 Computers 21-03-2023
+
+  Meeting started: 3/21/2023, 10:58:48 AM
+  Duration: 73 minutes
+  Participants: Abdullah Ollivierre, Darren Walker
+
+  [View original transcript](https://app.tactiq.io/api/2/u/m/r/X39xYVmUKJrLd71pDktC?o=txt)
+
+  
+
+  
+  
+  
+    ## Highlights
+
+    > 04:49 Abdullah Ollivierre: And and of course we have we have automated scripts for that. So really the goal is you know the intention is you don't you guys don't have to go in and manually clean up devices because we can automate all of that for you, but it's more so.
+> 13:27 Abdullah Ollivierre: In one of those packages for Microsoft is 5 like business premium or you can buy into it as a standalone license. Uh, it just just just into license and then assign that license to to those specific users and that way you don't now you can manage them through into and as opposed to group policy in WSS.
+> 17:28 Abdullah Ollivierre: To manage. So I'm just gonna give it a bogus name here called the test, and here you can manage the end user experience. And when I see the end user experience, I'm referring to those. To those notifications that you get on the right hand side in your notification center so you know when you see when you see, you know, here's a new Windows update for you or something like that. Actually, let's let's go here. No container windows. Updates. They call them the toast toast notifications. So you're you're you're basically managing. This right here.
+> 18:03 Abdullah Ollivierre: Your organization requires your advice to restart in in number of days, so this right here pick a time restart tonight, restart now those end user experiences with Windows Update for business. It is what you're managing right here. It's basically you're saying I'm gonna have an update ring for example. I'm going to have a pilot update ring for my IT people.
+> 18:54 Abdullah Ollivierre: Deferral of seven days meaning. After the update is released from Microsoft for seven days, then offer it or make it mandatory for those users right here essentially to basically apply and install the update and restart the computer to apply the update. And so in here you're essentially you're managing right there, the user experience for how it's gonna, how are you going to configure the automatic update? When is the deadline for the updates and how long?
+> 25:46 Abdullah Ollivierre: No, that's a good question. Yeah. So if you just want to get the standalone Intune license, one of the things that you will not get is the identity side, the conditional access. That's a very important feature in my opinion, because this.
+> 28:26 Abdullah Ollivierre: Yeah. So just, just going back, I think I think my recommendation is to start looking at because you know we the end, the end goal here is we would like to know.
+> 29:29 Darren Walker: So those are not connected to the domain. In past former five months for sure. Since November 7th go live date so.
+> 29:41 Darren Walker: But they are on the domain they are over here. So if it if I need to replace with another device I can do that. But the issue is. Can we at least do something that we can create a policy that it is forcing the device that are currently on the domain they are connected to the Internet and everything forced pushed the policy. They don't have to do anything. It is forced push and force installed.
+> 32:21 Abdullah Ollivierre: So you can. Yeah. So I know. I know. Because sometimes when I send these reports to to customers, they look at the report and they like Abdul. It's all grouped together. I I need the source data. I need the. I need to go back to the source. So if you need the source of those summary summary views, so actually you can delete that you can double click on any one of these summarized groupings here and it will take you back to the source data for those specific ones.
+> 47:08 Abdullah Ollivierre: Exactly. But as I said, you know the user cleanup, it's important, but it's not a requirement for the WSUS and the group policy. What I mean, generally speaking, the clean up is not an absolute requirement, but it's highly recommended that we clean up as much as we can, both specifically stale devices in before we start level set all our computers which is our desired state of the latest version of Windows 10.
+> 53:53 Darren Walker: Yes, I know that is the issue.
+> 54:41 Darren Walker: And so the the issue. The we don't have anything.
+> 57:03 Abdullah Ollivierre: Gotcha. Gotcha. OK. And with this policy right here, we're also configuring the quality update feature, update deadlines and grace periods as you saw earlier with Microsoft Intune. So this is a similar similar experience here where we're basically controlling the deadline for the update, meaning that's it. You have it within three days you must. This is your deadline, right? This you must or or in this case for you. It's zero days, so meaning it's it's immediate.
+> 58:43 Abdullah Ollivierre: So this this either option one, option two if you wanna really expedite those security patching and security updates. So those computers like the feature update is not. As urgent, it's important, but it's not as urgent as the quality update. The quality update is much more urgent than the feature update feature update does include security updates as well. Executive features, I would say, but it's more features than critical patching.
+> 01:04:50 Abdullah Ollivierre: You can you can definitely manage that. Absolutely. Absolutely. She's take a look at the schedule. So it's the synchronization schedule is automatic and synchronization per day. So does one sync per day. From Microsoft update so so it basically your WSS server will check with Microsoft update servers at least once at least once a day. Up to one once, once a day. So basically every day it will sync automatically at least once with the with with the with the windows with the Microsoft update servers and so from here you can. I check you have your KDH workstations right there. And. Those are the updates. Updates needed six. Most likely this one here is. For the most part, you have Windows 10. Uh Pro, which is which is important, of course, all updates.
+> 01:08:04 Abdullah Ollivierre: Yeah, exactly. Once, once you're caught up and you have these these regular monthly or quarterly whatever. Audits and reviews on the on the environment. But then, you know, going back to here, you can troubleshoot connection issues, synchronization issues. Umm. Let's see here. Anything unapproved approved, declined. And then according to this you have 121. So it's different numbers and different places. It's not, you know. You know, it's not. It's not a systematic or it's not a bug in the system that is reporting, you know, inconsistent numbers are different numbers. It's just the fact that. The computer, you know, it's just due to the different. Different statuses, right? It's just the where where the computer is it's it's but but the numbers are.
+> 01:10:23 Darren Walker: Yes, but the issue with the servers is if we get a some updates that might break. Few things right with the servers.
+
+  ## Transcript
+
+  00:00 Abdullah Ollivierre: Hello and.
+00:02 Darren Walker: Hello.
+00:02 Abdullah Ollivierre: Hey, how's it going?
+00:03 Darren Walker: Are you? Awesome. Awesome. I got he. Man with me here. What we share an office, just so you know.
+00:11 Abdullah Ollivierre: Nice. Yeah. Cubicle to cubicle right?
+00:16 Darren Walker: No, not even a cubicle, just a.
+00:20 Abdullah Ollivierre: Just. Yeah, at desk and two chairs.
+00:25 Darren Walker: Basically, yeah, yeah, no. You have two disk and two chairs, but. Yep.
+00:30 Abdullah Ollivierre: Yeah.
+00:33 Darren Walker: So. How? How? Ohh by the way, the Philips guy. He sent me a text. He's running late. He'll be here around 12:31. O'clock so. Just give me FYI. Tweet. So what's on the agenda this time with you? I see Active Directory clean up and level setting for Windows 10.
+01:01 Abdullah Ollivierre: Yeah. Yeah. First of all, you know. Welcome and thank you. Of course, for for being on the call. Really, for today, I don't know if you if you got a chance to just go go over my.
+01:16 Darren Walker: Yeah, we did.
+01:18 Abdullah Ollivierre: My my e-mail from yeah from Wednesday. Perfect. Sorry, I was just getting another call there. Sorry about that. Yeah, really. Just following up on our recent discussion about the updates for Windows 10 computers at at the hospital. I I did compile a detailed report on the Active Directory environment there. Now, as I mentioned, while it's not mandatory, it is highly recommended that we clean up the ad on Prem environment. But specifically focusing on stale devices. Ideally of course, we can clean up stale users as well.
+01:56 Abdullah Ollivierre: But but but I did. If we can do that before we level set all client machines to latest latest you know latest Windows 10 latest version of Windows 10. Now as of now the latest version is. AT22H2. Which translates to a 19045 is the build number and that's the latest servicing channel with with GA and and I see from.
+02:22 Darren Walker: Sorry, I've delusional. Is that Microsoft like final update or is there other updates after that?
+02:27 Abdullah Ollivierre: The the the latest feature update for Windows 10 is is 2022 H 2 correct? That's the.
+02:34 Darren Walker: Ohh that's latest song OK.
+02:34 Abdullah Ollivierre: That's the that's the latest one, right? Unless of course. You have some devices that are. I noticed that some I think we're on Windows 11, so obviously, but but those are.
+02:47 Darren Walker: No, we don't have any Windows 11 and moment not yet. Thank a lot.
+02:51 Abdullah Ollivierre: OK. Uh, yeah, actually me one second here. Pull this report over here. Uh, yeah. Did I see anything that were? Yeah, maybe that was a different environment. Never mind. Yeah. No, I don't see anyone. Just.
+03:07 Darren Walker: I think there was one Windows 11 there, but it was a test machine and we. Send it back.
+03:14 Abdullah Ollivierre: The test machine. OK, got it. Got it. So really, yeah, maybe I can. I can also hear share my screen as well.
+03:24 Darren Walker: Yes, please.
+03:26 Abdullah Ollivierre: 2nd. Uh.
+03:28 Darren Walker: Can you show us how did you compile that report? From where? Where did you compile that report?
+03:32 Abdullah Ollivierre: Yeah. Yeah. No, that's that's a great question. You much, let me actually show you here. I just gonna share my screen over and.
+03:42 Darren Walker: He does have access to. So yeah. Yeah. So OK.
+03:48 Abdullah Ollivierre: Share share screen. And that would be.
+03:56 Darren Walker: I'm sorry. That's true, right?
+04:02 Abdullah Ollivierre: Screen 2. Uh, see here. Let me know if you guys can see my screen.
+04:14 Darren Walker: Yes, we can.
+04:16 Abdullah Ollivierre: OK, perfect. I don't. So I have the the windows. When the server updates services, yeah the the when the server yeah update service is right there and and I'm not sure if you guys been here before or or pulled any reports but there are some some number of useful reports here. Now to answer your question on how did I got that report in the 1st place. So what I did I went over here on the domain controller.
+04:49 Darren Walker: Yeah.
+04:49 Abdullah Ollivierre: And and of course we have we have automated scripts for that. So really the goal is you know the intention is you don't you guys don't have to go in and manually clean up devices because we can automate all of that for you, but it's more so.
+05:07 Abdullah Ollivierre: You know, reviewing the report and and just give us the the go ahead and the green lights say, hey Abdullah, I need all these you know. And number of devices that are that have not logged in in in in X number of days to be disabled or the other way around you so either highlight the active computers and then we can let the script disable everything else or highlight the inactive ones and then basically let the script disable those and exclude everything else so we can do it either way. If you know the active ones great, we can exclude the inactive ones.
+05:44 Abdullah Ollivierre: Or sorry hit just the inactive ones and some of those or or or the other way. Uh, so if we log in here on Nova Networks on the domain admin here. Yeah, I think that's the one perfect. So what I did, I came over here on the Active Directory domain controller. Uh, do you see 01? And I generated that report based on. Based on the last logon timestamp, now something to keep in mind in Active Directory. Interestingly enough, there are two.
+06:21 Abdullah Ollivierre: Log last log on time stamps and and if you ask me why I I have no idea why they have two different ones that report two different values, but but what we do usually is that when we generate the report, we look at whatever whichever is the most recent out of the tool for each computer and then we take that.
+06:43 Abdullah Ollivierre: So based on whatever the most recent out of these two different attributes of of the last logon timestamp. Uh, we look at whatever the most recent and then and then essentially we we we we we include that in the report now I can have the report over on my screen over here. So this report is based on. It's coming directly from from your domain controllers, DC-1 and DC CO2. And So what? What I.
+07:10 Darren Walker: The last logon time means is it on the domain? I mean in the carriage environment itself. For the laptops that are outside KDH and does those count as well?
+07:22 Abdullah Ollivierre: So yeah, I know that's a great question actually meant. So basically the the the answer your question, so be the computers on the domain. So any any computer that is joined to the domain and is reporting to the domain controller, DC-1 or DC, CO2 will show up in this report. Now if those computers are not joined to the domain, they're outside of the domain, then they will not show up in this report.
+07:45 Darren Walker: No, they are joined to the domain, but they are working from home so they can. They are not connected to the Ethernet or VPN inside the hospital. They are. They're on their private. Woman Internet. So will those be reported as well or not?
+07:58 Abdullah Ollivierre: So that's, that's actually a good question. We can we can look at some samples as well, but my understanding is if those computers are are working remotely like say they're working from home and they're you know they're not. They're not communicating with the domain controller as say often like maybe you know at least once a day or once a week, or whatever the case may be, then that last logon timestamp may not be as accurate for those computers, because obviously if these computers are not routing their connection through a VPN, then they're not establishing any line of sight to the domain controller. And for that, of course, the domain controller will not know will not report accurately when was the last, like the domain controller would not up until.
+08:40 Abdullah Ollivierre: The last time it saw that computer coming to the domain control.
+08:43 Darren Walker: Yeah, yeah. So if there's no handshake.
+08:45 Abdullah Ollivierre: Exactly. Exactly. Yeah. The laptop will will. Obviously it's functional, but. Yeah.
+08:51 Darren Walker: So there are few users that don't connect to VPN after epic, they don't need to connect to VPN if they if they don't need access to gate Dr. They don't connect with to VPN right there. Everything else is alright and then everything in the background site. Usually there are few people who, OK, for example, Lynn has never been back since. Yeah, code Gray, not even code Gray since epic. COVID. Yeah. Yeah, that's true. Richard has not been an on site for since 4.
+09:21 Abdullah Ollivierre: And and and and for those. What I would recommend for those ones that are not needing to connect to the VPN, those few few few handful devices.
+09:31 Darren Walker: Yeah.
+09:31 Abdullah Ollivierre: If you look, if you look here, I'm. I'm sure you guys are familiar with this Windows Update in the settings menu here. So there are two options here. When you're when your computer is domain joined and and and managed by group policy and WSS, there's the your standard check for updates button and there's a little option right below that called. Check online for updates from Microsoft update.
+09:52 Abdullah Ollivierre: This right here is what those users that are not connected to VPN working remotely from home outside of the KDH network. They need to click on this if this option. So there are two options here. So option one and option two option one if that is grayed out or for some reason that is reporting an error if it's not working or whatever the case may be, I would advise them to use this second option right here.
+10:16 Darren Walker: So my point the my point was because if we are creating a script to remove all the machines from the domain or delete the machine or disable them from the domain.
+10:25 Abdullah Ollivierre: Mm-hmm.
+10:25 Darren Walker: And if they're not connected to the domain since past two years and they're working from home, so we'll be disabling them from the domain, right?
+10:35 Abdullah Ollivierre: Exactly. If they don't, well, he. And here's the thing, right. It's it it it's it's a it's an organization decision at the end of the day, right. It's up to you to decide. Say, you know, we need to disable. But I think from a security and from a performance point of view, it is best practice to review those reports quarterly like every three months and say hey, those devices have not reported in the last 90 days or 180 days. May as well may as well just disable them, right.
+11:02 Darren Walker: Or or we have a policy where if you are working remotely, you must log in via VPN at least once a month. So we can have a long change. Yeah, yeah.
+11:11 Abdullah Ollivierre: There you go. There you go. There you go. Yeah. If if you're working remotely and and and to basically renew that trust, trust, trust handshake with the domain controller, at least log in once every 30 days. Just just.
+11:21 Darren Walker: They did at the museum? Yes. So what happened to these devices? What will happen to these devices? That, uh well, domain.
+11:30 Abdullah Ollivierre: Now, now let me let me let me let let me ask you this. Do you guys have a Microsoft 365 in place right now? Sorry I'm not very familiar with with your with your Office 365 environment.
+11:41 Darren Walker: We don't, we don't administer it. It's done by TH. We have no administration. Yeah, it is not connected to our domain anyways, so.
+11:49 Abdullah Ollivierre: Gotcha. Gotcha. OK, So what, what I would recommend for those devices that are not connecting to VPN that are outside of the hospital. Another alternative option which is the modern option of where Microsoft is headed nowadays it's use Microsoft Intune mobile device management in order to manage Windows updates for business on those computers. That way you can have a centralized cloud based vehicle to deliver those policies.
+12:20 Abdullah Ollivierre: Those machines are not connecting on the VPN via Microsoft Intune, so if if you guys have any Microsoft Intune licensing or planning on maybe purchasing few licenses for those specific odd devices here and there that are outside the network, then that would be a viable solution for you to consider Microsoft into.
+12:40 Darren Walker: That's a license key, muffler. What's a license schema for the Intune is based just about to ask. Yeah, it's based on a per PC or or.
+12:46 Abdullah Ollivierre: It's so so both licensing schemes exist per user and per device. However, the per device is very rare. I have very rarely seen. A organizations using the per device. It's usually it's like 99% of the time you'll see the per user licensing scheme, but both both licensing scheme exists, but the per user is the most popular and most efficient. So you would basically license those in Office 365 per user. So for example if you have John, Sarah, Amanda and so on, you would buy a license for each one of them. Now as far as licensing for Intune, you can either have an Intune license bundled up in.
+13:27 Abdullah Ollivierre: In one of those packages for Microsoft is 5 like business premium or you can buy into it as a standalone license. Uh, it just just just into license and then assign that license to to those specific users and that way you don't now you can manage them through into and as opposed to group policy in WSS.
+13:45 Darren Walker: Yeah. OK. Yes, good. Thank you. Intune is also used for the Mac devices because they cannot connect to the domain in that way, right? That's why Intune is used in those devices to please be sort of part of domain in a way. So you log in right now to a front end with Intune. Uh, on my Mac? No, I mean just generally 2. Can you do have an administration we right now or we don't have no. OK.
+14:11 Abdullah Ollivierre: So no admin to the intern whatsoever. OK, so that's that might be something that we can we can have on the radar at some point for for you guys maybe to explore, right. And if you guys need any bouncing ideas or need any guidance on that please let me know. But just to kind of here, I have a sandbox environment. Just give you a little bit of a I'm not sure if you've seen the the management portal before, but. For for the for the cloud, the cloud environment, just turn off here. There we go. Uh, you're able guys to see this portal? Here's our devices.
+14:43 Abdullah Ollivierre: Right there is here where we manage the different platform is devices Windows, iOS, Mac, Android, Chrome and more. Most recently I would say Linux and Chrome are are the two recent additions to this to this catalog. Yeah for platform support, but obviously Windows and Mac are Windows obviously would be given its Microsoft would be the most popular platform and then iOS Mac OS.
+15:10 Darren Walker: A question so Intune can manage uh MDM as well, right? Mobile devices as well cell phones.
+15:15 Abdullah Ollivierre: That's that's exactly right. So as you can see on the left side here, I mentioned you can manage iOS, iPad OS, you can also manage Android OS and Intune is exactly that. It's like you said it's a mobile device management solution that allows you think of it like this modern vehicle to deliver applications and policies to your devices. So in the back in time.
+15:40 Abdullah Ollivierre: Uh, you know, back then, you know, back in the day, I guess we used to manage, you know, our computers within the network using group policies and SCCM and WDS US Now instead. Organizations that are starting in the cloud or hybrid organizations like yourself are seriously looking at Intune as this modern vehicle cloud based vehicle to deliver applications and policies to devices that are not on the domain that are not needing to connect to the VPN anymore. So it's a VPN less approach to management and so from here.
+16:15 Darren Walker: Nice seamless. I like that.
+16:15 Abdullah Ollivierre: Yeah, it's, it's it's a lovely approach. And so from here in in, obviously you know when you when you. By that per user per per month license of Intune, you expect certain things to to to to, you know, out of the platform. So for example, you know, in in this case you're updates, so the manager Windows updates those three options right here on the left side that I'm hovering over. So the first being the update rings, the feature updates and the quality updates, feature updates is what we're our desired state.
+16:47 Abdullah Ollivierre: You know and and and the reason we're having this call in the 1st place is to have the.
+16:51 Darren Walker: And Adi's policies by default installed on these intunes? Or we have to configure them?
+16:57 Abdullah Ollivierre: So configuring the policy itself is is not done for you out-of-the-box. You have to do it unless you're subscribed to. There's a paid service on top of the Intune license called Microsoft Autopatch, but that's yet another premium add-on from Microsoft. However, if you're just subscribed to the baseline Microsoft Intune subscription per user per month, then you can go to update rings and here where you create a profile.
+17:28 Abdullah Ollivierre: To manage. So I'm just gonna give it a bogus name here called the test, and here you can manage the end user experience. And when I see the end user experience, I'm referring to those. To those notifications that you get on the right hand side in your notification center so you know when you see when you see, you know, here's a new Windows update for you or something like that. Actually, let's let's go here. No container windows. Updates. They call them the toast toast notifications. So you're you're you're basically managing. This right here.
+18:03 Abdullah Ollivierre: Your organization requires your advice to restart in in number of days, so this right here pick a time restart tonight, restart now those end user experiences with Windows Update for business. It is what you're managing right here. It's basically you're saying I'm gonna have an update ring for example. I'm going to have a pilot update ring for my IT people.
+18:24 Abdullah Ollivierre: I to have the Windows updates like feature updates and quality updates to be rolled out to those the group of it people because they're in the pilot group as soon as possible, so I'm gonna have deferrals for zero days, meaning the maturity, the age of that update is immediate, 00 means immediate. So it roll it out immediately to the pilot group and then you can create another update ring, basically a second ring, call it just for the sake of simplicity, call it the everyone else or broad group and then you can have.
+18:54 Abdullah Ollivierre: Deferral of seven days meaning. After the update is released from Microsoft for seven days, then offer it or make it mandatory for those users right here essentially to basically apply and install the update and restart the computer to apply the update. And so in here you're essentially you're managing right there, the user experience for how it's gonna, how are you going to configure the automatic update? When is the deadline for the updates and how long?
+19:27 Abdullah Ollivierre: Before the update is offered and and and and and made mandatory to those devices right there in the in the different players. So obviously this is a very light touch compared to WSLS is like the fancy rose rice. Solution to manage Windows updates but in Intune today this is how we how we do it through update rings and and there's the other two options for feature updates. This is where you log the devices on a certain measure version of Windows. So for example I'm running on my computer right now. Let's see here Windows 10220219045 which is the latest build as of today from Microsoft or Windows 10 servicing channel.
+20:13 Abdullah Ollivierre: Now, if I'm not ready to roll 22H2 to all my my my managed devices, my managed computers I can freeze. I can sort of quote UN quote lock my computers on a certain feature update. So that I can buy more time as an IT professional as as an IT group I can buy myself more time to do further testing on on the newest version of the Windows 10 before I roll it out to everybody else. So right here I can create a profile.
+20:44 Abdullah Ollivierre: Sort of buy myself a little more time. You can just give it a bogus name here and right there. Feature updated deploy. I can select which feature update, which means your version of Windows I need to lock. So for example some organizations they're not ready to roll out or to even offer users Windows 11. So I don't want my users to be able to upgrade their computers to Windows 11 so I can go right here and freeze or sort of quote UN quote lock their devices so they will never be offered the Windows 11 upgrade on their computers.
+21:14 Darren Walker: And and and. How do you specify that freeze just?
+21:18 Abdullah Ollivierre: Yeah, I so I can select it right here from the drop down menu. I can say, yeah, I I can. I can say which which measure version of Windows I want to freeze these computers on SQL they will never be offered any. Now keep in mind if they were already on a newer version from what you've selected here.
+21:36 Darren Walker: Right.
+21:41 Abdullah Ollivierre: If they're already running Windows 11, they're not going to go back to Windows, Windows 10. However, if they're already, if they're running a equal or less than your desired state, then of course it will. That computer will stay.
+21:58 Darren Walker: And is there any way for the end user story? Is there any way for the end user to override that that freeze no.
+22:02 Abdullah Ollivierre: If they get the policy, no, unless unless they have an admin on their computer.
+22:07 Darren Walker: All right, cool.
+22:09 Abdullah Ollivierre: Yeah, if if you have, if you have a local admin on your machine, you can do pretty much anything.
+22:12 Darren Walker: Yeah.
+22:13 Abdullah Ollivierre: Right. Yeah, of course. It never, never give. Unless, of course, you know, if you have a specific, you know, group of people that you give admin to, obviously we we expect them to be responsible about what they do with their admin. But yeah, unless unless they have admin, if they have a standard user, any policies you would push through group policy or through this modern vehicle called Microsoft Intune, it's not, it's not possible to override that. And that's and that's the power of this essentially it gives you the IT pretty much.
+22:44 Abdullah Ollivierre: All, all the control that you want. The the the last thing here in in this year is quality updates. Quality updates is where where you have those expedited cycle for essentially for you know for security updates and bug fixes and things like that. Yeah, that's kind of sort of a quick overview of how this back, you know the the back end of Microsoft Intune, this new modern cloud based environment looks like.
+23:12 Darren Walker: It's $28.00 a month for user 20 a month. Wow, I don't think so. 300 bucks a year. OK.
+23:21 Abdullah Ollivierre: How sorry. What was that? What was that? What was that pricing?
+23:25 Darren Walker: $28.00 per user per month.
+23:27 Abdullah Ollivierre: That's. Yeah, that's where the that's where the business premium and my recommendation is to get the business premium because it's the the best value for your buck. However, you can buy just the Microsoft Intune license, let's recommend it to be honest with you. Like for example I, Microsoft, Intune license standalone, if you just wanna buy it by itself.
+23:49 Abdullah Ollivierre: That would be. Part of EMS as well, but. I think. That would be somewhere, don't I? Don't don't. Don't. Don't call me on the number, but. But I think around 8:00 or 9 Canadian dollars, a user a month. If you just wanna buy the the standalone license for India.
+24:09 Darren Walker: OK.
+24:10 Abdullah Ollivierre: So the the this is the EMS E3. Endpoint management Endpoint management is is the when you see the the, the, the the word endpoint management, that's the code word for Intune.
+24:21 Darren Walker: Ohh OK.
+24:22 Abdullah Ollivierre: Uh, yeah, so mobile app management, MDM and MDM is is is so you can as I said you know you can get into it as part of bundles either the Microsoft 365 business premium, the one you guys just highlighted there $28.00. Plus whatever. Uh applicable taxes per user per month or another bundle is the EMS bundle. It's a little more cost effective bundle, so that's another recommended bundle to look at. Or you can buy the standalone Intune license if you're working with an MSP or channel there for $8.00 user month as well. So you have different options to either get the bundles or the standalone.
+24:59 Abdullah Ollivierre: I depending on where you are, my commendations to give that I know the business stream is little more on the. I would say the higher end, but it gives you a lot of other security features that you will find very helpful as you're as you're managing those devices through Microsoft intern because you're end state might not just be Windows updates. I may wanna also roll out compliance policies to these devices and that's where I think that's where the other features in the business premium comes into place. Like these compliance policies. That's your end state is like I wanna make sure that these devices are healthy or unhealthy, are they compliant or in compliant.
+25:34 Abdullah Ollivierre: With, with with the, with the company's policies. So.
+25:38 Darren Walker: If we just wanted the basic basic endpoint management, they're bucks a month. Well, what functionality don't we get? You know off.
+25:46 Abdullah Ollivierre: No, that's a good question. Yeah. So if you just want to get the standalone Intune license, one of the things that you will not get is the identity side, the conditional access. That's a very important feature in my opinion, because this.
+26:03 Abdullah Ollivierre: Can can can do not? Can block access. If they don't have their firewall turned on, for example, or if they don't have an antivirus installed on their computer, or if they're antivirus is out of date, so using conditional access policies or depending on which IP they're coming from, so conditional access is very powerful way to control access to your organization's resources and data. Your Office 365. So that's one of the things that you will not get if you just go with the standalone into and license. However you go with the business.
+26:35 Darren Walker: But does this include the Office 365 outlook license as well? Or it is just the? Endpoint management and security.
+26:45 Abdullah Ollivierre: Good question. So if you go with the Microsoft 365 business premium.
+26:49 Darren Walker: We don't, we don't want the business premium because we Office 365 is managed by Auto Hospital. So we cannot have a different. E-mail to myself. That's why the 365. Really doesn't work for us but scheme.
+27:07 Abdullah Ollivierre: So the business premium does include Word, Excel and Outlook. If that answers question as well as OneDrive. So you can simply upgrade those existing licenses that you have to business premium without and you won't lose your e-mail or domain or any settings. It's just as simple license upgrade.
+27:23 Darren Walker: But we don't have admin access to the Exchange Office 365.
+27:28 Abdullah Ollivierre: I see gotcha, but yeah.
+27:31 Darren Walker: So that doesn't make any sense.
+27:33 Abdullah Ollivierre: Yeah, yeah, I know for sure. And so, so, in, in this case, you know, as I said, depending on your requirements, you know you can you can either buy it as a bundle of that doesn't make sense for your organization. You can also consider buying the standalone license or if you wanna buy the somewhere, like if you wanna go somewhere in between the business premium and the standalone, the EMS, the enterprise Mobility Security package is also another good option to look at because that one.
+27:57 Darren Walker: So is there something cheaper than the $8.00 month option?
+27:59 Abdullah Ollivierre: I know that for Intune, for, for.
+28:02 Darren Walker: In tunes, no, there might be other another MDM solutions personal.
+28:06 Abdullah Ollivierre: Yeah, you you would probably want to look at other MDM solutions but but in two and four you know with what it offers for 8/8 ish, $9 Canadian a user a month, I think it's pretty good.
+28:17 Darren Walker: Ohk. OK. How are you giving 2 minutes.
+28:19 Abdullah Ollivierre: Yeah.
+28:20 Darren Walker: OK, So what can be done for WSS server right now?
+28:26 Abdullah Ollivierre: Yeah. So just, just going back, I think I think my recommendation is to start looking at because you know we the end, the end goal here is we would like to know.
+28:39 Abdullah Ollivierre: We'd like to know the final count of how many devices that are truly not running the latest version of Windows 10, like as of now, when we look at these computers right here I see a lot of computers. I see a lot of room for cleanup and so if we look at these computers right here, I see at least 171 that are not disabled. So I wanted I wanted to also check with you to see if these numbers make sense to you. If we truly have 171 computers.
+29:09 Abdullah Ollivierre: Yeah.
+29:09 Darren Walker: So we do have, we do have the those many computers, but with the epic came in we got so many TH devices that are on TH net sub I mean domain. So we have to take those clinical devices back which is which are on the shelves right now.
+29:29 Abdullah Ollivierre: Right.
+29:29 Darren Walker: So those are not connected to the domain. In past former five months for sure. Since November 7th go live date so.
+29:40 Abdullah Ollivierre: I see.
+29:41 Darren Walker: But they are on the domain they are over here. So if it if I need to replace with another device I can do that. But the issue is. Can we at least do something that we can create a policy that it is forcing the device that are currently on the domain they are connected to the Internet and everything forced pushed the policy. They don't have to do anything. It is forced push and force installed.
+30:12 Darren Walker: And then rebooted within two days or three days time after the policy I've after the update is installed. Force reboot. If they don't reboot themselves.
+30:24 Abdullah Ollivierre: Yeah. Yeah, no, absolutely. So, actually, let's take a look at what you have today.
+30:29 Darren Walker: And meanwhile I can I can go through all the devices that we have on the network and we all start disabling the device so I can connect with you and we can delete those devices from the network or disable them or whatever you suggest. We can do that.
+30:43 Abdullah Ollivierre: Yeah, no, absolutely. So I'm looking at the. This report here as well, so this is the computers report, not the users report, so reporting on users is different from reporting on computers just to keep that in mind. So within more than 180 days you have 300 and. 56 devices that are listed in Active Directory that have not logged in within.
+31:09 Darren Walker: Surveillance set these up, everything.
+31:12 Abdullah Ollivierre: More than 180 days. And then obviously you're most used domain controller is your DC-1. And then DCL two is acting as a. You know, as a as as yeah, as as a, as a secondary or a backup essentially. So they're both active right now, of DC-1 is a primary and you know you're looking at this year's ideally what we'd like to do, gentlemen, is, is to clean up as much as we can so that when we're doing these, this upkeep, this ongoing reporting and reviews on your Active Directory domain domain environment.
+31:48 Abdullah Ollivierre: Uh, we we get accurate reports and and and and as as as much as possible of of device count that truly needs to be on the latest version of Windows 10. Like based on what I'm looking at here, 22 out of your 171 are already running the latest build which is 2202. So that's fine. So this is good. So actually we can highlight this with green and by the way, I don't know if you know this the report that I sent you you can double click on this number right here in Microsoft Excel.
+32:15 Darren Walker: Yeah.
+32:16 Abdullah Ollivierre: And it will show you just those 22 computers right here.
+32:19 Darren Walker: OK, that I didn't know.
+32:21 Abdullah Ollivierre: So you can. Yeah. So I know. I know. Because sometimes when I send these reports to to customers, they look at the report and they like Abdul. It's all grouped together. I I need the source data. I need the. I need to go back to the source. So if you need the source of those summary summary views, so actually you can delete that you can double click on any one of these summarized groupings here and it will take you back to the source data for those specific ones.
+32:47 Darren Walker: That's cool. It's so sorry. Abdullah. I have to step out with that Phillips guy for those carts. So I'll let you stay here with you, man, but appreciate your help there.
+32:55 Abdullah Ollivierre: No, for sure. Thank you. There. Thank you. Uh, so yeah, really, he managed to, for example. So these ones right here. So right now if you think about it, we have 171. So if we say this 171 minus the 22 that you already have on the latest.
+33:15 Darren Walker: Yeah.
+33:16 Abdullah Ollivierre: So you have 149 devices that are not patched with the latest Windows 10 version.
+33:21 Darren Walker: Yeah, I think it would be approx 49 devices. 100 devices are not there anymore. Might be way older devices or those were replaced and those were still in the domain. Ohh not deleted.
+33:38 Abdullah Ollivierre: Gotcha. So that's that's why I meant what that by by cleaning up, right? That's why we need to do some clean up to to get to get a more accurate reflection of true device count before we start tackling. You know, policies and WSS. You know what I mean? So we need to do as as much tidy up as possible. So what I what I what I can do to help. As I said, there's two options. You can either go in on the Active Directory domain controller and clean them up manually one by one. Or if you want to highlight them on the report we can have automated scripts to do the cleanup for you as well. So there are two options you can do that.
+34:18 Darren Walker: Uh, uh. What? I was thinking is, can we create a policy that I mentioned that we can push the updates, force push the updates and install them and see within next 15 days which computers have not received the updates? We can disable them.
+34:34 Abdullah Ollivierre: Got it. Got it. I see now.
+34:36 Darren Walker: Because I don't have the computer names that are on the floor, and to be honest I don't have that much time to go to each office and check what computer is connected to two which didn't. They are used or not.
+34:49 Abdullah Ollivierre: Uh-huh
+34:54 Darren Walker: It will be much more painful than, but I know all the computers that are connected are connected with the Internet, so if we can push the policy and within next 15 days we can see which computers have not received the policy, we can disable those at A at at one shot.
+35:08 Abdullah Ollivierre: I see. OK. That's a good strategy, I think. Yeah. So right here, we can. Let's actually take a look at the. At the so you can see here. I don't know if you if you looked at the WSU S. Reporting or or the management console here before. So we have. Right there, computers needing updates. According to WSU S is 100. So again, this may or may not be exactly accurate, right? Based based on on on on the clean up. Maybe after the cleanup or maybe after we push that policy. But to answer your question, we can definitely create a policy right here. I see there are a number of group policies already in place.
+35:52 Darren Walker: Yeah.
+35:52 Abdullah Ollivierre: Uh, that are. Uh, configuring other? Settings, but I don't see. I don't see.
+36:03 Darren Walker: To this.
+36:04 Abdullah Ollivierre: W. WSU S maybe we can take a look at. Maybe those are the ones that are actually, let's look at the right there. Just see a full catalog of your policies. And.
+36:20 Darren Walker: I think WSS policy would be.
+36:23 Abdullah Ollivierre: Right there.
+36:24 Darren Walker: And yeah.
+36:25 Abdullah Ollivierre: So we have one for servers and then we have one for workstations. Now our our focus here my based on my understanding is is Windows 10 yeah, Windows 10 client workstations. We're not gonna worry too much about servers today.
+36:39 Darren Walker: Yeah.
+36:39 Abdullah Ollivierre: We're just gonna focus on, you know, essentially on on, on Windows, Windows, Windows 10 workstations. So actually, let's take a look at here at the settings and just to see what is this policy doing and who is it targeting. So. Right there. So, right there, this policy, it's it's at the computer level and it's configuring automatic updates right there. And it says. Option #4. So there are a number of options you can configure and then you have option #3 here so auto download and notify. And then auto download and schedule. So actually is is what it said to right now. So configure automatic update with option #3 auto download and notify for install. So it's not forcing the install.
+37:26 Abdullah Ollivierre: It's it's just automatically downloading the update, but it's not forcing the installation of the update right now, so we can change that if you like.
+37:35 Darren Walker: Yes, please.
+37:36 Abdullah Ollivierre: Yeah, we can definitely change that. So right here under the workstations policy, actually before we we modify this policy, I'd like to take a look to see what the scope right now it's at the workstations level here. So actually let's take a look at the workstations OU.
+37:50 Darren Walker: All the computers are in the workstation or you.
+37:54 Abdullah Ollivierre: OK, so right there is what you have. OK, so you can see that some of the olus here are labeled disabled. So my my recommendation as a best practice is. It you know it to avoid targeting disabled devices with group policies because it slows down your group policy replication. So if you have so for example if you have 1000 computer, I'm just throwing a number and then you have say 20% of those.
+38:27 Abdullah Ollivierre: You know like like say, 200 of those are disabled and you're pushing your, your, your instructing the domain controller to be pushing policy to those disabled ones as well. It's just gonna cause it's not the best practice, it's just gonna cause performance bottlenecks. You know what I mean? So as much as they can as much as possible, try to clean up this workstations OU and we can help you with that as well by going here. This actually took a look at the so right here this policy is start getting this workstations.
+38:57 Abdullah Ollivierre: And and so if we clean up this OU as much as we can, then it's gonna help help, you know, in, in, in, in streamlining the troubleshooting as well and and bringing a more accurate reflection of the device count. And so if we look here. Workstations right now we haven't, like I can see I you can see some of them are already disabled of this, you know, arrow pointing down.
+39:20 Darren Walker: Yeah.
+39:21 Abdullah Ollivierre: So this is a disabled device. Obviously you can take a look here properties under operating system. This is a Windows 10 machine and let's take a look at the object it's sitting in this OU. Obviously it's not protected from deletions, so we can go ahead and delete it if needed or move it to a separate OU like at minimum. If you don't wanna delete it. If you're not ready to delete the device object, I would say eventually let's just delete them altogether and just let's so that way when we pull these reports every week or every month.
+39:53 Abdullah Ollivierre: We get an accurate report of of of true and active devices in the in the in the controller, but I would say at least you're not. Planning or ready to the delete them for now I would say move them outside of this workstation so you so that way this policy is not having to work so hard on on keep trying, retrying, retrying on these disabled device.
+40:18 Darren Walker: So can we create a OU mentioning disabled workstations?
+40:22 Abdullah Ollivierre: Exactly. Exactly. So right here we have disabled, can be deleted and disabled checking.
+40:27 Darren Walker: Yeah. Can we just merge them and keep it 1 outside? That was station and yeah.
+40:35 Abdullah Ollivierre: Yeah. So what I would recommend is in this case, and of course if it's a bulk job, we can, we can we have scripts for that, but we can create a new organizational unit right there at the top level.
+40:49 Darren Walker: Yeah.
+40:50 Abdullah Ollivierre: And. And we also want to make sure that those you know at the top level, they're not. Work workstations.
+41:00 Darren Walker: Don't stations disabled?
+41:02 Abdullah Ollivierre: Disabled or or something like that, right? You know right there.
+41:08 Darren Walker: So it's working in the server room. So it's working. Why Wi-Fi mean? I think in my thing is not catching the right. Yeah, yeah. Yeah.
+41:22 Abdullah Ollivierre: And right there, we can move this over here.
+41:27 Darren Walker: Yes.
+41:28 Abdullah Ollivierre: And then going forward, him and what we can do, you know, as I say, it's a shared responsibility and a collective effort just to make sure that we're. Core you know quarterly at least every three months, we're reviewing the just doing an audit on the on the domain controller and see what is disabled and just move them to this area right here. That way this policy is not working so hard to retry every time on disabled and it's a best practice, right, best practice.
+41:55 Darren Walker: Definitely yes, and I'll I'll make sure to delete those workstations from that you OU as well frequently.
+42:00 Abdullah Ollivierre: Yes, yes, exactly. Eventually, yes. So once you once you're ready, you say, you know, I know for a fact these devices are disabled and they're never gonna come back to the domain controller, just delete them all together. That way, when we pull this report right here. This number is gonna be more more accurate than. Yeah, exactly that way, because right now you have a lot of devices that are showing, like for example, 356 devices that are showing more than 180 days ago. I bet you a lot of these, maybe 99% of those 356 devices I've probably. Are ready to be deleted.
+42:33 Darren Walker: Yeah, definitely.
+42:34 Abdullah Ollivierre: You know, because I see some of them are Windows XP like 45 Windows XP machines and multiple Windows Server 2008 machines.
+42:42 Darren Walker: Uh, so Windows Server 2008. I think we still have a couple of them on the on the yeah, just a couple of them. But yeah, not all of them. And yeah, we can delete all Windows XP machine for sure.
+42:55 Abdullah Ollivierre: Exactly right. Yeah, that's that's what I thought, too. Right? I'm like, you know why? Why, why? Why do we still have Windows XP machines? Like, for example, do we look here at the OS version? And we see some of these computers already disabled, I guess by by looking at false. So these are already disabled, you've got. 176 that are disabled to just good and then you have all of these 390 that they're not disabled, but some of these are running. If we go by always version. Uh by OS right there. Windows XP right here. So we've got we've got 74 devices.
+43:36 Darren Walker: And I don't think so. We have any Windows 7 devices as well in our environment.
+43:39 Abdullah Ollivierre: Yeah, you see what I'm saying? So you already have a between Windows 7 and Windows XP. You have 190 computers that we can definitely not only disable, but, but.
+43:50 Darren Walker: I'm like can we click on Windows 7 devices please?
+43:52 Abdullah Ollivierre: Definitely we can go back to the source data here. Double click on it and now it just drills down to 116 devices for Windows 7, right? And so if I. Look at this here and and I mean obviously you can see the last logon date right there. Some of these are are from 2016. And.
+44:13 Darren Walker: One of them is 2023 as well.
+44:16 Abdullah Ollivierre: Not. Not a lot, but actually we can filter on that as well. Yeah, for sure. We can do a filter.
+44:21 Darren Walker: Which one? Epilepsy W 68. Yeah, we can delete all these off. That's fine. If they, if they are still there, I can read them to the domain.
+44:35 Abdullah Ollivierre: Yeah, exactly.
+44:37 Darren Walker: And then update them to Windows 10.
+44:38 Abdullah Ollivierre: Exactly, exactly. That's what I mean, right? So I mean, sometimes, you know, sometimes you just you try to be as careful as you can, but sometimes, you know, just disable them. And if somebody complaints, you can fix them later.
+44:50 Darren Walker: Yeah, we can disable them and put them on the different OU for sure.
+44:54 Abdullah Ollivierre: Exactly. See, that's what I mean. And this is where.
+44:56 Darren Walker: All Windows 7 and Windows XP.
+44:57 Abdullah Ollivierre: Exactly. And that's what I mean, where we can have some automated scripts to do that as well that you can run, you can run you know quarterly you can just go in and just run the script and it will scan your entire Active Directory and I'll say hey man, you've got these whatever Windows 7, Windows XP, blah blah blah. This, this, this you can just clean them up and and remove them.
+45:20 Abdullah Ollivierre: And so with that being said, as we're keeping in the upkeep of our 80 environment, as we keep you know as much as we can, if we try to keep it as clean as possible from stale users and stale devices, obviously this conversation is only focused on devices we haven't even discussed stale users yet.
+45:39 Darren Walker: Yes. So we don't have many steel users because we do delete the users, we don't disable the users, we usually delete the users from AD.
+45:49 Abdullah Ollivierre: All OK. OK, OK.
+45:50 Darren Walker: So there might be just handful of them.
+45:54 Abdullah Ollivierre: Let's take a look at the user's report here. So I pulled the this is the user report. And I see 305 users.
+46:03 Darren Walker: Just give me one second. Sorry.
+46:06 Abdullah Ollivierre: No worries.
+46:06 Darren Walker: Right. I mean.
+46:28 Darren Walker: Yeah, sorry. Go ahead.
+46:31 Abdullah Ollivierre: Uh norries. So based on the user report that I'm looking at here, human. So basically we have 305 devices. Sorry, 305 users that have not logged in in the last 180 days. Uh, that that are listed in the 80s, so that's something. But as I said, it's not a, it's not a.
+46:47 Darren Walker: So it might be the vendor accounts as well, and the group accounts. Ohh shared users account so I have to check those and delete those shared users because as I mentioned we had our own exchange before and after that we changed to Office 365 with Auto Hospital. So all the shared accounts are gone now. So we have to check those and delete those.
+47:08 Abdullah Ollivierre: Exactly. But as I said, you know the user cleanup, it's important, but it's not a requirement for the WSUS and the group policy. What I mean, generally speaking, the clean up is not an absolute requirement, but it's highly recommended that we clean up as much as we can, both specifically stale devices in before we start level set all our computers which is our desired state of the latest version of Windows 10.
+47:36 Darren Walker: Yeah.
+47:36 Abdullah Ollivierre: And so that's that is my recommendation and that's what I'd like to, you know, wanted to discuss today with you as well and and yeah and and you know, I'm happy to if you have any questions before we wrap up, I know we went over our time here, so I apologize for that but.
+47:52 Abdullah Ollivierre: But but. But yeah, I know this, this this is, you know, I think at best practice to to to consider that we start you know looking at our stale devices and clean them up as much as we can and and more importantly once we identify those stale devices with their manually or through a script and I would I would recommend that we actually we go over here at the domain controller and it moved them outside of the workstations OU and move them in fact.
+48:21 Abdullah Ollivierre: Any disabled any any device that we identify as stale and we disable them. Uh at temp temporarily at least move them out outside of the line of sight of any policy. Not just that WSS policy. So we should we should move them to a separate OU, isolate them in a separate OU that is not targeted by any group policy whatsoever. Just.
+48:43 Darren Walker: To this whole session disabled is not targeted by anything, right? It might be under the default OU itself, yeah.
+48:50 Abdullah Ollivierre: Well, well, it might be targeted, to be honest with you by by these guys right here. Like see all these policies?
+48:56 Darren Walker: Yeah, and.
+48:58 Abdullah Ollivierre: You have a number of policies right here that are at the at the like. For example, at the TH level. So even even even, by isolating this Oyu right here, it's still being targeted by any policies that are at the cache domain level. Uh, similar similar to the default domain policy right here.
+49:21 Darren Walker: Yeah. So can we exclude or is there an option can we exclude?
+49:25 Abdullah Ollivierre: You can use security filtering right here, but but that that's that's gonna overcomplicate your environment. You can use the security filtering to filter out that specific to a specific group, but but I think I think eventually my recommendation if you want the the the the the efficient option is to just completely delete this audio altogether once you are ready.
+49:50 Darren Walker: Yeah.
+49:51 Abdullah Ollivierre: I think I I think yeah. Not not only that will clean up your AD but also will clean up our our our report right here exactly. So that way when you wanna troubleshoot you say OK Abdullah I have this number of devices that are not getting the latest version of Windows 10 I say OK fine let's pull a report and then we can get an exact count that is truly reflective of say OK now we have maybe 20 or 30 or 40 computers whatever the case may be let's go after these and find out.
+50:20 Abdullah Ollivierre: What? Why the other fifty computers are getting the policy, but these 20 or 30 or 40 computers are not getting the policy because we know we are pushing the policy to all the workstations, right? Some of them are getting it and some of them that are on the same exact network are not getting it. So there may be something going on on these specific computers then or it may be something up with our domain controller. Maybe something up with our DNS or maybe something up with a WSUS. It could be a multiple different things but but once we have a more.
+50:52 Abdullah Ollivierre: Accurate reflective number then we can drill down and say, OK, let's let's focus on these. But right now it's hard to focus because there's a lot of stale devices.
+51:01 Darren Walker: Yeah. So, yeah, so can we do Windows 7 and Windows XP to all those? All that disabled for you and create A and make those changes to the policy to install instead of. Download and notify can we download and force update and? Notify the user to reboot the workstation in three days. If not, it will be forced rebooted.
+51:29 Abdullah Ollivierre: No, exactly. So actually, let's take a look at. Right here is our policy and is what we have under the WSS workstations policy right there.
+51:41 Darren Walker: Yeah.
+51:42 Abdullah Ollivierre: And actually, let's edit that policy and just go down to. Are options, so expand. And look at the auto download option under policies. And. It would be under. A windows. Admin templates right there. And then Windows components. And then there's a specific folder for it, Windows updates. And right here is where you find all the Windows Update policies that you have enabled in your environment. Now in your case you have these four enabled under this specific policy. So in your case would be configure automatic updates and you can change this option from option #3. To option to whatever other option you need. So there's 2345 and seven. Option number. For what you're looking for is probably.
+52:41 Darren Walker: Phone.
+52:41 Abdullah Ollivierre: Just number number. Number four, I think.
+52:48 Darren Walker: For right after download and can you install? Yeah.
+52:50 Abdullah Ollivierre: Yeah, and schedule the install is what you're looking for. So with option 4. Uh auto download updates and install them on the scheduled when auto selected this at the scheduled install time, Windows will automatically check, download and install updates and that's exactly what you want.
+53:06 Darren Walker: Yes, but if for example, if the schedule is at 3:00 AM, and what if they work, station is shut down at the 3:00 AM.
+53:16 Abdullah Ollivierre: Exactly. So if some of those workstations are are. There were offline. It will. It will ask the next time the device checks with the domain controller and.
+53:30 Darren Walker: And your daughter install.
+53:30 Abdullah Ollivierre: Yeah, it will grab the policy and order install, actually I mean the the device has to grab the policy at least the new the new update on the policy at least once, right? And so. But The thing is The thing is with group policies is that it's a one way communication like once you push the group policy, you don't know if it if the device received the policy or not there's.
+53:53 Darren Walker: Yes, I know that is the issue.
+53:54 Abdullah Ollivierre: Yeah, with with Intune. It's a two way communication channel. So with Intune, once you push the policy then you will know you can report on devices that did receive the policy and apply the policy or not. But with with with traditional classic group policy it's a one way St. you can only push the policy but you can you cannot. You don't get reports back that it worked or not. So that's part of the challenge there as well scheduled install date. So we can have it every day if you want.
+54:23 Darren Walker: Yeah, that's fine. I mean it.
+54:24 Abdullah Ollivierre: Yeah, but, but if, if if you're concerned about. If you have any concerns about the stability of those latest Windows updates, you know potentially breaking something that is critical in your hospital, you know what I mean. You may wanna consider.
+54:41 Darren Walker: And so the the issue. The we don't have anything.
+54:47 Abdullah Ollivierre: Critical.
+54:48 Darren Walker: That is, uh, specific. On Key DHT network that are that is tied to the Windows Update. So any application.
+54:56 Abdullah Ollivierre: I see. So you really, I mean those so so you're pretty confident that those Windows 10 workstations are not running anything too critically?
+55:05 Darren Walker: A. I think so, yeah, sort of.
+55:07 Abdullah Ollivierre: Gotcha. Gotcha. So so if if if.
+55:09 Darren Walker: And we can do second week of month for sure.
+55:12 Abdullah Ollivierre: Second, OK, so let's see.
+55:14 Darren Walker: First week or second week or whatever you suggest.
+55:16 Abdullah Ollivierre: Every OK, so every well, it's gonna be weekly. So for ohh. I see what you're saying. So maybe first week of the month. Instead of serve every week, OK.
+55:25 Darren Walker: Telling me, yeah.
+55:26 Abdullah Ollivierre: So maybe first week of the month and then scheduled.
+55:30 Darren Walker: Every day at 3:00 AM, yes.
+55:31 Abdullah Ollivierre: Every day at 3:00 AM. OK, that's good. At least with the 3:00 AM slot, we don't interrupt the users.
+55:37 Darren Walker: Yeah.
+55:37 Abdullah Ollivierre: You know with.
+55:39 Darren Walker: Yeah, definitely.
+55:39 Abdullah Ollivierre: We don't want them to hate the Windows Update experience too.
+55:42 Darren Walker: Yeah.
+55:44 Abdullah Ollivierre: You're like, oh, I just lost all my work.
+55:46 Darren Walker: Install updates for other Microsoft products as well, sure.
+55:50 Abdullah Ollivierre: Sure. Yeah, we can do that. And then we can hit apply. And so with this as you know devices the way that group policy sync cycle works, the devices check in with group policy every 90 minutes. Uh, so the next in the next expect that in the 90 minutes or so, if those devices are online and assuming assuming that line of communication between the devices and the domain controller is working and there's no issues there at the network level, of course, then within somewhere in the 90 minutes in the random random interval there it will, it will update the policy unless you know you go on that device. Another option manually run gpupdate force.
+56:33 Darren Walker: Yeah, definitely.
+56:33 Abdullah Ollivierre: To to grab the ball sees, but yeah, I don't. I don't think the computers need to necessarily reboot to get this new policy. I don't think so. That's the case. But I think as a general recommendation, I would say as it advised the users to reboot their computer at least once a week. Just. Yeah. So as in.
+56:53 Darren Walker: Yeah, that's what we do. Yeah, we tell the user, but they don't do usually, but we do send in a frequent e-mail at least once a month. Mentioning them to do the reboots.
+57:03 Abdullah Ollivierre: Gotcha. Gotcha. OK. And with this policy right here, we're also configuring the quality update feature, update deadlines and grace periods as you saw earlier with Microsoft Intune. So this is a similar similar experience here where we're basically controlling the deadline for the update, meaning that's it. You have it within three days you must. This is your deadline, right? This you must or or in this case for you. It's zero days, so meaning it's it's immediate.
+57:28 Darren Walker: Yeah.
+57:29 Abdullah Ollivierre: So. So there's there's no, there's no room here.
+57:32 Darren Walker: So what happens if the user is not connected to the domain for next three days or when the update launches? I mean, when the update hits the WSS server.
+57:41 Abdullah Ollivierre: Mm-hmm.
+57:41 Darren Walker: And the user is not connected to the domain or the Internet for next 5 days. Will it do next month or? If the grace period passes.
+57:52 Abdullah Ollivierre: So so if you wanna speed up the process, one option you can consider is to ask the users to go here and.
+58:00 Darren Walker: And click.
+58:00 Abdullah Ollivierre: Quick check for updates if you wanna, if you if you really want to expedite like for example the recently there is a a critical vulnerability for Microsoft Office outlook and I don't know if you heard about it. Yeah and.
+58:14 Darren Walker: Yeah, I saw it. Yeah.
+58:14 Abdullah Ollivierre: Yeah. So that's the critical vulnerability that needs to be patched as soon as possible. So what we have been advising people is that if you, if you've been waiting for the WSU S or the group policy to come into your computer and you're not getting that update, come here to Windows Update settings menu and click check for updates option one. If that doesn't work for you, if it's grayed out or if it's returning an error, then definitely click this other option right below that check online for updates from Microsoft Update.
+58:43 Darren Walker: Yeah.
+58:43 Abdullah Ollivierre: So this this either option one, option two if you wanna really expedite those security patching and security updates. So those computers like the feature update is not. As urgent, it's important, but it's not as urgent as the quality update. The quality update is much more urgent than the feature update feature update does include security updates as well. Executive features, I would say, but it's more features than critical patching.
+59:10 Abdullah Ollivierre: So. So that's something. Now another thing, when you're troubleshooting a certain computer and why is it not getting? Maybe I have 100 computers. All of them are getting the policy, except maybe a few computers that are not getting the policy or not getting the updates. Then you can come in here as well and click on view configured update policies right here and you can see what update policies are being pushed down to this device.
+59:33 Abdullah Ollivierre: Right there. So that's another another place to look for when you're doing your troubleshooting on these specific odd devices that are not getting the updates. And sometimes we have to troubleshoot the device further to an extent that we'll sometimes we might have just to completely reinstall Windows.
+59:50 Darren Walker: I know, I know. Then there's so many times.
+59:52 Abdullah Ollivierre: You know exactly, and and it does fix problems. You know, sometimes that you know reinstalling windows. Yeah, it fix the problems. And. And you're like, well, you know, I I I I wish I I I reinstalled windows from from the beginning but but and sometimes it's just a simple thing you know. But today these are the policies that you have on your group policy that are targeting this specific OU right here now the more we clean up this on you and the more we ensure that we are targeting what we truly need to target in this OU.
+01:00:25 Abdullah Ollivierre: The better we are in our reporting and our policy troubleshooting because as I said, you know, group policy troubleshooting is is challenging enough because it's a one way channel. You send it and you never know sometimes unless you know of course in your case you have the ECS on your side. So you can definitely use that as a reporting mechanism. There's a lot of good reports in the WSUS management console here. So under reports right there you can.
+01:00:54 Abdullah Ollivierre: I definitely take a moment and just go through some of these reports that really helpful. It can show you detailed reports, status reports, things like that. But again, those reports may not be. Exactly. Accurate as it today until we do a full clean up on the AD. But the but based on what you said, we can definitely go ahead and and clean up those Windows 7, Windows XP devices at least at least disable them and isolate them in a separate OU for now.
+01:01:21 Darren Walker: Yeah, definitely. We can put it in that workstation disabled or you.
+01:01:24 Abdullah Ollivierre: Pretty much, yeah. At least we're not. We're not having to, you know, overwork the group policy. Right. And say, hey, group policy go to these hundred devices that don't don't exist anymore.
+01:01:36 Darren Walker: Yes.
+01:01:36 Abdullah Ollivierre: Alright, exactly so.
+01:01:38 Darren Walker: One other thing. So on WSS server, do we have to check or do any settings to get new updates or does it automatically get updates and delete all updates that are not needed from the server? Do we have to do it manually?
+01:01:55 Abdullah Ollivierre: Yeah, I know that's that's a good question. My understanding is it's it's pretty it's it is automated. Let's actually take a look at. Right there, updates.
+01:02:11 Darren Walker: Thing, it's an options maybe.
+01:02:15 Abdullah Ollivierre: Yeah. So action.
+01:02:17 Darren Walker: And the water. Options.
+01:02:20 Abdullah Ollivierre: Options. Yeah, update source. What's your source, right?
+01:02:26 Darren Walker: Those are the cancellation is there.
+01:02:30 Abdullah Ollivierre: Do you want the source to be Microsoft updates?
+01:02:30 Darren Walker: Yes, please.
+01:02:32 Abdullah Ollivierre: So right there, that's your source. So. So basically what this means humans. So synchronize for Microsoft update, right? What this means is. If you have an unmanaged computer like today, if you go to Best Buy or Staples or Amazon or eBay, if you buy computer, that's that's not managed, right?
+01:02:50 Darren Walker: Just give me one second. Sorry. Yeah.
+01:02:53 Abdullah Ollivierre: No worries.
+01:03:55 Darren Walker: Yes, sorry.
+01:03:57 Abdullah Ollivierre: No worries, no worries man. So so basically today, if you have unmanaged devices, they would go directly to Microsoft servers for updates, right?
+01:04:06 Darren Walker: Yes.
+01:04:06 Abdullah Ollivierre: And and this is what this means. So what the what? The update source you have synchronized from Microsoft update and that's exactly where where the source of updates are coming from. They're directly coming from the Microsoft update servers and then using the WSUS capabilities management colleges, you can control the flow of water. Essentially you can control.
+01:04:28 Darren Walker: Yes. What do you have to manage something I mean. That we so this will download all the updates, right? The.
+01:04:37 Abdullah Ollivierre: Pretty much yes. It will sing it will. It will be exactly up to date with Microsoft updates.
+01:04:41 Darren Walker: But we have to manage something that we need. This quality updates are we don't have to install the previews or those things as well, right?
+01:04:50 Abdullah Ollivierre: You can you can definitely manage that. Absolutely. Absolutely. She's take a look at the schedule. So it's the synchronization schedule is automatic and synchronization per day. So does one sync per day. From Microsoft update so so it basically your WSS server will check with Microsoft update servers at least once at least once a day. Up to one once, once a day. So basically every day it will sync automatically at least once with the with with the with the windows with the Microsoft update servers and so from here you can. I check you have your KDH workstations right there. And. Those are the updates. Updates needed six. Most likely this one here is. For the most part, you have Windows 10. Uh Pro, which is which is important, of course, all updates.
+01:05:58 Abdullah Ollivierre: Well, here's another one for you server cleanup wizard, you can use server cleanup to free up all the computers, updates and updates for us from your server. Uh, so in something else, so I'm unused updates, computers not contacting the server. Ohh that's in. That's a that's a useful one right here. You can go through the screen up wizard to clean up anything that is not. And that's and the reason they Microsoft includes that here. I think it's the best practice to ensure that the 80 is clean right as much as possible from.
+01:06:27 Darren Walker: But this is not a D, right? It's it is just creating a cleaning day updates that are on a WSS server that are being stuck that for example.
+01:06:39 Abdullah Ollivierre: Umm
+01:06:44 Darren Walker: 2181 update it is trying to connect the 10 workstations but the three workstations are disabled or not. They are not able to connect so that update will still be there on the WSS server and it is trying to connect by connect and it so with this it will clean the 21H1 update from the server is itself right WSUS server.
+01:07:03 Abdullah Ollivierre: Correct that with the first option. Yes, you are correct with the second option right here it will. It will actually delete the actual computer itself as well. So with the first option it will delete those old updates that like 21 each one or something. But with this one here it will also delete the computer itself. This if you check this option right here.
+01:07:23 Darren Walker: So can we?
+01:07:25 Abdullah Ollivierre: So yeah, we can we can, we can use that. But as I said, you know if you wanna be extra careful before you delete them, I would say let's make sure we go through this report and disable what we need to disable like we you know, we can definitely consider this option right here once we are caught up. Once we are caught up to what we truly need. But but at this point I don't recommend using it right off the bat before making sure that we have an accurate number on the Windows 10 workstations at least. And then and then once you have an accurate number, say OK, whatever in the last 30 days that have not contacted my my WUS server, I'll just delete it.
+01:08:04 Darren Walker: OK.
+01:08:04 Abdullah Ollivierre: Yeah, exactly. Once, once you're caught up and you have these these regular monthly or quarterly whatever. Audits and reviews on the on the environment. But then, you know, going back to here, you can troubleshoot connection issues, synchronization issues. Umm. Let's see here. Anything unapproved approved, declined. And then according to this you have 121. So it's different numbers and different places. It's not, you know. You know, it's not. It's not a systematic or it's not a bug in the system that is reporting, you know, inconsistent numbers are different numbers. It's just the fact that. The computer, you know, it's just due to the different. Different statuses, right? It's just the where where the computer is it's it's but but the numbers are.
+01:08:53 Abdullah Ollivierre: Are are are you know? Are based on on what the server can and can't see. It's not necessarily a bug in the system, it's just mean sometimes going to the ADC numbers and you got come to WSS, you'll see different numbers for computers because obviously it's based on what the WCSS can see. Obviously the domain controller can will have a lot more computers to report on it, especially if it's there's any stale devices and things like that. So you might find differences in the numbers between the.
+01:09:26 Abdullah Ollivierre: AD server and the WSS server which which makes perfect sense because not all computers may be. Uh. Managed by WSS, right? And so it's just it's just different. Two different management portals or buckets. But yeah, I mean we can, we can definitely look more into your. WSU S reporting rollups approvals. Default approval rules, so you just have the default role there. Config wizard right here. Uh, we can go through that and. And see, uh, we have of course our downstream servers. Nothing there. Right there, we have OK servers and workstations. Servers you definitely want to keep your servers up to date.
+01:10:16 Darren Walker: Yeah.
+01:10:17 Abdullah Ollivierre: That those those are easy ones because they're always online, they're 24/7 online and.
+01:10:23 Darren Walker: Yes, but the issue with the servers is if we get a some updates that might break. Few things right with the servers.
+01:10:31 Darren Walker: Workstations are not that much worried about. We can reinstall the workstation. It's easier, but for the servers it is much complicated.
+01:10:39 Abdullah Ollivierre: Gotcha. Gotcha. By the way, do you still have any server 2003 in your room environment or?
+01:10:43 Darren Walker: I don't think so. Can we click and see which which are those?
+01:10:46 Abdullah Ollivierre: So these are the 13 source right there. So. I don't think so. Here's another opportunity for clean up that we can look at and potentially also run that script and.
+01:10:59 Darren Walker: Yeah.
+01:11:00 Abdullah Ollivierre: And you know the.
+01:11:02 Darren Walker: So except Katie age or three, Finn, I think. Without that, we can accept that we can delete all of them.
+01:11:12 Abdullah Ollivierre: Yeah, because the this one, even this one last logon is 2021.
+01:11:17 Darren Walker: Yeah.
+01:11:18 Abdullah Ollivierre: So was created back in 2007 and last logon is 2021, so that might be. Something I don't know. Yeah, but we we we we can double check, but yeah.
+01:11:28 Darren Walker: Yeah.
+01:11:29 Abdullah Ollivierre: But as I said, you know, if you wanna. If you wanna, if you wanna let me know about.
+01:11:34 Darren Walker: And there might be. Where are these servers located? I mean in there? They are in the service. Uh, which OU? Can we see the US as well?
+01:11:43 Abdullah Ollivierre: The container, yes. So right there a member servers.
+01:11:46 Darren Walker: OK.
+01:11:47 Abdullah Ollivierre: Yeah. Yeah. So I think, I think if you if you wanna also take a look at the report as well as I said, you know, it's not just, you know, I know it's a, it's a, it's an involved exercise, but it's not just and you know that's why we're having this discussion and looking at these reports just to look at the Windows 7, Windows XP and and also you know, potentially clean up servers and users as well. But yeah.
+01:12:11 Abdullah Ollivierre: Uh. Good. No, that that was a good call. Human. I know you're busy. I don't want to take too much of your time, but but maybe I will. Maybe I'll respond back to the e-mail as well with the, with the, the highlight some of the points that we have we discussed today and then we can go from there.
+01:12:33 Abdullah Ollivierre: Hello. No. I see.
+01:13:40 Abdullah Ollivierre: Hello. Hello. Hello.
+  
