@@ -1,5 +1,12 @@
 # Set output directory
-$OutputDir = "C:\Code\Split-longDocforOpenAI\Output"
+# $OutputDir = "C:\Code\Split-longDocforOpenAI\Output"
+
+# Get the current script directory
+$ScriptDir = Split-Path -Parent -Path $MyInvocation.MyCommand.Definition
+
+# Set output directory to the "Input" folder one level above the current directory
+$OutputDir = Join-Path -Path (Split-Path -Parent -Path $ScriptDir) -ChildPath "Output"
+
 
 # Remove any existing files in the output directory
 $existingFiles = Get-ChildItem $OutputDir -Filter "output-*.txt"
@@ -13,7 +20,15 @@ if ($existingFiles.Count -gt 0) {
 }
 
 # Read the text from the input file
-$InputText = Get-Content "C:\Code\Split-longDocforOpenAI\Input\input.txt"
+# $InputText = Get-Content "C:\Code\Split-longDocforOpenAI\Input\input.txt"
+
+
+# Set output directory to the "Input" folder one level above the current directory
+$InpuDir = Join-Path -Path (Split-Path -Parent -Path $ScriptDir) -ChildPath "Input"
+
+# Read the input text from the "input.txt" file in the "Input" folder
+$InputText = Get-Content (Join-Path -Path $InpuDir -ChildPath "Input.txt")
+
 
 # Define maximum number of words per file
 $maxWordsPerFile = 2500
