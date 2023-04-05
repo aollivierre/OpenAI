@@ -1,72 +1,217 @@
-This is part number 4
+Provide a detailed summary of the following script This is part number 4
 
-33:38 Abdullah Ollivierre: Gotcha. So that's that's why I meant what that by by cleaning up, right? That's why we need to do some clean up to to get to get a more accurate reflection of true device count before we start tackling. You know, policies and WSS. You know what I mean? So we need to do as as much tidy up as possible. So what I what I what I can do to help. As I said, there's two options. You can either go in on the Active Directory domain controller and clean them up manually one by one. Or if you want to highlight them on the report we can have automated scripts to do the cleanup for you as well. So there are two options you can do that.
-34:18 Darren Walker: Uh, uh. What? I was thinking is, can we create a policy that I mentioned that we can push the updates, force push the updates and install them and see within next 15 days which computers have not received the updates? We can disable them.
-34:34 Abdullah Ollivierre: Got it. Got it. I see now.
-34:36 Darren Walker: Because I don't have the computer names that are on the floor, and to be honest I don't have that much time to go to each office and check what computer is connected to two which didn't. They are used or not.
-34:49 Abdullah Ollivierre: Uh-huh
-34:54 Darren Walker: It will be much more painful than, but I know all the computers that are connected are connected with the Internet, so if we can push the policy and within next 15 days we can see which computers have not received the policy, we can disable those at A at at one shot.
-35:08 Abdullah Ollivierre: I see. OK. That's a good strategy, I think. Yeah. So right here, we can. Let's actually take a look at the. At the so you can see here. I don't know if you if you looked at the WSU S. Reporting or or the management console here before. So we have. Right there, computers needing updates. According to WSU S is 100. So again, this may or may not be exactly accurate, right? Based based on on on on the clean up. Maybe after the cleanup or maybe after we push that policy. But to answer your question, we can definitely create a policy right here. I see there are a number of group policies already in place.
-35:52 Darren Walker: Yeah.
-35:52 Abdullah Ollivierre: Uh, that are. Uh, configuring other? Settings, but I don't see. I don't see.
-36:03 Darren Walker: To this.
-36:04 Abdullah Ollivierre: W. WSU S maybe we can take a look at. Maybe those are the ones that are actually, let's look at the right there. Just see a full catalog of your policies. And.
-36:20 Darren Walker: I think WSS policy would be.
-36:23 Abdullah Ollivierre: Right there.
-36:24 Darren Walker: And yeah.
-36:25 Abdullah Ollivierre: So we have one for servers and then we have one for workstations. Now our our focus here my based on my understanding is is Windows 10 yeah, Windows 10 client workstations. We're not gonna worry too much about servers today.
-36:39 Darren Walker: Yeah.
-36:39 Abdullah Ollivierre: We're just gonna focus on, you know, essentially on on, on Windows, Windows, Windows 10 workstations. So actually, let's take a look at here at the settings and just to see what is this policy doing and who is it targeting. So. Right there. So, right there, this policy, it's it's at the computer level and it's configuring automatic updates right there. And it says. Option #4. So there are a number of options you can configure and then you have option #3 here so auto download and notify. And then auto download and schedule. So actually is is what it said to right now. So configure automatic update with option #3 auto download and notify for install. So it's not forcing the install.
-37:26 Abdullah Ollivierre: It's it's just automatically downloading the update, but it's not forcing the installation of the update right now, so we can change that if you like.
-37:35 Darren Walker: Yes, please.
-37:36 Abdullah Ollivierre: Yeah, we can definitely change that. So right here under the workstations policy, actually before we we modify this policy, I'd like to take a look to see what the scope right now it's at the workstations level here. So actually let's take a look at the workstations OU.
-37:50 Darren Walker: All the computers are in the workstation or you.
-37:54 Abdullah Ollivierre: OK, so right there is what you have. OK, so you can see that some of the olus here are labeled disabled. So my my recommendation as a best practice is. It you know it to avoid targeting disabled devices with group policies because it slows down your group policy replication. So if you have so for example if you have 1000 computer, I'm just throwing a number and then you have say 20% of those.
-38:27 Abdullah Ollivierre: You know like like say, 200 of those are disabled and you're pushing your, your, your instructing the domain controller to be pushing policy to those disabled ones as well. It's just gonna cause it's not the best practice, it's just gonna cause performance bottlenecks. You know what I mean? So as much as they can as much as possible, try to clean up this workstations OU and we can help you with that as well by going here. This actually took a look at the so right here this policy is start getting this workstations.
-38:57 Abdullah Ollivierre: And and so if we clean up this OU as much as we can, then it's gonna help help, you know, in, in, in, in streamlining the troubleshooting as well and and bringing a more accurate reflection of the device count. And so if we look here. Workstations right now we haven't, like I can see I you can see some of them are already disabled of this, you know, arrow pointing down.
-39:20 Darren Walker: Yeah.
-39:21 Abdullah Ollivierre: So this is a disabled device. Obviously you can take a look here properties under operating system. This is a Windows 10 machine and let's take a look at the object it's sitting in this OU. Obviously it's not protected from deletions, so we can go ahead and delete it if needed or move it to a separate OU like at minimum. If you don't wanna delete it. If you're not ready to delete the device object, I would say eventually let's just delete them altogether and just let's so that way when we pull these reports every week or every month.
-39:53 Abdullah Ollivierre: We get an accurate report of of of true and active devices in the in the in the controller, but I would say at least you're not. Planning or ready to the delete them for now I would say move them outside of this workstation so you so that way this policy is not having to work so hard on on keep trying, retrying, retrying on these disabled device.
-40:18 Darren Walker: So can we create a OU mentioning disabled workstations?
-40:22 Abdullah Ollivierre: Exactly. Exactly. So right here we have disabled, can be deleted and disabled checking.
-40:27 Darren Walker: Yeah. Can we just merge them and keep it 1 outside? That was station and yeah.
-40:35 Abdullah Ollivierre: Yeah. So what I would recommend is in this case, and of course if it's a bulk job, we can, we can we have scripts for that, but we can create a new organizational unit right there at the top level.
-40:49 Darren Walker: Yeah.
-40:50 Abdullah Ollivierre: And. And we also want to make sure that those you know at the top level, they're not. Work workstations.
-41:00 Darren Walker: Don't stations disabled?
-41:02 Abdullah Ollivierre: Disabled or or something like that, right? You know right there.
-41:08 Darren Walker: So it's working in the server room. So it's working. Why Wi-Fi mean? I think in my thing is not catching the right. Yeah, yeah. Yeah.
-41:22 Abdullah Ollivierre: And right there, we can move this over here.
-41:27 Darren Walker: Yes.
-41:28 Abdullah Ollivierre: And then going forward, him and what we can do, you know, as I say, it's a shared responsibility and a collective effort just to make sure that we're. Core you know quarterly at least every three months, we're reviewing the just doing an audit on the on the domain controller and see what is disabled and just move them to this area right here. That way this policy is not working so hard to retry every time on disabled and it's a best practice, right, best practice.
-41:55 Darren Walker: Definitely yes, and I'll I'll make sure to delete those workstations from that you OU as well frequently.
-42:00 Abdullah Ollivierre: Yes, yes, exactly. Eventually, yes. So once you once you're ready, you say, you know, I know for a fact these devices are disabled and they're never gonna come back to the domain controller, just delete them all together. That way, when we pull this report right here. This number is gonna be more more accurate than. Yeah, exactly that way, because right now you have a lot of devices that are showing, like for example, 356 devices that are showing more than 180 days ago. I bet you a lot of these, maybe 99% of those 356 devices I've probably. Are ready to be deleted.
-42:33 Darren Walker: Yeah, definitely.
-42:34 Abdullah Ollivierre: You know, because I see some of them are Windows XP like 45 Windows XP machines and multiple Windows Server 2008 machines.
-42:42 Darren Walker: Uh, so Windows Server 2008. I think we still have a couple of them on the on the yeah, just a couple of them. But yeah, not all of them. And yeah, we can delete all Windows XP machine for sure.
-42:55 Abdullah Ollivierre: Exactly right. Yeah, that's that's what I thought, too. Right? I'm like, you know why? Why, why? Why do we still have Windows XP machines? Like, for example, do we look here at the OS version? And we see some of these computers already disabled, I guess by by looking at false. So these are already disabled, you've got. 176 that are disabled to just good and then you have all of these 390 that they're not disabled, but some of these are running. If we go by always version. Uh by OS right there. Windows XP right here. So we've got we've got 74 devices.
-43:36 Darren Walker: And I don't think so. We have any Windows 7 devices as well in our environment.
-43:39 Abdullah Ollivierre: Yeah, you see what I'm saying? So you already have a between Windows 7 and Windows XP. You have 190 computers that we can definitely not only disable, but, but.
-43:50 Darren Walker: I'm like can we click on Windows 7 devices please?
-43:52 Abdullah Ollivierre: Definitely we can go back to the source data here. Double click on it and now it just drills down to 116 devices for Windows 7, right? And so if I. Look at this here and and I mean obviously you can see the last logon date right there. Some of these are are from 2016. And.
-44:13 Darren Walker: One of them is 2023 as well.
-44:16 Abdullah Ollivierre: Not. Not a lot, but actually we can filter on that as well. Yeah, for sure. We can do a filter.
-44:21 Darren Walker: Which one? Epilepsy W 68. Yeah, we can delete all these off. That's fine. If they, if they are still there, I can read them to the domain.
-44:35 Abdullah Ollivierre: Yeah, exactly.
-44:37 Darren Walker: And then update them to Windows 10.
-44:38 Abdullah Ollivierre: Exactly, exactly. That's what I mean, right? So I mean, sometimes, you know, sometimes you just you try to be as careful as you can, but sometimes, you know, just disable them. And if somebody complaints, you can fix them later.
-44:50 Darren Walker: Yeah, we can disable them and put them on the different OU for sure.
-44:54 Abdullah Ollivierre: Exactly. See, that's what I mean. And this is where.
-44:56 Darren Walker: All Windows 7 and Windows XP.
-44:57 Abdullah Ollivierre: Exactly. And that's what I mean, where we can have some automated scripts to do that as well that you can run, you can run you know quarterly you can just go in and just run the script and it will scan your entire Active Directory and I'll say hey man, you've got these whatever Windows 7, Windows XP, blah blah blah. This, this, this you can just clean them up and and remove them.
-45:20 Abdullah Ollivierre: And so with that being said, as we're keeping in the upkeep of our 80 environment, as we keep you know as much as we can, if we try to keep it as clean as possible from stale users and stale devices, obviously this conversation is only focused on devices we haven't even discussed stale users yet.
-45:39 Darren Walker: Yes. So we don't have many steel users because we do delete the users, we don't disable the users, we usually delete the users from AD.
-45:49 Abdullah Ollivierre: All OK. OK, OK.
-45:50 Darren Walker: So there might be just handful of them.
-45:54 Abdullah Ollivierre: Let's take a look at the user's report here. So I pulled the this is the user report. And I see 305 users.
-46:03 Darren Walker: Just give me one second. Sorry.
-46:06 Abdullah Ollivierre: No worries.
-46:06 Darren Walker: Right. I mean.
-46:28 Darren Walker: Yeah, sorry. Go ahead.
-46:31 Abdullah Ollivierre: Uh norries. So based on the user report that I'm looking at here, human. So basically we have 305 devices. Sorry, 305 users that have not logged in in the last 180 days. Uh, that that are listed in the 80s, so that's something. But as I said, it's not a, it's not a.
-46:47 Darren Walker: So it might be the vendor accounts as well, and the group accounts. Ohh shared users account so I have to check those and delete those shared users because as I mentioned we had our own exchange before and after that we changed to Office 365 with Auto Hospital. So all the shared accounts are gone now. So we have to check those and delete those.
+                Start-Sleep 5
+                Get-ChildItem 'Cert:\LocalMachine\My\' | ? { $_.Issuer -match "MS-Organization-Access|MS-Organization-P2P-Access \[\d+\]" } | % {
+                    Write-Host "Removing leftover Hybrid-Join certificate $($_.DnsNameList.Unicode)" -ForegroundColor Cyan
+                    Remove-Item $_.PSPath
+                }
+
+                $dsreg = dsregcmd.exe /status
+                if (!(($dsreg | Select-String "AzureAdJoined :") -match "NO")) {
+                    throw "$env:COMPUTERNAME is still joined to Azure. Run again"
+                }
+
+                # join computer to Azure again
+                "Joining $env:COMPUTERNAME to Azure"
+                Write-Verbose "by running: Get-ScheduledTask -TaskName Automatic-Device-Join | Start-ScheduledTask"
+                Get-ScheduledTask -TaskName "Automatic-Device-Join" | Start-ScheduledTask
+                while ((Get-ScheduledTask "Automatic-Device-Join" -ErrorAction silentlyContinue).state -ne "Ready") {
+                    Start-Sleep 1
+                    "Waiting for sched. task 'Automatic-Device-Join' to complete"
+                }
+                if ((Get-ScheduledTask -TaskName "Automatic-Device-Join" | Get-ScheduledTaskInfo | select -exp LastTaskResult) -ne 0) {
+                    throw "Sched. task Automatic-Device-Join failed. Is $env:COMPUTERNAME synchronized to AzureAD?"
+                }
+
+                # check certificates
+                "Waiting for certificate creation"
+                $i = 30
+                Write-Verbose "two certificates should be created in Computer Personal cert. store (issuer: MS-Organization-Access, MS-Organization-P2P-Access [$(Get-Date -Format yyyy)]"
+
+                Start-Sleep 3
+
+                while (!($hybridJoinCert = Get-ChildItem 'Cert:\LocalMachine\My\' | ? { $_.Issuer -match "MS-Organization-Access|MS-Organization-P2P-Access \[\d+\]" }) -and $i -gt 0) {
+                    Start-Sleep 3
+                    --$i
+                    $i
+                }
+
+                # check AzureAd join status
+                $dsreg = dsregcmd.exe /status
+                if (($dsreg | Select-String "AzureAdJoined :") -match "YES") {
+                    ++$AzureAdJoined
+                }
+
+                if ($hybridJoinCert -and $AzureAdJoined) {
+                    "$env:COMPUTERNAME was successfully joined to AAD again."
+                } else {
+                    $problem = @()
+
+                    if (!$AzureAdJoined) {
+                        $problem += " - computer is not AzureAD joined"
+                    }
+
+                    if (!$hybridJoinCert) {
+                        $problem += " - certificates weren't created"
+                    }
+
+                    Write-Error "Join wasn't successful:`n$($problem -join "`n")"
+                    Write-Warning "Check if device $env:COMPUTERNAME exists in AAD"
+                    Write-Warning "Run:`ngpupdate /force /target:computer"
+                    Write-Warning "You can get failure reason via manual join by running: Invoke-AsSystem -scriptBlock {dsregcmd /join /debug} -returnTranscript"
+                    throw 1
+                }
+            }
+            argumentList = $allFunctionDefs
+        }
+
+        if ($computerName -and $computerName -notin "localhost", $env:COMPUTERNAME) {
+            $param.computerName = $computerName
+        } else {
+            if (! ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
+                throw "You don't have administrator rights"
+            }
+        }
+
+        Invoke-Command @param
+    }
+
+    function Get-IntuneEnrollmentStatus {
+        <#
+        .SYNOPSIS
+        Function for checking whether computer is managed by Intune (fulfill all requirements).
+
+        .DESCRIPTION
+        Function for checking whether computer is managed by Intune (fulfill all requirements).
+        What is checked:
+        - device is AAD joined
+        - device is joined to Intune
+        - device has valid Intune certificate
+        - device has Intune sched. tasks
+        - device has Intune registry keys
+        - Intune service exists
+
+        Returns true or false.
+
+        .PARAMETER computerName
+        (optional) name of the computer to check.
+
+        .PARAMETER checkIntuneToo
+        Switch for checking Intune part too (if device is listed there).
+
+        .EXAMPLE
+        Get-IntuneEnrollmentStatus
+
+        Check Intune status on local computer.
+
+        .EXAMPLE
+        Get-IntuneEnrollmentStatus -computerName ae-50-pc
+
+        Check Intune status on computer ae-50-pc.
+
+        .EXAMPLE
+        Get-IntuneEnrollmentStatus -computerName ae-50-pc -checkIntuneToo
+
+        Check Intune status on computer ae-50-pc, plus connects to Intune and check whether ae-50-pc exists there.
+        #>
+
+        [CmdletBinding()]
+        param (
+            [string] $computerName,
+
+            [switch] $checkIntuneToo
+        )
+
+        if (!$computerName) { $computerName = $env:COMPUTERNAME }
+
+        #region get Intune data
+        if ($checkIntuneToo) {
+            $ErrActionPreference = $ErrorActionPreference
+            $ErrorActionPreference = "Stop"
+
+            try {
+                if (Get-Command Get-ADComputer -ErrorAction SilentlyContinue) {
+                    $ADObj = Get-ADComputer -Filter "Name -eq '$computerName'" -Properties Name, ObjectGUID
+                } else {
+                    Write-Verbose "Get-ADComputer command is missing, unable to get device GUID"
+                }
+
+                Connect-Graph
+
+                $intuneObj = @()
+
+                $intuneObj += Get-IntuneManagedDevice -Filter "DeviceName eq '$computerName'"
+
+                if ($ADObj.ObjectGUID) {
+                    # because of bug? computer can be listed under guid_date name in cloud
+                    $intuneObj += Get-IntuneManagedDevice -Filter "azureADDeviceId eq '$($ADObj.ObjectGUID)'" | ? DeviceName -NE $computerName
+                }
+            } catch {
+                Write-Warning "Unable to get information from Intune. $_"
+
+                # to avoid errors that device is missing from Intune
+                $intuneObj = 1
+            }
+
+            $ErrorActionPreference = $ErrActionPreference
+        }
+        #endregion get Intune data
+
+        $scriptBlock = {
+            param ($checkIntuneToo, $intuneObj)
+
+            $intuneNotJoined = 0
+
+            #region Intune checks
+            if ($checkIntuneToo) {
+                if (!$intuneObj) {
+                    ++$intuneNotJoined
+                    Write-Warning "Device is missing from Intune!"
+                }
+
+                if ($intuneObj.count -gt 1) {
+                    Write-Warning "Device is listed $($intuneObj.count) times in Intune"
+                }
+
+                $wrongIntuneName = $intuneObj.DeviceName | ? { $_ -ne $env:COMPUTERNAME }
+                if ($wrongIntuneName) {
+                    Write-Warning "Device is named as $wrongIntuneName in Intune"
+                }
+
+                $correctIntuneName = $intuneObj.DeviceName | ? { $_ -eq $env:COMPUTERNAME }
+                if ($intuneObj -and !$correctIntuneName) {
+                    ++$intuneNotJoined
+                    Write-Warning "Device has no record in Intune with correct device name"
+                }
+            }
+            #endregion Intune checks
+
+            #region dsregcmd checks
+            $dsregcmd = dsregcmd.exe /status
+            $azureAdJoined = $dsregcmd | Select-String "AzureAdJoined : YES"
+            if (!$azureAdJoined) {
+                ++$intuneNotJoined
+                Write-Warning "Device is NOT AAD joined"
+            }
+
+            $tenantName = $dsregcmd | Select-String "TenantName : .+"
+            $MDMUrl = $dsregcmd | Select-String "MdmUrl : .+"
+            if (!$tenantName -or !$MDMUrl) {
+                ++$intuneNotJoined
+                Write-Warning "Device is NOT Intune joined"
+            }
+            #endregion dsregcmd checks
+
+            #region certificate checks
+            $MDMCert = Get-ChildItem 'Cert:\LocalMachine\My\' | ? Issuer -EQ "CN=Microsoft Intune MDM Device CA"
+            if (!$MDMCert) {
+                ++$intuneNotJoined
+                Write-Warning "Intune certificate is missing"
+            } elseif ($MDMCert.NotAfter -lt (Get-Date) -or $MDMCert.NotBefore -gt (Get-Date)) {
+                ++$intuneNotJoined
+                Write-Warning "Intune certificate isn't valid"
+            }
+            #endregion certificate checks
+
+            #region sched. task checks
+            $MDMSchedTask = Get-ScheduledTask | ? { $_.TaskPath -like "*Microsoft*Windows*EnterpriseMgmt\*" -and $_.TaskName -eq "PushLaunch" }

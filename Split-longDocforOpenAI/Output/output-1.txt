@@ -1,77 +1,222 @@
-This is part number 1
+Provide a detailed summary of the following script This is part number 1
 
-# Active Directory Cleanup and Level Set for Windows 10 Computers 21-03-2023
+function Reset-IntuneEnrollment {
+    <#
+    .SYNOPSIS
+    Function for resetting device Intune management connection.
 
-  Meeting started: 3/21/2023, 10:58:48 AM
-  Duration: 73 minutes
-  Participants: Abdullah Ollivierre, Darren Walker
+    .DESCRIPTION
+    Function for resetting device Intune management connection.
 
-  [View original transcript](https://app.tactiq.io/api/2/u/m/r/X39xYVmUKJrLd71pDktC?o=txt)
+    It will:
+     - check actual Intune status on device
+     - reset Hybrid AzureAD join
+     - remove device records from Intune
+     - remove Intune connection data and invoke re-enrollment
 
-  
+    .PARAMETER computerName
+    (optional) Name of the computer.
 
-  
-  
-  
-    ## Highlights
+    .EXAMPLE
+    Reset-IntuneEnrollment
 
-    > 04:49 Abdullah Ollivierre: And and of course we have we have automated scripts for that. So really the goal is you know the intention is you don't you guys don't have to go in and manually clean up devices because we can automate all of that for you, but it's more so.
-> 13:27 Abdullah Ollivierre: In one of those packages for Microsoft is 5 like business premium or you can buy into it as a standalone license. Uh, it just just just into license and then assign that license to to those specific users and that way you don't now you can manage them through into and as opposed to group policy in WSS.
-> 17:28 Abdullah Ollivierre: To manage. So I'm just gonna give it a bogus name here called the test, and here you can manage the end user experience. And when I see the end user experience, I'm referring to those. To those notifications that you get on the right hand side in your notification center so you know when you see when you see, you know, here's a new Windows update for you or something like that. Actually, let's let's go here. No container windows. Updates. They call them the toast toast notifications. So you're you're you're basically managing. This right here.
-> 18:03 Abdullah Ollivierre: Your organization requires your advice to restart in in number of days, so this right here pick a time restart tonight, restart now those end user experiences with Windows Update for business. It is what you're managing right here. It's basically you're saying I'm gonna have an update ring for example. I'm going to have a pilot update ring for my IT people.
-> 18:54 Abdullah Ollivierre: Deferral of seven days meaning. After the update is released from Microsoft for seven days, then offer it or make it mandatory for those users right here essentially to basically apply and install the update and restart the computer to apply the update. And so in here you're essentially you're managing right there, the user experience for how it's gonna, how are you going to configure the automatic update? When is the deadline for the updates and how long?
-> 25:46 Abdullah Ollivierre: No, that's a good question. Yeah. So if you just want to get the standalone Intune license, one of the things that you will not get is the identity side, the conditional access. That's a very important feature in my opinion, because this.
-> 28:26 Abdullah Ollivierre: Yeah. So just, just going back, I think I think my recommendation is to start looking at because you know we the end, the end goal here is we would like to know.
-> 29:29 Darren Walker: So those are not connected to the domain. In past former five months for sure. Since November 7th go live date so.
-> 29:41 Darren Walker: But they are on the domain they are over here. So if it if I need to replace with another device I can do that. But the issue is. Can we at least do something that we can create a policy that it is forcing the device that are currently on the domain they are connected to the Internet and everything forced pushed the policy. They don't have to do anything. It is forced push and force installed.
-> 32:21 Abdullah Ollivierre: So you can. Yeah. So I know. I know. Because sometimes when I send these reports to to customers, they look at the report and they like Abdul. It's all grouped together. I I need the source data. I need the. I need to go back to the source. So if you need the source of those summary summary views, so actually you can delete that you can double click on any one of these summarized groupings here and it will take you back to the source data for those specific ones.
-> 47:08 Abdullah Ollivierre: Exactly. But as I said, you know the user cleanup, it's important, but it's not a requirement for the WSUS and the group policy. What I mean, generally speaking, the clean up is not an absolute requirement, but it's highly recommended that we clean up as much as we can, both specifically stale devices in before we start level set all our computers which is our desired state of the latest version of Windows 10.
-> 53:53 Darren Walker: Yes, I know that is the issue.
-> 54:41 Darren Walker: And so the the issue. The we don't have anything.
-> 57:03 Abdullah Ollivierre: Gotcha. Gotcha. OK. And with this policy right here, we're also configuring the quality update feature, update deadlines and grace periods as you saw earlier with Microsoft Intune. So this is a similar similar experience here where we're basically controlling the deadline for the update, meaning that's it. You have it within three days you must. This is your deadline, right? This you must or or in this case for you. It's zero days, so meaning it's it's immediate.
-> 58:43 Abdullah Ollivierre: So this this either option one, option two if you wanna really expedite those security patching and security updates. So those computers like the feature update is not. As urgent, it's important, but it's not as urgent as the quality update. The quality update is much more urgent than the feature update feature update does include security updates as well. Executive features, I would say, but it's more features than critical patching.
-> 01:04:50 Abdullah Ollivierre: You can you can definitely manage that. Absolutely. Absolutely. She's take a look at the schedule. So it's the synchronization schedule is automatic and synchronization per day. So does one sync per day. From Microsoft update so so it basically your WSS server will check with Microsoft update servers at least once at least once a day. Up to one once, once a day. So basically every day it will sync automatically at least once with the with with the with the windows with the Microsoft update servers and so from here you can. I check you have your KDH workstations right there. And. Those are the updates. Updates needed six. Most likely this one here is. For the most part, you have Windows 10. Uh Pro, which is which is important, of course, all updates.
-> 01:08:04 Abdullah Ollivierre: Yeah, exactly. Once, once you're caught up and you have these these regular monthly or quarterly whatever. Audits and reviews on the on the environment. But then, you know, going back to here, you can troubleshoot connection issues, synchronization issues. Umm. Let's see here. Anything unapproved approved, declined. And then according to this you have 121. So it's different numbers and different places. It's not, you know. You know, it's not. It's not a systematic or it's not a bug in the system that is reporting, you know, inconsistent numbers are different numbers. It's just the fact that. The computer, you know, it's just due to the different. Different statuses, right? It's just the where where the computer is it's it's but but the numbers are.
-> 01:10:23 Darren Walker: Yes, but the issue with the servers is if we get a some updates that might break. Few things right with the servers.
+    .NOTES
+    # How MDM (Intune) enrollment works https://techcommunity.microsoft.com/t5/intune-customer-success/support-tip-understanding-auto-enrollment-in-a-co-managed/ba-p/834780
+    #>
 
-  ## Transcript
+    [CmdletBinding()]
+    param (
+        [string] $computerName = $env:COMPUTERNAME
+    )
 
-  00:00 Abdullah Ollivierre: Hello and.
-00:02 Darren Walker: Hello.
-00:02 Abdullah Ollivierre: Hey, how's it going?
-00:03 Darren Walker: Are you? Awesome. Awesome. I got he. Man with me here. What we share an office, just so you know.
-00:11 Abdullah Ollivierre: Nice. Yeah. Cubicle to cubicle right?
-00:16 Darren Walker: No, not even a cubicle, just a.
-00:20 Abdullah Ollivierre: Just. Yeah, at desk and two chairs.
-00:25 Darren Walker: Basically, yeah, yeah, no. You have two disk and two chairs, but. Yep.
-00:30 Abdullah Ollivierre: Yeah.
-00:33 Darren Walker: So. How? How? Ohh by the way, the Philips guy. He sent me a text. He's running late. He'll be here around 12:31. O'clock so. Just give me FYI. Tweet. So what's on the agenda this time with you? I see Active Directory clean up and level setting for Windows 10.
-01:01 Abdullah Ollivierre: Yeah. Yeah. First of all, you know. Welcome and thank you. Of course, for for being on the call. Really, for today, I don't know if you if you got a chance to just go go over my.
-01:16 Darren Walker: Yeah, we did.
-01:18 Abdullah Ollivierre: My my e-mail from yeah from Wednesday. Perfect. Sorry, I was just getting another call there. Sorry about that. Yeah, really. Just following up on our recent discussion about the updates for Windows 10 computers at at the hospital. I I did compile a detailed report on the Active Directory environment there. Now, as I mentioned, while it's not mandatory, it is highly recommended that we clean up the ad on Prem environment. But specifically focusing on stale devices. Ideally of course, we can clean up stale users as well.
-01:56 Abdullah Ollivierre: But but but I did. If we can do that before we level set all client machines to latest latest you know latest Windows 10 latest version of Windows 10. Now as of now the latest version is. AT22H2. Which translates to a 19045 is the build number and that's the latest servicing channel with with GA and and I see from.
-02:22 Darren Walker: Sorry, I've delusional. Is that Microsoft like final update or is there other updates after that?
-02:27 Abdullah Ollivierre: The the the latest feature update for Windows 10 is is 2022 H 2 correct? That's the.
-02:34 Darren Walker: Ohh that's latest song OK.
-02:34 Abdullah Ollivierre: That's the that's the latest one, right? Unless of course. You have some devices that are. I noticed that some I think we're on Windows 11, so obviously, but but those are.
-02:47 Darren Walker: No, we don't have any Windows 11 and moment not yet. Thank a lot.
-02:51 Abdullah Ollivierre: OK. Uh, yeah, actually me one second here. Pull this report over here. Uh, yeah. Did I see anything that were? Yeah, maybe that was a different environment. Never mind. Yeah. No, I don't see anyone. Just.
-03:07 Darren Walker: I think there was one Windows 11 there, but it was a test machine and we. Send it back.
-03:14 Abdullah Ollivierre: The test machine. OK, got it. Got it. So really, yeah, maybe I can. I can also hear share my screen as well.
-03:24 Darren Walker: Yes, please.
-03:26 Abdullah Ollivierre: 2nd. Uh.
-03:28 Darren Walker: Can you show us how did you compile that report? From where? Where did you compile that report?
-03:32 Abdullah Ollivierre: Yeah. Yeah. No, that's that's a great question. You much, let me actually show you here. I just gonna share my screen over and.
-03:42 Darren Walker: He does have access to. So yeah. Yeah. So OK.
-03:48 Abdullah Ollivierre: Share share screen. And that would be.
-03:56 Darren Walker: I'm sorry. That's true, right?
-04:02 Abdullah Ollivierre: Screen 2. Uh, see here. Let me know if you guys can see my screen.
-04:14 Darren Walker: Yes, we can.
-04:16 Abdullah Ollivierre: OK, perfect. I don't. So I have the the windows. When the server updates services, yeah the the when the server yeah update service is right there and and I'm not sure if you guys been here before or or pulled any reports but there are some some number of useful reports here. Now to answer your question on how did I got that report in the 1st place. So what I did I went over here on the domain controller.
-04:49 Darren Walker: Yeah.
-04:49 Abdullah Ollivierre: And and of course we have we have automated scripts for that. So really the goal is you know the intention is you don't you guys don't have to go in and manually clean up devices because we can automate all of that for you, but it's more so.
-05:07 Abdullah Ollivierre: You know, reviewing the report and and just give us the the go ahead and the green lights say, hey Abdullah, I need all these you know. And number of devices that are that have not logged in in in in X number of days to be disabled or the other way around you so either highlight the active computers and then we can let the script disable everything else or highlight the inactive ones and then basically let the script disable those and exclude everything else so we can do it either way. If you know the active ones great, we can exclude the inactive ones.
-05:44 Abdullah Ollivierre: Or sorry hit just the inactive ones and some of those or or or the other way. Uh, so if we log in here on Nova Networks on the domain admin here. Yeah, I think that's the one perfect. So what I did, I came over here on the Active Directory domain controller. Uh, do you see 01? And I generated that report based on. Based on the last logon timestamp, now something to keep in mind in Active Directory. Interestingly enough, there are two.
-06:21 Abdullah Ollivierre: Log last log on time stamps and and if you ask me why I I have no idea why they have two different ones that report two different values, but but what we do usually is that when we generate the report, we look at whatever whichever is the most recent out of the tool for each computer and then we take that.
-06:43 Abdullah Ollivierre: So based on whatever the most recent out of these two different attributes of of the last logon timestamp. Uh, we look at whatever the most recent and then and then essentially we we we we we include that in the report now I can have the report over on my screen over here. So this report is based on. It's coming directly from from your domain controllers, DC-1 and DC CO2. And So what? What I.
-07:10 Darren Walker: The last logon time means is it on the domain? I mean in the carriage environment itself. For the laptops that are outside KDH and does those count as well?
+    $ErrorActionPreference = "Stop"
+
+    #region helper functions
+    function Connect-Graph {
+        <#
+        .SYNOPSIS
+        Function for connecting to Microsoft Graph.
+
+        .DESCRIPTION
+        Function for connecting to Microsoft Graph.
+        Support interactive authentication or application authentication
+        Without specifying any parameters, interactive auth. will be used.
+
+        .PARAMETER TenantId
+        ID of your tenant.
+
+        Default is "e4fb6bec-b1f4-46dc-9ab8-c67549adc56d"
+
+        .PARAMETER AppId
+        Azure AD app ID (GUID) for the application that will be used to authenticate
+
+        .PARAMETER AppSecret
+        Specifies the Azure AD app secret corresponding to the app ID that will be used to authenticate.
+        Can be generated in Azure > 'App Registrations' > SomeApp > 'Certificates & secrets > 'Client secrets'.
+
+        .PARAMETER Beta
+        Set schema to beta.
+
+        .EXAMPLE
+        Connect-Graph
+
+        .NOTES
+        Requires module Microsoft.Graph.Intune
+        #>
+
+        [CmdletBinding()]
+        [Alias("Connect-MSGraph2", "Connect-MSGraphApp2")]
+        param (
+            [string] $TenantId = "e4fb6bec-b1f4-46dc-9ab8-c67549adc56d"
+            ,
+            [string] $AppId
+            ,
+            [string] $AppSecret
+            ,
+            [switch] $beta
+        )
+
+        if (!(Get-Command Connect-MSGraph, Connect-MSGraphApp -ea silent)) {
+            throw "Module Microsoft.Graph.Intune is missing"
+        }
+
+        if ($beta) {
+            if ((Get-MSGraphEnvironment).SchemaVersion -ne "beta") {
+                $null = Update-MSGraphEnvironment -SchemaVersion beta
+            }
+        }
+
+        if ($TenantId -and $AppId -and $AppSecret) {
+            $graph = Connect-MSGraphApp -Tenant $TenantId -AppId $AppId -AppSecret $AppSecret -ea Stop
+            Write-Verbose "Connected to Intune tenant $TenantId using app-based authentication (Azure AD authentication not supported)"
+        } else {
+            $graph = Connect-MSGraph -ea Stop
+            Write-Verbose "Connected to Intune tenant $($graph.TenantId)"
+        }
+    }
+
+    function Invoke-MDMReenrollment {
+        <#
+        .SYNOPSIS
+        Function for resetting device Intune management connection.
+
+        .DESCRIPTION
+        Force re-enrollment of Intune managed devices.
+
+        It will:
+        - remove Intune certificates
+        - remove Intune scheduled tasks & registry keys
+        - force re-enrollment via DeviceEnroller.exe
+
+        .PARAMETER computerName
+        (optional) Name of the remote computer, which you want to re-enroll.
+
+        .PARAMETER asSystem
+        Switch for invoking re-enroll as a SYSTEM instead of logged user.
+
+        .EXAMPLE
+        Invoke-MDMReenrollment
+
+        Invoking re-enroll to Intune on local computer under logged user.
+
+        .EXAMPLE
+        Invoke-MDMReenrollment -computerName PC-01 -asSystem
+
+        Invoking re-enroll to Intune on computer PC-01 under SYSTEM account.
+
+        .NOTES
+        https://www.maximerastello.com/manually-re-enroll-a-co-managed-or-hybrid-azure-ad-join-windows-10-pc-to-microsoft-intune-without-loosing-current-configuration/
+
+        Based on work of MauriceDaly.
+        #>
+
+        [Alias("Invoke-IntuneReenrollment")]
+        [CmdletBinding()]
+        param (
+            [string] $computerName,
+
+            [switch] $asSystem
+        )
+
+        if ($computerName -and $computerName -notin "localhost", $env:COMPUTERNAME) {
+            if (! ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
+                throw "You don't have administrator rights"
+            }
+        }
+
+        $allFunctionDefs = "function Invoke-AsSystem { ${function:Invoke-AsSystem} }"
+
+        $scriptBlock = {
+            param ($allFunctionDefs, $asSystem)
+
+            try {
+                foreach ($functionDef in $allFunctionDefs) {
+                    . ([ScriptBlock]::Create($functionDef))
+                }
+
+                Write-Host "Checking for MDM certificate in computer certificate store"
+
+                # Check&Delete MDM device certificate
+                Get-ChildItem 'Cert:\LocalMachine\My\' | ? Issuer -EQ "CN=Microsoft Intune MDM Device CA" | % {
+                    Write-Host " - Removing Intune certificate $($_.DnsNameList.Unicode)"
+                    Remove-Item $_.PSPath
+                }
+
+                # Obtain current management GUID from Task Scheduler
+                $EnrollmentGUID = Get-ScheduledTask | Where-Object { $_.TaskPath -like "*Microsoft*Windows*EnterpriseMgmt\*" } | Select-Object -ExpandProperty TaskPath -Unique | Where-Object { $_ -like "*-*-*" } | Split-Path -Leaf
+
+                # Start cleanup process
+                if (![string]::IsNullOrEmpty($EnrollmentGUID)) {
+                    Write-Host "Current enrollment GUID detected as $([string]$EnrollmentGUID)"
+
+                    # Stop Intune Management Exention Agent and CCM Agent services
+                    Write-Host "Stopping MDM services"
+                    if (Get-Service -Name IntuneManagementExtension -ErrorAction SilentlyContinue) {
+                        Write-Host " - Stopping IntuneManagementExtension service..."
+                        Stop-Service -Name IntuneManagementExtension
+                    }
+                    if (Get-Service -Name CCMExec -ErrorAction SilentlyContinue) {
+                        Write-Host " - Stopping CCMExec service..."
+                        Stop-Service -Name CCMExec
+                    }
+
+                    # Remove task scheduler entries
+                    Write-Host "Removing task scheduler Enterprise Management entries for GUID - $([string]$EnrollmentGUID)"
+                    Get-ScheduledTask | Where-Object { $_.Taskpath -match $EnrollmentGUID } | Unregister-ScheduledTask -Confirm:$false
+                    # delete also parent folder
+                    Remove-Item -Path "$env:WINDIR\System32\Tasks\Microsoft\Windows\EnterpriseMgmt\$EnrollmentGUID" -Force
+
+                    $RegistryKeys = "HKLM:\SOFTWARE\Microsoft\Enrollments", "HKLM:\SOFTWARE\Microsoft\Enrollments\Status", "HKLM:\SOFTWARE\Microsoft\EnterpriseResourceManager\Tracked", "HKLM:\SOFTWARE\Microsoft\PolicyManager\AdmxInstalled", "HKLM:\SOFTWARE\Microsoft\PolicyManager\Providers", "HKLM:\SOFTWARE\Microsoft\Provisioning\OMADM\Accounts", "HKLM:\SOFTWARE\Microsoft\Provisioning\OMADM\Logger", "HKLM:\SOFTWARE\Microsoft\Provisioning\OMADM\Sessions"
+                    foreach ($Key in $RegistryKeys) {
+                        Write-Host "Processing registry key $Key"
+                        # Remove registry entries
+                        if (Test-Path -Path $Key) {
+                            # Search for and remove keys with matching GUID
+                            Write-Host " - GUID entry found in $Key. Removing..."
+                            Get-ChildItem -Path $Key | Where-Object { $_.Name -match $EnrollmentGUID } | Remove-Item -Recurse -Force -Confirm:$false -ErrorAction SilentlyContinue
+                        }
+                    }
+
+                    # Start Intune Management Extension Agent service
+                    Write-Host "Starting MDM services"
+                    if (Get-Service -Name IntuneManagementExtension -ErrorAction SilentlyContinue) {
+                        Write-Host " - Starting IntuneManagementExtension service..."
+                        Start-Service -Name IntuneManagementExtension
+                    }
+                    if (Get-Service -Name CCMExec -ErrorAction SilentlyContinue) {
+                        Write-Host " - Starting CCMExec service..."
+                        Start-Service -Name CCMExec
+                    }
+
+                    # Sleep
+                    Write-Host "Waiting for 30 seconds prior to running DeviceEnroller"
+                    Start-Sleep -Seconds 30
+
+                    # Start re-enrollment process
+                    Write-Host "Calling: DeviceEnroller.exe /C /AutoenrollMDM"
+                    if ($asSystem) {
+                        Invoke-AsSystem -runAs SYSTEM -scriptBlock { Start-Process -FilePath "$env:WINDIR\System32\DeviceEnroller.exe" -ArgumentList "/C /AutoenrollMDM" -NoNewWindow -Wait -PassThru }
+                    } else {
+                        Start-Process -FilePath "$env:WINDIR\System32\DeviceEnroller.exe" -ArgumentList "/C /AutoenrollMDM" -NoNewWindow -Wait -PassThru
+                    }
+                } else {

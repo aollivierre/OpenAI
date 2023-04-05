@@ -1,44 +1,213 @@
-This is part number 2
+Provide a detailed summary of the following script This is part number 2
 
-07:22 Abdullah Ollivierre: So yeah, I know that's a great question actually meant. So basically the the the answer your question, so be the computers on the domain. So any any computer that is joined to the domain and is reporting to the domain controller, DC-1 or DC, CO2 will show up in this report. Now if those computers are not joined to the domain, they're outside of the domain, then they will not show up in this report.
-07:45 Darren Walker: No, they are joined to the domain, but they are working from home so they can. They are not connected to the Ethernet or VPN inside the hospital. They are. They're on their private. Woman Internet. So will those be reported as well or not?
-07:58 Abdullah Ollivierre: So that's, that's actually a good question. We can we can look at some samples as well, but my understanding is if those computers are are working remotely like say they're working from home and they're you know they're not. They're not communicating with the domain controller as say often like maybe you know at least once a day or once a week, or whatever the case may be, then that last logon timestamp may not be as accurate for those computers, because obviously if these computers are not routing their connection through a VPN, then they're not establishing any line of sight to the domain controller. And for that, of course, the domain controller will not know will not report accurately when was the last, like the domain controller would not up until.
-08:40 Abdullah Ollivierre: The last time it saw that computer coming to the domain control.
-08:43 Darren Walker: Yeah, yeah. So if there's no handshake.
-08:45 Abdullah Ollivierre: Exactly. Exactly. Yeah. The laptop will will. Obviously it's functional, but. Yeah.
-08:51 Darren Walker: So there are few users that don't connect to VPN after epic, they don't need to connect to VPN if they if they don't need access to gate Dr. They don't connect with to VPN right there. Everything else is alright and then everything in the background site. Usually there are few people who, OK, for example, Lynn has never been back since. Yeah, code Gray, not even code Gray since epic. COVID. Yeah. Yeah, that's true. Richard has not been an on site for since 4.
-09:21 Abdullah Ollivierre: And and and and for those. What I would recommend for those ones that are not needing to connect to the VPN, those few few few handful devices.
-09:31 Darren Walker: Yeah.
-09:31 Abdullah Ollivierre: If you look, if you look here, I'm. I'm sure you guys are familiar with this Windows Update in the settings menu here. So there are two options here. When you're when your computer is domain joined and and and managed by group policy and WSS, there's the your standard check for updates button and there's a little option right below that called. Check online for updates from Microsoft update.
-09:52 Abdullah Ollivierre: This right here is what those users that are not connected to VPN working remotely from home outside of the KDH network. They need to click on this if this option. So there are two options here. So option one and option two option one if that is grayed out or for some reason that is reporting an error if it's not working or whatever the case may be, I would advise them to use this second option right here.
-10:16 Darren Walker: So my point the my point was because if we are creating a script to remove all the machines from the domain or delete the machine or disable them from the domain.
-10:25 Abdullah Ollivierre: Mm-hmm.
-10:25 Darren Walker: And if they're not connected to the domain since past two years and they're working from home, so we'll be disabling them from the domain, right?
-10:35 Abdullah Ollivierre: Exactly. If they don't, well, he. And here's the thing, right. It's it it it's it's a it's an organization decision at the end of the day, right. It's up to you to decide. Say, you know, we need to disable. But I think from a security and from a performance point of view, it is best practice to review those reports quarterly like every three months and say hey, those devices have not reported in the last 90 days or 180 days. May as well may as well just disable them, right.
-11:02 Darren Walker: Or or we have a policy where if you are working remotely, you must log in via VPN at least once a month. So we can have a long change. Yeah, yeah.
-11:11 Abdullah Ollivierre: There you go. There you go. There you go. Yeah. If if you're working remotely and and and to basically renew that trust, trust, trust handshake with the domain controller, at least log in once every 30 days. Just just.
-11:21 Darren Walker: They did at the museum? Yes. So what happened to these devices? What will happen to these devices? That, uh well, domain.
-11:30 Abdullah Ollivierre: Now, now let me let me let me let let me ask you this. Do you guys have a Microsoft 365 in place right now? Sorry I'm not very familiar with with your with your Office 365 environment.
-11:41 Darren Walker: We don't, we don't administer it. It's done by TH. We have no administration. Yeah, it is not connected to our domain anyways, so.
-11:49 Abdullah Ollivierre: Gotcha. Gotcha. OK, So what, what I would recommend for those devices that are not connecting to VPN that are outside of the hospital. Another alternative option which is the modern option of where Microsoft is headed nowadays it's use Microsoft Intune mobile device management in order to manage Windows updates for business on those computers. That way you can have a centralized cloud based vehicle to deliver those policies.
-12:20 Abdullah Ollivierre: Those machines are not connecting on the VPN via Microsoft Intune, so if if you guys have any Microsoft Intune licensing or planning on maybe purchasing few licenses for those specific odd devices here and there that are outside the network, then that would be a viable solution for you to consider Microsoft into.
-12:40 Darren Walker: That's a license key, muffler. What's a license schema for the Intune is based just about to ask. Yeah, it's based on a per PC or or.
-12:46 Abdullah Ollivierre: It's so so both licensing schemes exist per user and per device. However, the per device is very rare. I have very rarely seen. A organizations using the per device. It's usually it's like 99% of the time you'll see the per user licensing scheme, but both both licensing scheme exists, but the per user is the most popular and most efficient. So you would basically license those in Office 365 per user. So for example if you have John, Sarah, Amanda and so on, you would buy a license for each one of them. Now as far as licensing for Intune, you can either have an Intune license bundled up in.
-13:27 Abdullah Ollivierre: In one of those packages for Microsoft is 5 like business premium or you can buy into it as a standalone license. Uh, it just just just into license and then assign that license to to those specific users and that way you don't now you can manage them through into and as opposed to group policy in WSS.
-13:45 Darren Walker: Yeah. OK. Yes, good. Thank you. Intune is also used for the Mac devices because they cannot connect to the domain in that way, right? That's why Intune is used in those devices to please be sort of part of domain in a way. So you log in right now to a front end with Intune. Uh, on my Mac? No, I mean just generally 2. Can you do have an administration we right now or we don't have no. OK.
-14:11 Abdullah Ollivierre: So no admin to the intern whatsoever. OK, so that's that might be something that we can we can have on the radar at some point for for you guys maybe to explore, right. And if you guys need any bouncing ideas or need any guidance on that please let me know. But just to kind of here, I have a sandbox environment. Just give you a little bit of a I'm not sure if you've seen the the management portal before, but. For for the for the cloud, the cloud environment, just turn off here. There we go. Uh, you're able guys to see this portal? Here's our devices.
-14:43 Abdullah Ollivierre: Right there is here where we manage the different platform is devices Windows, iOS, Mac, Android, Chrome and more. Most recently I would say Linux and Chrome are are the two recent additions to this to this catalog. Yeah for platform support, but obviously Windows and Mac are Windows obviously would be given its Microsoft would be the most popular platform and then iOS Mac OS.
-15:10 Darren Walker: A question so Intune can manage uh MDM as well, right? Mobile devices as well cell phones.
-15:15 Abdullah Ollivierre: That's that's exactly right. So as you can see on the left side here, I mentioned you can manage iOS, iPad OS, you can also manage Android OS and Intune is exactly that. It's like you said it's a mobile device management solution that allows you think of it like this modern vehicle to deliver applications and policies to your devices. So in the back in time.
-15:40 Abdullah Ollivierre: Uh, you know, back then, you know, back in the day, I guess we used to manage, you know, our computers within the network using group policies and SCCM and WDS US Now instead. Organizations that are starting in the cloud or hybrid organizations like yourself are seriously looking at Intune as this modern vehicle cloud based vehicle to deliver applications and policies to devices that are not on the domain that are not needing to connect to the VPN anymore. So it's a VPN less approach to management and so from here.
-16:15 Darren Walker: Nice seamless. I like that.
-16:15 Abdullah Ollivierre: Yeah, it's, it's it's a lovely approach. And so from here in in, obviously you know when you when you. By that per user per per month license of Intune, you expect certain things to to to to, you know, out of the platform. So for example, you know, in in this case you're updates, so the manager Windows updates those three options right here on the left side that I'm hovering over. So the first being the update rings, the feature updates and the quality updates, feature updates is what we're our desired state.
-16:47 Abdullah Ollivierre: You know and and and the reason we're having this call in the 1st place is to have the.
-16:51 Darren Walker: And Adi's policies by default installed on these intunes? Or we have to configure them?
-16:57 Abdullah Ollivierre: So configuring the policy itself is is not done for you out-of-the-box. You have to do it unless you're subscribed to. There's a paid service on top of the Intune license called Microsoft Autopatch, but that's yet another premium add-on from Microsoft. However, if you're just subscribed to the baseline Microsoft Intune subscription per user per month, then you can go to update rings and here where you create a profile.
-17:28 Abdullah Ollivierre: To manage. So I'm just gonna give it a bogus name here called the test, and here you can manage the end user experience. And when I see the end user experience, I'm referring to those. To those notifications that you get on the right hand side in your notification center so you know when you see when you see, you know, here's a new Windows update for you or something like that. Actually, let's let's go here. No container windows. Updates. They call them the toast toast notifications. So you're you're you're basically managing. This right here.
-18:03 Abdullah Ollivierre: Your organization requires your advice to restart in in number of days, so this right here pick a time restart tonight, restart now those end user experiences with Windows Update for business. It is what you're managing right here. It's basically you're saying I'm gonna have an update ring for example. I'm going to have a pilot update ring for my IT people.
-18:24 Abdullah Ollivierre: I to have the Windows updates like feature updates and quality updates to be rolled out to those the group of it people because they're in the pilot group as soon as possible, so I'm gonna have deferrals for zero days, meaning the maturity, the age of that update is immediate, 00 means immediate. So it roll it out immediately to the pilot group and then you can create another update ring, basically a second ring, call it just for the sake of simplicity, call it the everyone else or broad group and then you can have.
-18:54 Abdullah Ollivierre: Deferral of seven days meaning. After the update is released from Microsoft for seven days, then offer it or make it mandatory for those users right here essentially to basically apply and install the update and restart the computer to apply the update. And so in here you're essentially you're managing right there, the user experience for how it's gonna, how are you going to configure the automatic update? When is the deadline for the updates and how long?
-19:27 Abdullah Ollivierre: Before the update is offered and and and and and made mandatory to those devices right there in the in the different players. So obviously this is a very light touch compared to WSLS is like the fancy rose rice. Solution to manage Windows updates but in Intune today this is how we how we do it through update rings and and there's the other two options for feature updates. This is where you log the devices on a certain measure version of Windows. So for example I'm running on my computer right now. Let's see here Windows 10220219045 which is the latest build as of today from Microsoft or Windows 10 servicing channel.
-20:13 Abdullah Ollivierre: Now, if I'm not ready to roll 22H2 to all my my my managed devices, my managed computers I can freeze. I can sort of quote UN quote lock my computers on a certain feature update. So that I can buy more time as an IT professional as as an IT group I can buy myself more time to do further testing on on the newest version of the Windows 10 before I roll it out to everybody else. So right here I can create a profile.
+                    throw "Unable to obtain enrollment GUID value from task scheduler. Aborting"
+                }
+            } catch [System.Exception] {
+                throw "Error message: $($_.Exception.Message)"
+            }
+        }
+
+        $param = @{
+            scriptBlock  = $scriptBlock
+            argumentList = $allFunctionDefs, $asSystem
+        }
+
+        if ($computerName -and $computerName -notin "localhost", $env:COMPUTERNAME) {
+            $param.computerName = $computerName
+        }
+
+        Invoke-Command @param
+    }
+
+    function Get-IntuneLog {
+        <#
+        .SYNOPSIS
+        Function for Intune policies debugging on client.
+        - opens Intune logs
+        - opens event viewer with Intune log
+        - generates & open MDMDiagReport.html report
+
+        .DESCRIPTION
+        Function for Intune policies debugging on client.
+        - opens Intune logs
+        - opens event viewer with Intune log
+        - generates & open MDMDiagReport.html report
+
+        .PARAMETER computerName
+        Name of remote computer.
+
+        .EXAMPLE
+        Get-IntuneLog
+        #>
+
+        [CmdletBinding()]
+        param (
+            [string] $computerName
+        )
+
+        if ($computerName -and $computerName -in "localhost", $env:COMPUTERNAME) {
+            $computerName = $null
+        }
+
+        function _openLog {
+            param (
+                [string[]] $logs
+            )
+
+            if (!$logs) { return }
+
+            # use best possible log viewer
+            $cmLogViewer = "C:\Program Files (x86)\Microsoft Endpoint Manager\AdminConsole\bin\CMLogViewer.exe"
+            $cmTrace = "$env:windir\CCM\CMTrace.exe"
+            if (Test-Path $cmLogViewer) {
+                $viewer = $cmLogViewer
+            } elseif (Test-Path $cmTrace) {
+                $viewer = $cmTrace
+            }
+
+            if ($viewer -and $viewer -match "CMLogViewer\.exe$") {
+                # open all logs in one CMLogViewer instance
+                $quotedLog = ($logs | % {
+                        "`"$_`""
+                    }) -join " "
+                Start-Process $viewer -ArgumentList $quotedLog
+            } else {
+                # cmtrace (or notepad) don't support opening multiple logs in one instance, so open each log in separate viewer process
+                foreach ($log in $logs) {
+                    if (!(Test-Path $log -ErrorAction SilentlyContinue)) {
+                        Write-Warning "Log $log wasn't found"
+                        continue
+                    }
+
+                    Write-Verbose "Opening $log"
+                    if ($viewer -and $viewer -match "CMTrace\.exe$") {
+                        # in case CMTrace viewer exists, use it
+                        Start-Process $viewer -ArgumentList "`"$log`""
+                    } else {
+                        # use associated viewer
+                        & $log
+                    }
+                }
+            }
+        }
+
+        # open main Intune logs
+        $log = "C:\ProgramData\Microsoft\IntuneManagementExtension\Logs"
+        if ($computerName) {
+            $log = "\\$computerName\" + ($log -replace ":", "$")
+        }
+        "opening logs in '$log'"
+        _openLog (Get-ChildItem $log -File | select -exp fullname)
+
+        # When a PowerShell script is run on the client from Intune, the scripts and the script output will be stored here, but only until execution is complete
+        $log = "C:\Program files (x86)\Microsoft Intune Management Extension\Policies\Scripts"
+        if ($computerName) {
+            $log = "\\$computerName\" + ($log -replace ":", "$")
+        }
+        "opening logs in '$log'"
+        _openLog (Get-ChildItem $log -File -ea SilentlyContinue | select -exp fullname)
+
+        $log = "C:\Program files (x86)\Microsoft Intune Management Extension\Policies\Results"
+        if ($computerName) {
+            $log = "\\$computerName\" + ($log -replace ":", "$")
+        }
+        "opening logs in '$log'"
+        _openLog (Get-ChildItem $log -File -ea SilentlyContinue | select -exp fullname)
+
+        # open Event Viewer with Intune Log
+        "opening event log 'Microsoft-Windows-DeviceManagement-Enterprise-Diagnostics-Provider/Admin'"
+        if ($computerName) {
+            Write-Warning "Opening remote Event Viewer can take significant time!"
+            mmc.exe eventvwr.msc /computer:$computerName /c:"Microsoft-Windows-DeviceManagement-Enterprise-Diagnostics-Provider/Admin"
+        } else {
+            mmc.exe eventvwr.msc /c:"Microsoft-Windows-DeviceManagement-Enterprise-Diagnostics-Provider/Admin"
+        }
+
+        # generate & open MDMDiagReport
+        "generating & opening MDMDiagReport"
+        if ($computerName) {
+            Write-Warning "TODO (zatim delej tak, ze spustis tuto fci lokalne pod uzivatelem, jehoz vysledky chces zjistit"
+        } else {
+            Start-Process MdmDiagnosticsTool.exe -Wait -ArgumentList "-out $env:TEMP\MDMDiag" -NoNewWindow
+            & "$env:TEMP\MDMDiag\MDMDiagReport.html"
+        }
+
+        # vygeneruje spoustu bordelu do jednoho zip souboru vhodneho k poslani mailem (bacha muze mit vic jak 5MB)
+        # Start-Process MdmDiagnosticsTool.exe -ArgumentList "-area Autopilot;DeviceEnrollment;DeviceProvisioning;TPM -zip C:\temp\aaa.zip" -Verb runas
+
+        # show DM info
+        $param = @{
+            scriptBlock = { Get-ChildItem -Path HKLM:SOFTWARE\Microsoft\Enrollments -Recurse | where { $_.Property -like "*UPN*" } }
+        }
+        if ($computerName) {
+            $param.computerName = $computerName
+        }
+        Invoke-Command @param | Format-Table
+
+        # $regKey = "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\IntuneManagementExtension\SideCarPolicies\Scripts"
+        # if (!(Get-Process regedit)) {
+        #     # set starting location for regedit
+        #     Set-ItemProperty HKCU:\Software\Microsoft\Windows\CurrentVersion\Applets\Regedit LastKey $regKey
+        #     # open regedit
+        # } else {
+        #     "To check script last run time and result check $regKey in regedit or logs located in C:\Program files (x86)\Microsoft Intune Management Extension\Policies"
+        # }
+        # regedit.exe
+    }
+
+    function Reset-HybridADJoin {
+        <#
+        .SYNOPSIS
+        Function for resetting Hybrid AzureAD join connection.
+
+        .DESCRIPTION
+        Function for resetting Hybrid AzureAD join connection.
+        It will:
+        - un-join computer from AzureAD (using dsregcmd.exe)
+        - remove leftover certificates
+        - invoke rejoin (using sched. task 'Automatic-Device-Join')
+        - inform user about the result
+
+        .PARAMETER computerName
+        (optional) name of the computer you want to rejoin.
+
+        .EXAMPLE
+        Reset-HybridADJoin
+
+        Un-join and re-join this computer to AzureAD
+
+        .NOTES
+        https://www.maximerastello.com/manually-re-register-a-windows-10-or-windows-server-machine-in-hybrid-azure-ad-join/
+        #>
+
+        [CmdletBinding()]
+        param (
+            [string] $computerName
+        )
+
+        Write-Warning "For join AzureAD process to work. Computer account has to exists in AzureAD already (should be synchronized via 'AzureAD Connect')!"
+
+        #region helper functions
+        function Invoke-AsSystem {
+            <#
+            .SYNOPSIS
+            Function for running specified code under SYSTEM account.
+
+            .DESCRIPTION
+            Function for running specified code under SYSTEM account.
+
+            Helper files and sched. tasks are automatically deleted.
+
+            .PARAMETER scriptBlock
+            Scriptblock that should be run under SYSTEM account.
+
+            .PARAMETER computerName
+            Name of computer, where to run this.
+
+            .PARAMETER returnTranscript
+            Add creating of transcript to specified scriptBlock and returns its output.
+
+            .PARAMETER cacheToDisk
+            Necessity for long scriptBlocks. Content will be saved to disk and run from there.
+
+            .PARAMETER argument
