@@ -1,44 +1,278 @@
 This is part number 2
 
-07:22 Abdullah Ollivierre: So yeah, I know that's a great question actually meant. So basically the the the answer your question, so be the computers on the domain. So any any computer that is joined to the domain and is reporting to the domain controller, DC-1 or DC, CO2 will show up in this report. Now if those computers are not joined to the domain, they're outside of the domain, then they will not show up in this report.
-07:45 Darren Walker: No, they are joined to the domain, but they are working from home so they can. They are not connected to the Ethernet or VPN inside the hospital. They are. They're on their private. Woman Internet. So will those be reported as well or not?
-07:58 Abdullah Ollivierre: So that's, that's actually a good question. We can we can look at some samples as well, but my understanding is if those computers are are working remotely like say they're working from home and they're you know they're not. They're not communicating with the domain controller as say often like maybe you know at least once a day or once a week, or whatever the case may be, then that last logon timestamp may not be as accurate for those computers, because obviously if these computers are not routing their connection through a VPN, then they're not establishing any line of sight to the domain controller. And for that, of course, the domain controller will not know will not report accurately when was the last, like the domain controller would not up until.
-08:40 Abdullah Ollivierre: The last time it saw that computer coming to the domain control.
-08:43 Darren Walker: Yeah, yeah. So if there's no handshake.
-08:45 Abdullah Ollivierre: Exactly. Exactly. Yeah. The laptop will will. Obviously it's functional, but. Yeah.
-08:51 Darren Walker: So there are few users that don't connect to VPN after epic, they don't need to connect to VPN if they if they don't need access to gate Dr. They don't connect with to VPN right there. Everything else is alright and then everything in the background site. Usually there are few people who, OK, for example, Lynn has never been back since. Yeah, code Gray, not even code Gray since epic. COVID. Yeah. Yeah, that's true. Richard has not been an on site for since 4.
-09:21 Abdullah Ollivierre: And and and and for those. What I would recommend for those ones that are not needing to connect to the VPN, those few few few handful devices.
-09:31 Darren Walker: Yeah.
-09:31 Abdullah Ollivierre: If you look, if you look here, I'm. I'm sure you guys are familiar with this Windows Update in the settings menu here. So there are two options here. When you're when your computer is domain joined and and and managed by group policy and WSS, there's the your standard check for updates button and there's a little option right below that called. Check online for updates from Microsoft update.
-09:52 Abdullah Ollivierre: This right here is what those users that are not connected to VPN working remotely from home outside of the KDH network. They need to click on this if this option. So there are two options here. So option one and option two option one if that is grayed out or for some reason that is reporting an error if it's not working or whatever the case may be, I would advise them to use this second option right here.
-10:16 Darren Walker: So my point the my point was because if we are creating a script to remove all the machines from the domain or delete the machine or disable them from the domain.
-10:25 Abdullah Ollivierre: Mm-hmm.
-10:25 Darren Walker: And if they're not connected to the domain since past two years and they're working from home, so we'll be disabling them from the domain, right?
-10:35 Abdullah Ollivierre: Exactly. If they don't, well, he. And here's the thing, right. It's it it it's it's a it's an organization decision at the end of the day, right. It's up to you to decide. Say, you know, we need to disable. But I think from a security and from a performance point of view, it is best practice to review those reports quarterly like every three months and say hey, those devices have not reported in the last 90 days or 180 days. May as well may as well just disable them, right.
-11:02 Darren Walker: Or or we have a policy where if you are working remotely, you must log in via VPN at least once a month. So we can have a long change. Yeah, yeah.
-11:11 Abdullah Ollivierre: There you go. There you go. There you go. Yeah. If if you're working remotely and and and to basically renew that trust, trust, trust handshake with the domain controller, at least log in once every 30 days. Just just.
-11:21 Darren Walker: They did at the museum? Yes. So what happened to these devices? What will happen to these devices? That, uh well, domain.
-11:30 Abdullah Ollivierre: Now, now let me let me let me let let me ask you this. Do you guys have a Microsoft 365 in place right now? Sorry I'm not very familiar with with your with your Office 365 environment.
-11:41 Darren Walker: We don't, we don't administer it. It's done by TH. We have no administration. Yeah, it is not connected to our domain anyways, so.
-11:49 Abdullah Ollivierre: Gotcha. Gotcha. OK, So what, what I would recommend for those devices that are not connecting to VPN that are outside of the hospital. Another alternative option which is the modern option of where Microsoft is headed nowadays it's use Microsoft Intune mobile device management in order to manage Windows updates for business on those computers. That way you can have a centralized cloud based vehicle to deliver those policies.
-12:20 Abdullah Ollivierre: Those machines are not connecting on the VPN via Microsoft Intune, so if if you guys have any Microsoft Intune licensing or planning on maybe purchasing few licenses for those specific odd devices here and there that are outside the network, then that would be a viable solution for you to consider Microsoft into.
-12:40 Darren Walker: That's a license key, muffler. What's a license schema for the Intune is based just about to ask. Yeah, it's based on a per PC or or.
-12:46 Abdullah Ollivierre: It's so so both licensing schemes exist per user and per device. However, the per device is very rare. I have very rarely seen. A organizations using the per device. It's usually it's like 99% of the time you'll see the per user licensing scheme, but both both licensing scheme exists, but the per user is the most popular and most efficient. So you would basically license those in Office 365 per user. So for example if you have John, Sarah, Amanda and so on, you would buy a license for each one of them. Now as far as licensing for Intune, you can either have an Intune license bundled up in.
-13:27 Abdullah Ollivierre: In one of those packages for Microsoft is 5 like business premium or you can buy into it as a standalone license. Uh, it just just just into license and then assign that license to to those specific users and that way you don't now you can manage them through into and as opposed to group policy in WSS.
-13:45 Darren Walker: Yeah. OK. Yes, good. Thank you. Intune is also used for the Mac devices because they cannot connect to the domain in that way, right? That's why Intune is used in those devices to please be sort of part of domain in a way. So you log in right now to a front end with Intune. Uh, on my Mac? No, I mean just generally 2. Can you do have an administration we right now or we don't have no. OK.
-14:11 Abdullah Ollivierre: So no admin to the intern whatsoever. OK, so that's that might be something that we can we can have on the radar at some point for for you guys maybe to explore, right. And if you guys need any bouncing ideas or need any guidance on that please let me know. But just to kind of here, I have a sandbox environment. Just give you a little bit of a I'm not sure if you've seen the the management portal before, but. For for the for the cloud, the cloud environment, just turn off here. There we go. Uh, you're able guys to see this portal? Here's our devices.
-14:43 Abdullah Ollivierre: Right there is here where we manage the different platform is devices Windows, iOS, Mac, Android, Chrome and more. Most recently I would say Linux and Chrome are are the two recent additions to this to this catalog. Yeah for platform support, but obviously Windows and Mac are Windows obviously would be given its Microsoft would be the most popular platform and then iOS Mac OS.
-15:10 Darren Walker: A question so Intune can manage uh MDM as well, right? Mobile devices as well cell phones.
-15:15 Abdullah Ollivierre: That's that's exactly right. So as you can see on the left side here, I mentioned you can manage iOS, iPad OS, you can also manage Android OS and Intune is exactly that. It's like you said it's a mobile device management solution that allows you think of it like this modern vehicle to deliver applications and policies to your devices. So in the back in time.
-15:40 Abdullah Ollivierre: Uh, you know, back then, you know, back in the day, I guess we used to manage, you know, our computers within the network using group policies and SCCM and WDS US Now instead. Organizations that are starting in the cloud or hybrid organizations like yourself are seriously looking at Intune as this modern vehicle cloud based vehicle to deliver applications and policies to devices that are not on the domain that are not needing to connect to the VPN anymore. So it's a VPN less approach to management and so from here.
-16:15 Darren Walker: Nice seamless. I like that.
-16:15 Abdullah Ollivierre: Yeah, it's, it's it's a lovely approach. And so from here in in, obviously you know when you when you. By that per user per per month license of Intune, you expect certain things to to to to, you know, out of the platform. So for example, you know, in in this case you're updates, so the manager Windows updates those three options right here on the left side that I'm hovering over. So the first being the update rings, the feature updates and the quality updates, feature updates is what we're our desired state.
-16:47 Abdullah Ollivierre: You know and and and the reason we're having this call in the 1st place is to have the.
-16:51 Darren Walker: And Adi's policies by default installed on these intunes? Or we have to configure them?
-16:57 Abdullah Ollivierre: So configuring the policy itself is is not done for you out-of-the-box. You have to do it unless you're subscribed to. There's a paid service on top of the Intune license called Microsoft Autopatch, but that's yet another premium add-on from Microsoft. However, if you're just subscribed to the baseline Microsoft Intune subscription per user per month, then you can go to update rings and here where you create a profile.
-17:28 Abdullah Ollivierre: To manage. So I'm just gonna give it a bogus name here called the test, and here you can manage the end user experience. And when I see the end user experience, I'm referring to those. To those notifications that you get on the right hand side in your notification center so you know when you see when you see, you know, here's a new Windows update for you or something like that. Actually, let's let's go here. No container windows. Updates. They call them the toast toast notifications. So you're you're you're basically managing. This right here.
-18:03 Abdullah Ollivierre: Your organization requires your advice to restart in in number of days, so this right here pick a time restart tonight, restart now those end user experiences with Windows Update for business. It is what you're managing right here. It's basically you're saying I'm gonna have an update ring for example. I'm going to have a pilot update ring for my IT people.
-18:24 Abdullah Ollivierre: I to have the Windows updates like feature updates and quality updates to be rolled out to those the group of it people because they're in the pilot group as soon as possible, so I'm gonna have deferrals for zero days, meaning the maturity, the age of that update is immediate, 00 means immediate. So it roll it out immediately to the pilot group and then you can create another update ring, basically a second ring, call it just for the sake of simplicity, call it the everyone else or broad group and then you can have.
-18:54 Abdullah Ollivierre: Deferral of seven days meaning. After the update is released from Microsoft for seven days, then offer it or make it mandatory for those users right here essentially to basically apply and install the update and restart the computer to apply the update. And so in here you're essentially you're managing right there, the user experience for how it's gonna, how are you going to configure the automatic update? When is the deadline for the updates and how long?
-19:27 Abdullah Ollivierre: Before the update is offered and and and and and made mandatory to those devices right there in the in the different players. So obviously this is a very light touch compared to WSLS is like the fancy rose rice. Solution to manage Windows updates but in Intune today this is how we how we do it through update rings and and there's the other two options for feature updates. This is where you log the devices on a certain measure version of Windows. So for example I'm running on my computer right now. Let's see here Windows 10220219045 which is the latest build as of today from Microsoft or Windows 10 servicing channel.
-20:13 Abdullah Ollivierre: Now, if I'm not ready to roll 22H2 to all my my my managed devices, my managed computers I can freeze. I can sort of quote UN quote lock my computers on a certain feature update. So that I can buy more time as an IT professional as as an IT group I can buy myself more time to do further testing on on the newest version of the Windows 10 before I roll it out to everybody else. So right here I can create a profile.
+
+Causes the parallel invocation to run as a PowerShell job. A single job object is returned instead of output from the running script blocks. The job object contains child jobs for each parallel script block that runs. The job object can be used by all PowerShell job cmdlets, to monitor running state and retrieve data. This parameter was introduced in PowerShell 7.0.
+
+Type: SwitchParameter
+
+Position: Named
+
+Default value: None
+
+Accept pipeline input: False
+
+Accept wildcard characters: False
+
+-Begin
+
+Specifies a script block that runs before this cmdlet processes any input objects. This script block is only run once for the entire pipeline. For more information about the begin block, see about_Functions.
+
+Type: ScriptBlock
+
+Position: Named
+
+Default value: None
+
+Accept pipeline input: False
+
+Accept wildcard characters: False
+
+-Confirm
+
+Prompts you for confirmation before running the cmdlet.
+
+Type: SwitchParameter
+
+Aliases: cf
+
+Position: Named
+
+Default value: False
+
+Accept pipeline input: False
+
+Accept wildcard characters: False
+
+-End
+
+Specifies a script block that runs after this cmdlet processes all input objects. This script block is only run once for the entire pipeline. For more information about the end block, see about_Functions.
+
+Type: ScriptBlock
+
+Position: Named
+
+Default value: None
+
+Accept pipeline input: False
+
+Accept wildcard characters: False
+
+-InputObject
+
+Specifies the input objects. ForEach-Object runs the script block or operation statement on each input object. Enter a variable that contains the objects, or type a command or expression that gets the objects. When you use the InputObject parameter with ForEach-Object, instead of piping command results to ForEach-Object, the InputObject value is treated as a single object. This is true even if the value is a collection that is the result of a command, such as -InputObject (Get-Process). Because InputObject cannot return individual properties from an array or collection of objects, we recommend that if you use ForEach-Object to perform operations on a collection of objects for those objects that have specific values in defined properties, you use ForEach-Object in the pipeline, as shown in the examples in this topic.
+
+Type: PSObject
+
+Position: Named
+
+Default value: None
+
+Accept pipeline input: True
+
+Accept wildcard characters: False
+
+-MemberName
+
+Specifies the property to get or the method to call. Wildcard characters are permitted, but work only if the resulting string resolves to a unique value. For example, if you run Get-Process | ForEach -MemberName *Name, the wildcard pattern matches more than one member causing the command to fail. This parameter was introduced in Windows PowerShell 3.0.
+
+Type: String
+
+Position: 0
+
+Default value: None
+
+Accept pipeline input: False
+
+Accept wildcard characters: True
+
+-Parallel
+
+Specifies the script block to be used for parallel processing of input objects. Enter a script block that describes the operation. This parameter was introduced in PowerShell 7.0.
+
+Type: ScriptBlock
+
+Position: Named
+
+Default value: None
+
+Accept pipeline input: False
+
+Accept wildcard characters: False
+
+-Process
+
+Specifies the operation that is performed on each input object. This script block is run for every object in the pipeline. For more information about the process block, see about_Functions. When you provide multiple script blocks to the Process parameter, the first script block is always mapped to the begin block. If there are only two script blocks, the second block is mapped to the process block. If there are three or more script blocks, first script block is always mapped to the begin block, the last block is mapped to the end block, and the blocks in between are all mapped to the process block.
+
+Type:
+
+ScriptBlock[]
+
+Position: 0
+
+Default value: None
+
+Accept pipeline input: False
+
+Accept wildcard characters: False
+
+-RemainingScripts
+
+Specifies all script blocks that are not taken by the Process parameter. This parameter was introduced in Windows PowerShell 3.0.
+
+Type:
+
+ScriptBlock[]
+
+Position: Named
+
+Default value: None
+
+Accept pipeline input: False
+
+Accept wildcard characters: False
+
+-ThrottleLimit
+
+Specifies the number of script blocks that in parallel. Input objects are blocked until the running script block count falls below the ThrottleLimit. The default value is 5. The ThrottleLimit parameter limits the number of parallel scripts running during each instance of ForEach-Object -Parallel. It does not limit the number of jobs that can be created when using the AsJob parameter. Since jobs themselves run concurrently, it is possible to create a number of parallel jobs, each running up to the throttle limit number of concurrent scriptblocks. This parameter was introduced in PowerShell 7.0.
+
+Type: Int32
+
+Position: Named
+
+Default value: 5
+
+Accept pipeline input: False
+
+Accept wildcard characters: False
+
+-TimeoutSeconds
+
+Specifies the number of seconds to wait for all input to be processed in parallel. After the specified timeout time, all running scripts are stopped. And any remaining input objects to be processed are ignored. Default value of 0 disables the timeout, and ForEach-Object -Parallel can run indefinitely. Typing Ctrl+C at the command line stops a running ForEach-Object -Parallel command. This parameter cannot be used along with the AsJob parameter. This parameter was introduced in PowerShell 7.0.
+
+Type: Int32
+
+Position: Named
+
+Default value: 0
+
+Accept pipeline input: False
+
+Accept wildcard characters: False
+
+-UseNewRunspace
+
+Causes the parallel invocation to create a new runspace for every loop iteration instead of reusing runspaces from the runspace pool. This parameter was introduced in PowerShell 7.1
+
+Type: SwitchParameter
+
+Position: Named
+
+Default value: False
+
+Accept pipeline input: False
+
+Accept wildcard characters: False
+
+-WhatIf
+
+Shows what would happen if the cmdlet runs. The cmdlet is not run.
+
+Type: SwitchParameter
+
+Aliases: wi
+
+Position: Named
+
+Default value: False
+
+Accept pipeline input: False
+
+Accept wildcard characters: False
+
+Inputs PSObject You can pipe any object to this cmdlet.
+
+Outputs PSObject This cmdlet returns objects that are determined by the input.
+
+Notes PowerShell includes the following aliases for ForEach-Object:
+
+All Platforms:
+
+% foreach
+
+The ForEach-Object cmdlet works much like the Foreach statement, except that you cannot pipe input to a Foreach statement. For more information about the Foreach statement, see about_Foreach. Starting in PowerShell 4.0, Where and ForEach methods were added for use with collections. You can read more about these new methods here about_arrays Using ForEach-Object -Parallel:
+
+The ForEach-Object -Parallel parameter set uses PowerShell's internal API to run each script block in a new runspace. This is significantly more overhead than running ForEach-Object normally with sequential processing. It is important to use Parallel where the overhead of running in parallel is small compared to work the script block performs. For example:
+
+Compute intensive scripts on multi-core machines Scripts that spend time waiting for results or doing file operations
+
+Using the Parallel parameter can cause scripts to run much slower than normal. Especially if the parallel scripts are trivial. Experiment with Parallel to discover where it can be beneficial.
+
+When running in parallel, objects decorated with ScriptProperties or ScriptMethods cannot be guaranteed to function correctly if they are run in a different runspace than the scripts were originally attached to them. Scriptblock invocation always attempts to run in its home runspace, regardless of where it's actually invoked. However, ForEach-Object -Parallel creates temporary runspaces that get deleted after use, so there's no runspace for the scripts to execute in anymore. This behavior can work as long as the home runspace still exists. However, you may not get the desired result if the script is dependent on external variables that are only present in the caller's runspace and not the home runspace.
+
+Non-terminating errors are written to the cmdlet error stream as they occur in parallel running scriptblocks. Because parallel scriptblock execution order is non-deterministic, the order in which errors appear in the error stream is random. Likewise, messages written to other data streams, like warning, verbose, or information are written to those data streams in an indeterminate order. Terminating errors, such as exceptions, terminate the individual parallel instance of the scriptblocks in which they occur. A terminating error in one scriptblocks may not cause the termination of the Foreach-Object cmdlet. The other scriptblocks, running in parallel, continue to run unless they also encounter a terminating error. The terminating error is written to the error data stream as an ErrorRecord with a FullyQualifiedErrorId of PSTaskException. Terminating errors can be converted to non-terminating errors using PowerShell try/catch or trap blocks.
+
+PipelineVariable common parameter variables are not supported in parallel scenarios even with the $using: keyword.
+
+Important The ForEach-Object -Parallel parameter set runs script blocks in parallel on separate process threads. The $using: keyword allows passing variable references from the cmdlet invocation thread to each running script block thread. Since the script blocks run in different threads, the object variables passed by reference must be used safely. Generally it is safe to read from referenced objects that don't change. But if the object state is being modified then you must used thread safe objects, such as .NET System.Collection.Concurrent types (See Example 11).
+
+Related Links
+
+Compare-Object Where-Object Group-Object Measure-Object New-Object Select-Object Sort-Object Tee-Object
+
+Feedback
+
+Submit and view feedback for
+
+This product
+
+This page
+
+View all page feedback
+
+Theme
+
+Light
+
+Dark
+
+High contrast
+
+Previous Versions
+
+Blog
+
+Contribute
+
+Privacy
+
+Terms of Use
+
+Trademarks
+
+© Microsoft 2023
+
+Additional resources
+
+In this article
+
+Theme
+
+Light
+
+Dark
+
+High contrast
+
+Previous Versions
+
+Blog
+
+Contribute
+
+Privacy
+
+Terms of Use
+
+Trademarks
+
+© Microsoft 2023
