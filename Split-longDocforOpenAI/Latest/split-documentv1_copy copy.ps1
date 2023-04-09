@@ -31,7 +31,7 @@ $InputText = Get-Content (Join-Path -Path $InpuDir -ChildPath "Input.txt")
 
 
 # Define maximum number of words per file
-$maxWordsPerFile = 2500
+$maxWordsPerFile = 1000
 
 # Initialize output file index and current number of words
 $outputFileIndex = 1
@@ -54,10 +54,19 @@ foreach ($line in $InputText) {
         Write-Host "$(Get-Date) - Finished writing $prevOutputFilePath ($wordCount words)" -ForegroundColor Cyan
     }
 
+
+
+    <#
+    #Custom Propmpts
+    Provide a detailed summary broken down into bullet points as well as summary of all people involved broken down into a table format ?
+
+
+    #>
+
     # Append the current line to the current output file
     $outputFilePath = Join-Path $OutputDir "output-$outputFileIndex.txt"
     if (!(Test-Path $outputFilePath)) {
-        Add-Content $outputFilePath "This is part number $outputFileIndex`n"
+        Add-Content $outputFilePath "Provide a detailed summary of the following script This is part number $outputFileIndex`n"
     }
     Add-Content $outputFilePath $line
 
