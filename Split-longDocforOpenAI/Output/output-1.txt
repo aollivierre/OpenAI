@@ -1,144 +1,84 @@
 This is part number 1
 
-hello and welcome to the last session of the event have you guys had a good time so far I hope so
-I hope it's been good for you my name is Dan Holm and as you can tell from my accent I come from the United States in
-fact I live in Hawaii on the island of Maui so I flew in day before yesterday
-halfway around the world and if I sound a little hoarse it's because I picked up a cold on the airplane but it's my
-pleasure to be with you here today and to share with you my insights into best
-practices in administering Active Directory a little bit about myself I
-have spent 17 years as a consultant an author and a trainer serving global fortune 500 sized organizations the one
-I can talk about in public is NBC television which is one of the major networks in the US for whom I'm the
-Microsoft technologies consultant during the broadcast of the Olympic Games and so I've been involved in Torino Beijing
-Vancouver and now we're getting ready for London and that involves implementing many of the best practices
-that we're going to be talking about here today I also have my own consulting firm in tell'em I'm the chief evangelist
-for SharePoint for a company called outpoint and I'm an author for Microsoft press the my book is listed up there and
-for those of you who will be administering Active Directory I highly
-recommend this book solely because it's one of the few books out there that tells you how to do things that you
-can't do out of the box with Active Directory so many of the tricks I'll be showing you today if you like them
-there's a lot more in that in that particular resource my email address is up here as well and I encourage you to
-always feel comfortable to email me my job is to help the community do better
-with the technology so I'm more than happy to answer questions whenever I can and I will be posting the slides and the
-scripts to my SkyDrive later on today or perhaps tomorrow so the URL is there and
-I will tweet that URL right after the session my twitter handle is at dan home so with that we've got about 53 minutes
-to cram in about 20 years worth of or 10 years worth of the industry's experience
-with active rectory I began working with Active Directory in 1998 when it was windows in
-t5 Oh alpha and then of course Active Directory came out with Windows 2000 in
-production and since then a lot has changed and you all are entering a
-really exciting time in the in the world of Active Directory things have changed things are changing it in faster and I
-want to help you understand first of all what has changed over the 10 years that have passed so that when you hear people
-and you see people implementing practices that are old that you know how to do it better and also you know why it
-was done that way in the past so that you can help your your employers and and
-your enterprises do better so we'll start with Active Directory design building a domain and a forest from the
-ground up and then we will also spend a lot of time with tricks and tips for how
-you can go beyond the out of box tool set and administer Active Directory more
-effectively so the first thing we'll talk about in your Active Directory is the domain controllers themselves when
-you install Active Directory on a domain controller you should really entrain controllers
-clean that means don't have your domain controller doing other things that makes it a bigger security risk
-it adds risk for updates and and so keep your domain controllers clean and doing
-their jobs and one way you can help that happen is leveraging virtualization
-virtualization is obviously the way of the future and in the case of domain controllers you can virtualize a domain
-controller and thereby keep that virtual machine focused on the one task of supporting your Active Directory so even
-in a small business where maybe you have very few servers instead of having your
-domain controller be a file server and a print server and an exchange server instead put your domain controller in a
-virtual machine and and allow other roles to be hosted either on the
-physical box or on other virtual machines another thing you can do to help out your the security of your
-domain controllers is to use read only domain controllers which allow you to put a domain
-controller in a physical location that is less secure so if you have a remote office for example you can put our drum
-read only domain controller there and it will be able to authenticate users but if it gets compromised that domain
-controller cannot infect and and corrupt the rest of your directory now the one
-piece of advice I'll give you about remote read only domain controllers is that you must be sure you've tested them
-in production before you expect them to work there are some applications out
-there some third-party applications and services that don't that weren't really coded correctly they don't work
-effectively against read only domain controllers and the only way to know that is to actually test it so read only
-domain controllers are a great feature Microsoft is right to talk about the value that they provide but do make sure
-that you that you're confident they will work for you in production up to the -
-up to the domain level itself I'd like to talk about forest and domain design because ten years ago when people
-started with Active Directory the design goals were quite different than they are now
-and so let me actually whiteboard this here and we'll describe it in the early
-days of Active Directory and was common to use multi domain forests where you
-would have a single domain and then you would have child domains and within a single forest and your force might even
-be just two domains and this top domain was often called an empty forest root
-where it would be a domain without any real users or computers or resources but
-it would represent the enterprise where as all of the real users and computers would be in child domains one or more
-child domains the design concept at the time was that Active Directory would eventually allow
-us to merge with another company and simply take their domain and graft it to
-our forest that capability never came out and so the the potential that a
-multi domain and forest and an empty domain root had would has generally not been real
-in the community in fact what we found over the years of experience is that as
-soon as you have more than one domain in your forest you actually make security and manageability much more difficult so
-multi-domain forests are really out and instead you really should dominate design a single domain and within that
-domain secure the service accounts secure the major administrative accounts
-effectively in order to isolate them rather than put them in a separate domain another thing that used to be
-very common is if we had our company company a and we were partnered with another company Company B we would
-create trusts between those domains windows trusts and windows trust relationships would allow us to have
-user accounts from our partner company and we could assign those accounts
-permissions to a resource in our domain as long as we trusted that domain that
-was a very common model for many many years even going back before Active Directory and these days that model is
-starting to break down for a number of reasons first of all it is difficult to secure perfectly then there are a couple
-of features that you can add including a selective authentication and advanced
-encryption of the trusts to make them more secure however it still involves
-going through firewalls with ports that most companies aren't comfortable opening up and so the new the new world
-is really about federating identity and using Active Directory Federation services and similar authentication
-services to authenticate users rather than windows trusts so with Active Directory Federation services you can
-authenticate users against a partner domain using standard protocols and ports and a set of standard services so
-keep your eye on Active Directory Federation services it's part of Active Directory it is now in version 2 it's a
-very important technology and my guess is that in Windows 9 we're going to see
-that Active Directory looks a lot more like Active Directory Federation services does today and a lot less that then Active
-Directory looks like today the world is moving towards claims based authentication and I believe that that's
-where Microsoft will end up taking the product as well just as an industry observer so old-school domains
-old-school trusts are really out and you really should be looking at single domain forests and when you need to
-partner with another organization look at identity Federation with tools like Active Directory Federation services
-within a single domain within your domain you have to think about your design of your organizational units and
-this is where we will jump into an eel domain here when you design your active
-directory and you look at the structure of organizational units you want to be sure that you've designed your
-organizational units to manage security first now the reason I emphasize that is
-in the early days of Active Directory people would also design Active Directory to support group policy and
-they would create oh use solely so that they could link a group policy object to the öyou and that has turned out to be
-in most cases a less than effective design so let's take a look at an actual
-Active Directory design here if we go into our domain we can see that the
-organizational units are are really focused on object classes for example we
-see user accounts and servers the reason that it's important to design Active
-Directory for security is that permissions must be propagated through
-the directory you're going to assign permissions on this oh you for example that your helpdesk can reset user
-passwords and you want that permission to be propagated effectively through the objects in your Active Directory so
-rather than splitting out user accounts we put user accounts in a location that
-allows our helpdesk to have a single point of delegation and we can manage that delegation and those permissions
-effectively when we look inside these OU's we'll see a little bit more detail for example and our client computers oh
-you we have the ability to as Universal permissions for example we
-might have again a centralized helpdesk that is able to perform tasks for any computer but we might also have regional
-offices for example an office in London or an office in Sydney and we have
-helpdesk we have a local desktop support there and we want that local desktop support to be able to join a machine to
-the domain for example by creating a know you to delegate that permission to we've given ourselves an effective way
-to delegate one time to that local desktop Support Group so it's quite
-common to see a know you for client computers that's divided into regions to
-reflect the local desktop support delegation needs when we look at something like the servers oh you this
-is something you would see that would be fairly common where each type of server is in its own oh you because typically
-there are teams of administrators who manage those servers and so they can be given permissions to their o you to do
-things like join a server to the domain so we end up finding that object based
-models and often reflect the delegation needs of businesses so this is a very
-common model but the real point is that you need to focus on delegation and on
-the assigning of permissions and making it as simple and effective as possible because that's what Active Directory is
-really designed to do as a database is create a structure through which
-permissions can be propagated now when it comes to group policy when you get
-down into your design after you've already after you have designed it for security you might find that you have a
-know you that you can link a group policy to and that's great if your design also supports group policy that's
-excellent but as we'll see in a moment most organizations have found that it's
-more effective and more manageable to work with group policies by link by
-filtering them to a group rather than to linking them to a know you so for example if we go up to our group policy
-management
-we can see that at the level of our domain we've linked oh use for example
-we've linked group policies for example a group policy that deploys Adobe Acrobat or that deploys VLC player these
-group policies are linked to the domain and filtered to a group so that in order to when we want a user or a computer to
-receive these applications we put them into the group and it doesn't matter where in the domain they're located
-because a computer or user can only live in one organizational unit but it can belong to multiple groups so most
-organizations have found that filtering group policies based on group membership
-is a more effective way to manage group policies let me take a quick look and yeah so let's uh let's move on to the
-concept of group policy group policies and we've just been talking about
-scoping group policies and scoping group policies is the concept of deciding how
-a group policy object applies to your environment and you can scope a group
-policy several different ways you can scope a group policy based on linking it to a site and domain or an
-organizational unit but that and in some cases that works but in most cases it's not really flexible or manageable enough
-you can also scope a group policy based on WMI filters and WMI filters allow you
-to query the hardware and determine whether a group policy applies so for example we could say apply this group
-policy only if a machine has more than two gigabytes of RAM or if it has 20 gigs of free hard disk space WMI filters
-are interesting they're effective but they're the most performance intensive
+
+
+Connect-PnPOnline | PnP PowerShell
+
+Toggle navigation
+
+Search Results for
+
+Show / Hide Table of Contents
+
+Connect-PnPOnline
+
+SYNOPSIS Connect to a SharePoint site SYNTAX Credentials (Default) Connect-PnPOnline [-ReturnConnection] [-Url] <String> [-Credentials <CredentialPipeBind>] [-CurrentCredentials] [-CreateDrive] [-DriveName <String>] [-ClientId <String>] [-RedirectUri <String>] [-AzureEnvironment <AzureEnvironment>] [-TenantAdminUrl <String>] [-TransformationOnPrem] [-ValidateConnection] [-Connection <PnPConnection>]
+
+SharePoint ACS (Legacy) App Only Connect-PnPOnline [-ReturnConnection] [-Url] <String> [-Realm <String>] -ClientSecret <String> [-CreateDrive] [-DriveName <String>] -ClientId <String> [-AzureEnvironment <AzureEnvironment>] [-TenantAdminUrl <String>] [-ValidateConnection] [-Connection <PnPConnection>]
+
+App-Only with Azure Active Directory Connect-PnPOnline [-ReturnConnection] [-Url] <String> [-CreateDrive] [-DriveName <String>] -ClientId <String> -Tenant <String> [-CertificatePath <String>] [-CertificateBase64Encoded <String>] [-CertificatePassword <SecureString>] [-AzureEnvironment <AzureEnvironment>] [-TenantAdminUrl <String>] [-ValidateConnection] [-Connection <PnPConnection>]
+
+App-Only with Azure Active Directory using a certificate from the Windows Certificate Management Store by thumbprint Connect-PnPOnline [-ReturnConnection] [-Url] <String> [-CreateDrive] [-DriveName <String>] -ClientId <String> -Tenant <String> -Thumbprint <String> [-AzureEnvironment <AzureEnvironment>] [-TenantAdminUrl <String>] [-ValidateConnection] [-Connection <PnPConnection>]
+
+PnP Management Shell / DeviceLogin Connect-PnPOnline [-ReturnConnection] [-Url] <String> [-CreateDrive] [-DriveName <String>] [-DeviceLogin] [-LaunchBrowser] [-ClientId <String>] [-AzureEnvironment <AzureEnvironment>] [-ValidateConnection] [-Connection <PnPConnection>]
+
+Web Login for Multi Factor Authentication Connect-PnPOnline [-ReturnConnection] [-Url] <String> [-CreateDrive] [-DriveName <String>] [-TenantAdminUrl <String>] [-UseWebLogin] [-ForceAuthentication] [-ValidateConnection]
+
+Interactive for Multi Factor Authentication Connect-PnPOnline -Interactive [-ReturnConnection] -Url <String> [-CreateDrive] [-DriveName <String>] [-LaunchBrowser] [-ClientId <String>] [-AzureEnvironment <AzureEnvironment>] [-TenantAdminUrl <String>] [-ForceAuthentication] [-ValidateConnection] [-Connection <PnPConnection>]
+
+On-premises login for page transformation from on-premises SharePoint to SharePoint Online Connect-PnPOnline -Url <String> -TransformationOnPrem [-CurrentCredential]
+
+Access Token Connect-PnPOnline -Url <String> -AccessToken <String> [-AzureEnvironment <AzureEnvironment>] [-ReturnConnection]
+
+System Assigned Managed Identity Connect-PnPOnline [-Url <String>] -ManagedIdentity [-ReturnConnection]
+
+User Assigned Managed Identity by Client Id Connect-PnPOnline [-Url <String>] -ManagedIdentity -UserAssignedManagedIdentityClientId <String> [-ReturnConnection]
+
+User Assigned Managed Identity by Principal Id Connect-PnPOnline [-Url <String>] -ManagedIdentity -UserAssignedManagedIdentityObjectId <String> [-ReturnConnection]
+
+User Assigned Managed Identity by Azure Resource Id Connect-PnPOnline [-Url <String>] -ManagedIdentity -UserAssignedManagedIdentityAzureResourceId <String> [-ReturnConnection]
+
+Environment Variable Connect-PnPOnline [-ReturnConnection] [-Url] <String> [-EnvironmentVariable] [-CurrentCredentials] [-CreateDrive] [-DriveName <String>] [-RedirectUri <String>] [-AzureEnvironment <AzureEnvironment>] [-TenantAdminUrl <String>] [-TransformationOnPrem] [-ValidateConnection] [-Connection <PnPConnection>]
+
+DESCRIPTION Connects to a SharePoint site or another API and creates a context that is required for the other PnP Cmdlets. See https://pnp.github.io/powershell/articles/connecting.html for more information on the options to connect. EXAMPLES EXAMPLE 1 Connect-PnPOnline -Url "contoso.sharepoint.com"
+
+Connect to SharePoint prompting for the username and password. When a generic credential is added to the Windows Credential Manager with https://contoso.sharepoint.com, PowerShell will not prompt for username and password and use those stored credentials instead. EXAMPLE 2 Connect-PnPOnline -Url "contoso.sharepoint.com" -Credentials (Get-Credential)
+
+Connect to SharePoint prompting for the username and password to use to authenticate EXAMPLE 3 Connect-PnPOnline -Url "contoso.sharepoint.de" -ClientId 344b8aab-389c-4e4a-8fa1-4c1ae2c0a60d -ClientSecret $clientSecret
+
+This will authenticate you to the site using Legacy ACS authentication EXAMPLE 4 Connect-PnPOnline -Url "contoso.sharepoint.com" -DeviceLogin
+
+This will authenticate you using the PnP Management Shell Multi-Tenant application. A browser window will have to be opened where you have to enter a code that is shown in your PowerShell window. EXAMPLE 5 Connect-PnPOnline -Url "contoso.sharepoint.com" -DeviceLogin -LaunchBrowser
+
+This will authenticate you using the PnP Management Shell Multi-Tenant application. A browser window will automatically open and the code you need to enter will be automatically copied to your clipboard. EXAMPLE 6 $password = (ConvertTo-SecureString -AsPlainText 'myprivatekeypassword' -Force) Connect-PnPOnline -Url "contoso.sharepoint.com" -ClientId 6c5c98c7-e05a-4a0f-bcfa-0cfc65aa1f28 -CertificatePath 'c:\mycertificate.pfx' -CertificatePassword $password -Tenant 'contoso.onmicrosoft.com'
+
+Connects using an Azure Active Directory registered application using a locally available certificate containing a private key. See https://learn.microsoft.com/sharepoint/dev/solution-guidance/security-apponly-azuread for a sample on how to get started. EXAMPLE 7 Connect-PnPOnline -Url "contoso.sharepoint.com" -ClientId 6c5c98c7-e05a-4a0f-bcfa-0cfc65aa1f28 -Tenant 'contoso.onmicrosoft.com' -Thumbprint 34CFAA860E5FB8C44335A38A097C1E41EEA206AA
+
+Connects to SharePoint using app-only tokens via an app's declared permission scopes. See https://github.com/SharePoint/PnP-PowerShell/tree/master/Samples/SharePoint.ConnectUsingAppPermissions for a sample on how to get started. Ensure you have imported the private key certificate, typically the .pfx file, into the Windows Certificate Store for the certificate with the provided thumbprint. EXAMPLE 8 Connect-PnPOnline -Url "contoso.sharepoint.com" -ClientId 6c5c98c7-e05a-4a0f-bcfa-0cfc65aa1f28 -CertificateBase64Encoded $base64encodedstring -Tenant 'contoso.onmicrosoft.com'
+
+Connects using an Azure Active Directory registered application using a certificate with a private key that has been base64 encoded. See https://learn.microsoft.com/sharepoint/dev/solution-guidance/security-apponly-azuread for a sample on how to get started. EXAMPLE 9 Connect-PnPOnline -Url "contoso.sharepoint.com" -UseWebLogin
+
+Note: See Example 10 as this is a preferred option over using -UseWebLogin. Connects to SharePoint using legacy cookie based authentication. Notice this type of authentication is limited in its functionality. We will for instance not be able to acquire an access token for the Graph, and as a result none of the Graph related cmdlets will work. Also some of the functionality of the provisioning engine (Get-PnPSiteTemplate, Get-PnPTenantTemplate, Invoke-PnPSiteTemplate, Invoke-PnPTenantTemplate) will not work because of this reason. The cookies will in general expire within a few days and if you use -UseWebLogin within that time popup window will appear that will disappear immediately, this is expected. Use -ForceAuthentication to reset the authentication cookies and force a new login. See example 10 for a full support for interactive logins using MFA and the ability to acquire Graph tokens. EXAMPLE 10 Connect-PnPOnline -Url "contoso.sharepoint.com" -Interactive
+
+Connects to the Azure AD, acquires an access token and allows PnP PowerShell to access both SharePoint and the Microsoft Graph. By default it will use the PnP Management Shell multi-tenant application behind the scenes, so make sure to run `Register-PnPManagementShellAccess` first. EXAMPLE 11 Connect-PnPOnline -Url "https://portal.contoso.com" -TransformationOnPrem -CurrentCredential
+
+Connects to on-premises SharePoint 2013, 2016 or 2019 site with the current user's on-premises Windows credential (e.g. domain\user). This option is only supported for being able to transform on-premises classic wiki, webpart, blog and publishing pages into modern pages in a SharePoint Online site. Although other PnP cmdlets might work as well, they're officially not supported for being used in an on-premises context. See http://aka.ms/sharepoint/modernization/pages for more details on page transformation. EXAMPLE 12 Connect-PnPOnline -Url contoso.sharepoint.com -ManagedIdentity Get-PnPTeamsTeam
+
+Connects using a system assigned managed identity to Microsoft Graph. Using this way of connecting only works with environments that support managed identities: Azure Functions, Azure Automation Runbooks and the Azure Cloud Shell. Read up on this article how it can be used. EXAMPLE 13 Connect-PnPOnline -Url contoso.sharepoint.com -ManagedIdentity -UserAssignedManagedIdentityObjectId 363c1b31-6872-47fd-a616-574d3aec2a51 Get-PnPList
+
+Connects using an user assigned managed identity with object/principal ID 363c1b31-6872-47fd-a616-574d3aec2a51 to SharePoint Online. Using this way of connecting only works with environments that support managed identities: Azure Functions, Azure Automation Runbooks and the Azure Cloud Shell. Read up on this article how it can be used. EXAMPLE 14 Connect-PnPOnline -Url contoso.sharepoint.com -AccessToken $token
+
+This method assumes you have acquired a valid OAuth2 access token from Azure AD with the correct audience and permissions set. Using this method PnP PowerShell will not acquire tokens dynamically and if the token expires (typically after 1 hour) cmdlets will fail to work using this method. EXAMPLE 15 Connect-PnPOnline -Url contoso.sharepoint.com -EnvironmentVariable -Tenant 'contoso.onmicrosoft.com'
+
+This example uses the AZURE_CLIENT_CERTIFICATE_PATH and AZURE_CLIENT_CERTIFICATE_PASSWORD environment variable values to authenticate. The AZURE_CLIENT_ID environment variable must be present and Tenant parameter value must be provided. EXAMPLE 16 Connect-PnPOnline -Url contoso.sharepoint.com -EnvironmentVariable
+
+This example uses the AZURE_USERNAME and AZURE_PASSWORD environment variables as credentials to authenticate. If AZURE_CLIENT_ID is not present, then it will try to use the default PnP Management Shell Azure AD app as fallback and attempt to authenticate. This method assumes you have the necessary environment variables available. For more information about the required environment variables, please refer to this article, Azure.Identity Environment Variables here. So, when using -EnvironmentVariable method for authenticating, we will require AZURE_CLIENT_CERTIFICATE_PATH, AZURE_CLIENT_CERTIFICATE_PASSWORD and AZURE_CLIENT_ID environment variables for using the service principal with certificate method for authentication. If AZURE_USERNAME, AZURE_PASSWORD and AZURE_CLIENT_ID, we will use these environment variables and authenticate using credentials flow. We support only Service principal with certificate and Username with password mode for authentication. Configuration will be attempted in that order. For example, if values for a certificate and username+password are both present, the client certificate method will be used. PARAMETERS -AccessToken Using this parameter you can provide your own access token. Notice that it is recommend to use one of the other connection methods as this will limits the offered functionality on PnP PowerShell. For instance if the token expires (typically after 1 hour) will not be able to acquire a new valid token, which the other connection methods do allow. You are responsible for providing your own valid access token when using this parameter, for the correct audience, with the correct permissions scopes. Type: String Parameter Sets: Access Token Aliases:
+
+Required: True Position: Named Default value: False Accept pipeline input: False Accept wildcard characters: False
+
+-AzureEnvironment The Azure environment to use for authentication, the defaults to 'Production' which is the main Azure environment. Type: AzureEnvironment Parameter Sets: Credentials, SharePoint ACS (Legacy) App Only, App-Only with Azure Active Directory, App-Only with Azure Active Directory using a certificate from the Windows Certificate Management Store by thumbprint, PnP Management Shell / DeviceLogin, Interactive, Access Token, Environment Variable Aliases: Accepted values: Production, PPE, China, Germany, USGovernment, USGovernmentHigh, USGovernmentDoD
+
+Required: False Position: Named Default value: None Accept pipeline input: False Accept wildcard characters: False
+
+-CertificatePassword Password to the certificate (*.pfx) Type: SecureString Parameter Sets: App-Only with Azure Active Directory Aliases:
+

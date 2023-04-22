@@ -1,151 +1,88 @@
 This is part number 2
 
-way of filtering group policy objects because if you use a WMI filter the
-computer the client has to actually run that query during the group policy application process which can take time
-so it's a it's a the best practice is not to use WMI filters unless you have
-something that is truly dynamic and is likely to change regularly so for
-example instead of creating a group policy that uses a WMI to decide whether a machine is Windows 7
-that's very performance intensive create a group of computers that are Windows 7 that doesn't change very often when you
-upgrade a machine you can add it to the group and you then don't need to be running a WMI filter all the time so
-groups end up being the most effective way to filter Group Policy objects and and two points about using groups to
-filter Group Policy objects let's create a new group policy we'll call this an
-thwart policies and let's say that we want this group policy to apply to users
-and computers in antwort now I've already got a group called let's see
-where is it oh I reset my virtual machine so we'll create the group first we'll create a
-group for Antwerp users and computers and then when we want to filter this
-group policy object by default a group policy object will apply to all users
-and computers the authenticated users group we remove that and we add the one
-group that we do want Antwerp users and computers now if you do this this will
-work for the group policy the group policy will now only apply to those users and computers but the problem is
-an administrator who isn't in that group when they open the group policy
-management console what they will see is
-something that indicates that this is an unknown group policy they won't actually
-be able to see this they'll see a blank spot in the group policy which makes it
-tough to for an administrator to work with it makes it difficult to troubleshoot the group policies so if
-you filter a group policy object to apply to only one set of users you
-should also go to the delegation tab and give the authenticated users group read
-permission you give that group read permission but you do not give the group so if I can find
-it here there we go you do not give the group apply group policy permission so this policy will
-not apply but they will be able to read it and that simply means that an administrator will be able to see that
-the group policy exists in the troubleshooting tools you won't get messages about unknown group policy
-objects so when you do filter a group policy object do give the authenticated users group read permission that makes
-your life a lot easier the other thing that you want to do with group policies occasionally is you want to deny group
-policies from applying to a group so in this case let's say we've got this group policy object and we want to prevent it
-from applying to the Antwerp users in order to do that we can't we cannot use
-this user interface we have to go back to the delegation tab to the advanced button and we add our ant work group and
-we deny that group the apply group policy permission so that's how we block
-the group policy from applying to a single group when you do that
-unfortunately it doesn't show up here so when you look at the group policy object
-you can't really tell that it applies to everyone except and for abusers you actually have to dig deeper into the
-into the user interface to find that which is unfortunate but that's the way the interface works now whenever you
-create a group policy object I encourage you to have one group created that will
-allow you to deny that group policy even if you know one needs to be denied now there usually comes a time when there's
-problems that need to be solved and in troubleshooting you want to start removing Group Policy objects from a
-user or a computer so my recommendation is every time you create a group policy object create some kind of group that
-allows you to deny permissions so that
-you can exclude a user or computer if necessary from a particular group policy so we've looked at the domain we've
-looked at we've looked at Active Directory we've looked at group policy
-and we looked at OU's our next step is going to be to look at sites but before I do that are there any questions about
-the pieces we've talked about so far and if there are you might have to shout out because I can't necessarily see
-everybody okay now on sites active
-directory sites are logged well sorry my pinout active directory sites are
-logical objects that represent areas of high connectivity and these tend to lead
-to a lot of confusion and organizations because they think when an organization thinks of the word site they think oh we
-have a site in Antwerp and we have a site in Brussels and we have a site in New York City so they think about sites
-geographically active directory sites are logical objects that don't represent
-a geographic area they represent an area of high connectivity so if you have high
-connectivity in Antwerp and Brussels those two geographic locations might be
-a single active directory site but if there's a slower or more expensive link to New York New York might also have be
-its own active directory site now in the early days of active directory the industry was very
-concerned that Microsoft would bring down their networks with lots of replication traffic people didn't trust
-Microsoft to do it right but what what have proved is that Microsoft did a very
-good job in designing Active Directory replication it's very robust it's very efficient and in addition over time
-networks have gotten much better so the kinds of connectivity we see even in our own homes is better than most businesses
-had 10 years ago so because both people's understanding of replication
-has it changed and network technologies
-have improved we now have a situation where when you look at your environment
-you might think well we have good connectivity between all of these sites and if that's the case we could get by
-with a single active directory site and many organizations are doing that now be
-because they have such good connectivity the problem is that sites are for more
-than replication of traffic sites are also used to help locate resources close
-to you when those resources are replicated and distributed in multiple locations so for example you can have a
-file server that contains important information in Brussels and if the in
-flight if the information is that important you might also have it replicated into a server and Antwerp
-using DFS are distributed file system replication and you might also have it
-replicated in New York with DFS R now if
-users are accessing these resources using DFS in distributed file system
-namespaces DFS n will allow you to get users to the closest copy of that
-resource the DFS n is site aware as are several other technologies within
-windows but if you only have one site a user in New York might very well connect
-with the copy of the resource and Antwerp which might not be so efficient and so even though you might be able to
-get by with one site from a replication perspective you actually find these days
-you need more sites in order to support localization of services so that users
-are getting things from the most efficient location so I've been in a number of companies that are starting to
-create single sites and then realizing that they need to go and create more sites than maybe they even had before
-simply to support localization and in addition we're finding that you'll when
-you do that you create sites that don't have domain controllers so for example if Antwerp and Brussels are highly
-connected you might have your domain controller only in Antwerp you may not
-have a domain controller in Brussels but you may create two separate sites in order to support localization of a
-service like DFS so you end up with sites without domain controllers and when you do that you can implement
-what's called coverage where you tell the Brussels site that it should use the
-domain controller in and rather than the domain controller in New York City so we think about sites as a
-way of localizing resources be aware of what you have out there and and and what
-sites are really used for related to sites are subnets each site is actually
-defined by the IP addresses that it has so if we have a range of addresses like
-ten dot zero dot one dot zero it that
-would define the Antwerp site and maybe 10.0 2.0 defines Brussels and it is the
-linkage between the subnet and the site that allows a computer to know what site it's in and therefore to get resources
-more effectively so if we go in and look at our interface in Active Directory sites and services we see subnets are
-defined and each subnet object is linked whoops each subnet is linked to one and
-only one site so when you the key takeaway here is that it's very
-important that every address that a computer might get in your enterprise has a subnet that associates it with a
-site because if a computer gets an IP address that isn't defined as a site it
-basically has no clue where it is and it makes very bad decisions about where to authenticate and where to get resources
-from so whenever in a large organization where you have DHCP servers and and
-you're adding scopes to your DHCP servers it's important that every time you add a scope you also associate it
-with a site and have some sort of process to ensure that happens in Active Directory
-so those are some tips on sites and subnets and then finally there is
-replication and as I mentioned replication has proven to be quite good
-our networks are quite fast and if you have multiple sites let's go back yet
-one more time here if have multiple sites defined so we've now
-defined three sites Antwerp new Brussels and New York and we have domain
-controllers in Antwerp and New York they are going to replicate with each other using what's called inter site
-replication within a site if you've got multiple domain controllers let's say
-you've with two domain controllers in Antwerp two domain controllers in New York those domain controllers will
-replicate with what's called entrust site replication now in trust site replication is very very very fast when
-a domain controller gets a change it tells its partners I've got to change
-you want to come get it and the partners come and get the change and that usually happens within about fifteen or thirty
-seconds so replication is very fast using what's called notification based replication one domain controller
-notifies its partner that it has changes between sites it's very different between sites there's a process called
-poling where the bridge head server from one site calls up the bridge head server
-from the other site and says do you have any changes and that poling can only happen at a minimum of 15 minutes so
-there can be a very big time lapse between when a user is added to a group
-in New York and when that user can actually be part of that group in Antwerp that time lapses can be very
-painful and and it really doesn't help much if you have relatively good connectivity if you have good
-connectivity between these two sites there's no reason why you should be waiting 15 minutes to get those changes
-and what you can do is you can implement what's called notification based replication between the sites so that
-allows the inter site replication to happen at the same 15 to 30 second
-interval as the intra site replication and I have one customer who has offices
-all over the world they changed their site replication to entrust to
-notification based replication and now their entire global Active Directory converges in 37 seconds and what that
-means is any change that's made anywhere in the world within an average of 37 seconds makes it to every other domain
-controller in the world and as long as you have relatively decent connectivity that's perfectly
-fine because the amount of traffic that is replicated doesn't increase that much
-when you use notification based replication the same changes have to make it across the wire the difference
-is you're not waiting 15 minutes and getting a whole bunch of changes you're getting changes as they happen a more
-steady stream of small changes so notification based replication is another big change that I encourage you
-to help your your employers in your enterprises understand any questions on
-site subnets replication that those kinds of pieces okay
-now on to administrative roles you're you are or you're going to be an administrator of Active Directory it's
-very important that you follow the best practice of having multiple accounts you need to have one account for you as a
-user and you need to have other accounts that have privileges and that's a very common best practice I hope you've all
-learned that so you you log on as a user without privileges and then you use run
-as to run your administrative tools with higher-level credentials and if you are
-also a domain administrator I encourage you to have a third account that is at
-that level because on a day-to-day basis you don't need to be a domain administrator you can be you can have an
-administrative account that has the permissions it needs to manage users and manage groups and manage computers and
-you can use that second account on a day to day basis the only time you need to be a domain or
-an enterprise administrator is when you're making very significant changes and so it's best to isolate that into
-yet a third account if you are that privileged in your organization now in addition there are certain accounts in
-Active Directory that already are highly privileged of course including the domain administrator account the
-administrator account in the domain that account is super privileged so it is an
+Required: False Position: Named Default value: None Accept pipeline input: False Accept wildcard characters: False
+
+-CertificatePath Path to the certificate containing the private key (*.pfx) Type: String Parameter Sets: App-Only with Azure Active Directory Aliases:
+
+Required: False Position: Named Default value: None Accept pipeline input: False Accept wildcard characters: False
+
+-ClientId The Client ID of the Azure AD Application Type: String Parameter Sets: Credentials, PnP Management Shell / DeviceLogin, Interactive Aliases: ApplicationId
+
+Required: False Position: Named Default value: None Accept pipeline input: False Accept wildcard characters: False
+
+Type: String Parameter Sets: SharePoint ACS (Legacy) App Only, App-Only with Azure Active Directory, App-Only with Azure Active Directory using a certificate from the Windows Certificate Management Store by thumbprint Aliases:
+
+Required: True Position: Named Default value: None Accept pipeline input: False Accept wildcard characters: False
+
+-ClientSecret The client secret to use. When using this, technically an Azure Access Control Service (ACS) authentication will take place. This effectively means only cmdlets that are connecting to SharePoint Online will work. Cmdlets using Microsoft Graph or any other API behind the scenes will not work. Type: String Parameter Sets: SharePoint ACS (Legacy) App Only Aliases:
+
+Required: True Position: Named Default value: None Accept pipeline input: False Accept wildcard characters: False
+
+-Connection Optional connection to be reused by the new connection. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection. Type: PnPConnection Parameter Sets: Credentials, SharePoint ACS (Legacy) App Only, App-Only with Azure Active Directory, App-Only with Azure Active Directory using a certificate from the Windows Certificate Management Store by thumbprint, SPO Management Shell Credentials, PnP Management Shell / DeviceLogin, Interactive login for Multi Factor Authentication, Environment Variable
+
+Required: False Position: Named Default value: PnPConnection.Current Accept pipeline input: False Accept wildcard characters: False
+
+-CreateDrive If you want to create a PSDrive connected to the URL Type: SwitchParameter Parameter Sets: Credentials, SharePoint ACS (Legacy) App Only, App-Only with Azure Active Directory, App-Only with Azure Active Directory using a certificate from the Windows Certificate Management Store by thumbprint, SPO Management Shell Credentials, PnP Management Shell / DeviceLogin, Web Login for Multi Factor Authentication, Interactive for Multi Factor Authentication, Environment Variable Aliases:
+
+Required: False Position: Named Default value: False Accept pipeline input: False Accept wildcard characters: False
+
+-Credentials Credentials of the user to connect with. Either specify a PSCredential object or a string. In case of a string value a lookup will be done to the Generic Credentials section of the Windows Credentials in the Windows Credential Manager for the correct credentials. Type: CredentialPipeBind Parameter Sets: Credentials Aliases:
+
+Required: False Position: Named Default value: None Accept pipeline input: False Accept wildcard characters: False
+
+-CurrentCredentials Use credentials of the currently logged in user. Applicable exclusively when connecting to on premises SharePoint Server via PnP. Switch parameter. Type: CredentialPipeBind Parameter Sets: Credentials Aliases:
+
+Required: False Position: Named Default value: None Accept pipeline input: False Accept wildcard characters: False
+
+-DriveName Name of the PSDrive to create (default: SPO) Type: String Parameter Sets: Credentials, SharePoint ACS (Legacy) App Only, App-Only with Azure Active Directory, App-Only with Azure Active Directory using a certificate from the Windows Certificate Management Store by thumbprint, SPO Management Shell Credentials, PnP Management Shell / DeviceLogin, Web Login for Multi Factor Authentication, Interactive for Multi Factor Authentication, Environment Variable Aliases:
+
+Required: False Position: Named Default value: None Accept pipeline input: False Accept wildcard characters: False
+
+-LaunchBrowser Launch a browser automatically and copy the code to enter to the clipboard Type: SwitchParameter Parameter Sets: PnP Management Shell / DeviceLogin, Interactive Aliases:
+
+Required: False Position: Named Default value: False Accept pipeline input: False Accept wildcard characters: False
+
+-DeviceLogin Log in using the Device Code flow. By default it will use the PnP Management Shell multi-tenant Azure AD application registration. You will be asked to consent to:
+
+Read and write managed metadata Have full control of all site collections Read user profiles Invite guest users to the organization Read and write all groups Read and write directory data Read and write identity providers Access the directory as you
+
+Type: SwitchParameter Parameter Sets: PnP Management Shell / DeviceLogin Aliases: PnPManagementShell, PnPO365ManagementShell
+
+Required: True Position: Named Default value: False Accept pipeline input: False Accept wildcard characters: False
+
+-Realm Authentication realm. If not specified will be resolved from the url specified. Type: String Parameter Sets: SharePoint ACS (Legacy) App Only Aliases:
+
+Required: False Position: Named Default value: None Accept pipeline input: False Accept wildcard characters: False
+
+-RedirectUri The Redirect URI of the Azure AD Application Type: String Parameter Sets: Credentials Aliases:
+
+Required: False Position: Named Default value: None Accept pipeline input: False Accept wildcard characters: False
+
+-ReturnConnection Returns the connection for use with the -Connection parameter on cmdlets. It will not touch the current connection which can be established by omitting this parameter. Type: SwitchParameter Parameter Sets: Credentials, SharePoint ACS (Legacy) App Only, App-Only with Azure Active Directory, App-Only with Azure Active Directory using a certificate from the Windows Certificate Management Store by thumbprint, SPO Management Shell Credentials, PnP Management Shell / DeviceLogin, Web Login for Multi Factor Authentication, Interactive for Multi Factor Authentication, Access Token, Environment Variable Aliases:
+
+Required: False Position: Named Default value: False Accept pipeline input: True (ByValue) Accept wildcard characters: False
+
+-Tenant The Azure Active Directory tenant name, e.g. mycompany.onmicrosoft.com or mycompany.com if you have added custom domains to your tenant Type: String Parameter Sets: App-Only with Azure Active Directory, App-Only with Azure Active Directory using a certificate from the Windows Certificate Management Store by thumbprint, Environment Variable Aliases:
+
+Required: True Position: Named Default value: None Accept pipeline input: False Accept wildcard characters: False
+
+-TenantAdminUrl The url to the Tenant Admin site. If not specified, the cmdlets will assume to connect automatically to https://[tenantname]-admin.sharepoint.com where appropriate. Type: String Parameter Sets: Credentials, SharePoint ACS (Legacy) App Only, App-Only with Azure Active Directory, App-Only with Azure Active Directory using a certificate from the Windows Certificate Management Store by thumbprint, SPO Management Shell Credentials, Web Login for Multi Factor Authentication, Interactive for Multi Factor Authentication, Environment Variable Aliases:
+
+Required: False Position: Named Default value: None Accept pipeline input: False Accept wildcard characters: False
+
+-Thumbprint The thumbprint of the certificate containing the private key registered with the application in Azure Active Directory Type: String Parameter Sets: App-Only with Azure Active Directory using a certificate from the Windows Certificate Management Store by thumbprint Aliases:
+
+Required: True Position: Named Default value: None Accept pipeline input: False Accept wildcard characters: False
+
+-Url The Url of the site collection or subsite to connect to, i.e. tenant.sharepoint.com, https://tenant.sharepoint.com, tenant.sharepoint.com/sites/hr, etc. Type: String Parameter Sets: Credentials, SharePoint ACS (Legacy) App Only, App-Only with Azure Active Directory, App-Only with Azure Active Directory using a certificate from the Windows Certificate Management Store by thumbprint, SPO Management Shell Credentials, PnP Management Shell / DeviceLogin, Web Login for Multi Factor Authentication, Interactive for Multi Factor Authentication, Access Token, Environment Variable Aliases:
+
+Required: True (Except when using -ManagedIdentity) Position: 0 Default value: None Accept pipeline input: True (ByValue) Accept wildcard characters: False
+
+-ValidateConnection When provided, the cmdlet will check to ensure the SharePoint Online site specified through -Url exists and if not, will throw an exception. If you omit this flag or set it to $false, it will blindly set up a connection without validating that the site actually exists. Making use of this option does make one extra call on the connection attempt, so it is recommended to only use it in scenarios where you know the site you're trying to connect o may not exist and would like to have feedback on this during the connect. Type: SwitchParameter Parameter Sets: Credentials, SharePoint ACS (Legacy) App Only, App-Only with Azure Active Directory, App-Only with Azure Active Directory using a certificate from the Windows Certificate Management Store by thumbprint, SPO Management Shell Credentials, PnP Management Shell / DeviceLogin, Web Login for Multi Factor Authentication, Interactive for Multi Factor Authentication, Access Token, Environment Variable Aliases:
+
+Required: False Default value: False Accept pipeline input: False Accept wildcard characters: False
+
+-TransformationOnPrem If you want to the use page transformation cmdlets, setting this switch will allow you to connect to an on-prem server. Notice that this -only- applies to Transformation cmdlets. Type: SwitchParameter Parameter Sets: Credentials, Environment Variable Aliases:
+
+Required: False Position: Named Default value: False Accept pipeline input: False Accept wildcard characters: False
+

@@ -1,140 +1,47 @@
 This is part number 3
 
-account you really never should log on as you can create your own account that has lots of privileges but keep that
-account reserved for emergencies and I have a lot of my big clients lock it
-down to the point we're in order to log on as the domain administrator two people each have part
-of a password that together can be used to break into that one account and log on to it you also have groups in Active
-Directory that have a lot of power domain administrators Enterprise admins schema admins and these groups should be
-kept empty for the most part so let's take a quick look at these groups here
-so we have domain admins Enterprise admins schema admins also falls into
-this group there's really no need for these accounts to have very many users
-in them so keep them as empty as possible and again perhaps with special
-identities that you really only need when they're necessary with this schema admins group specifically can remain
-completely empty until the time when you Ackman need to make a schema change and then there are some specific groups that
-are legacy groups that you need to watch out for these are the built-in groups and they all have the word operators in
-them these print operators server operators backup operators these
-accounts are highly problematic they were put into Active Directory in order
-to support backward compatibility with Windows and T they have too many privileges in Active Directory they're
-over credentialed they don't align with business requirements today and additionally if you put an account in
-one of these groups it becomes protected in such a way that the permissions that apply to that account are different than they would
-normally be it becomes more difficult to change that accounts password and all kinds of other things happen as well and
-if you want some details on the on exactly what I'm talking about you can look up admin SD holder which is the
-problem that happens when you add an account to these so instead of using these groups don't and create your own
-groups that have the privileges they need to do a backup you can give any group the right to backup a server you
-can give any group the right to log on to a server you can delegate management of user accounts do it with custom
-groups rather than using these legacy groups and Active Directory and also do
-be sure to audit changes to these groups particularly domain admins Windows Server now includes directory
-service change auditing where you can audit exactly who added a specific user
-or group to domain admins and who took them out and you want to make sure you're auditing that and keeping it an
-eye on it sorry I hit escape accident
-okay on the topic of user accounts most
-of us were all familiar with user accounts and we know that users have a logon name the problem with the logon
-name is that it has to be unique within the domain and a lot of companies don't have very good standards to ensure
-uniqueness I know companies who use first name last initial for example Dan H and that becomes
-difficult because as soon as you have another Dan h1 user has to have a name that's not really their name so what I
-encourage you to to the head towards is the old user logon name should be something that
-is unique in the domain and unique for that user such as their employee ID or I
-have some clients who actually allow users to pick their own user name like you would on Twitter or something like that and then you don't use that to log
-on instead use the user principal name to log on the user principal name is another attribute of your user account
-and it has to be unique within the forest but the advantage of user principal name is that it looks like and
-it can be your email address so if I look at one of my employees accounts we
-can see that their user logon name is Adam bar at contoso com which is also
-his email address so that becomes very easy for users to remember they just log on with their email address and their
-password and they think of it as their email address it just happens that the user principal name is the same as their
-email address also consider renaming the administrator account that doesn't
-technically add any security but it adds manageability too so that if someone is
-accidentally logging on as administrator on their workstation but they forgot to choose the local machine and they're
-still logging on to the domain they don't start creating audit trees in the domain so I do encourage you to rename the administrator couches
-for manageability and then come passwords you have users within usernames and passwords and all of us
-are used to this idea of you need an eight character password with complexity those eight character or six character
-passwords with complexity aren't really that secure and the problem with complexity is that it becomes difficult
-for users to remember and difficult for them to type and one of the biggest
-risks for passwords is actually users having so much trouble remembering them
-that they write them down right stick them on a post-it note under their keyboard or on their monitor instead encourage users to use phrases to use
-sentences when you do the math a three word password is far more secure than a
-6 character complex password so if my password is Antwerp is fun that's a very
-very very secure password it's easy for me to remember and it's easy for me to type quickly so that if someone is you
-know watching me it's tougher for them to see what I'm doing instead of me having to hold down ctrl or shift and
-you know exclamation point so short phrases are actually more secure more
-memorable and your users will appreciate it the other thing to think about is fine-grained password policies which are
-a feature of Windows Server now relatively new that allow you to set more strict polyp policies for your
-administrative accounts and your service accounts now moving into Active
-Directory a little bit deeper one of the bad practices that I see is naming users
-with their last name first just so that you can see them in Active Directory so
-when you look at Active Directory users are sorted by name and they're sorted by the first letter in their name so if
-you're looking for Bill Gates is he under B for Bill or W for William it's kind of difficult to figure out and so
-what some companies will do is they'll do last name comma first name the problem with that and this is
-illustrated on the slide is that when you when you look under the hood at what's going on what Active Directory
-stores is actually their last name backslash , because the comma is a reserved
-character in the distinguished name it separates the components of this distinguished name so if you have a
-comma in the name it has to be escaped and that makes it tough to work with scripts and tough to work with other
-things so instead of doing last name comma first name for the username we'll find another solution for that
-which is to customize the MMC view so we can go into our views
-let's take employees for example and we can simply add the last name column so
-that when we need to sort by last name whoops I added the wrong column sorry
-last name surname so when we want to
-find a user by last name we can simply sort by that column to find them more effectively now it is okay to have the
-display name be last comma first so the display name which it shows up in the
-exchange global address list for example that's totally fine it's the common name
-of the object which is how the object is listed here that you do not want to use last name comma first name now when we
-added the last name column we actually exposed another problem with the toolset
-which is when I added the last name column to the employees oh you it also adds the last name column to every other
-view so now I see a last name column for my computer's which probably isn't very
-helpful so we're gonna need to fix that as well but that's an option for us now the last
-fifteen minutes of this session I want to start moving in two things you can do to actually administer active directly
-directory more effectively and this takes us into a concept that I call extreme and then the C consoles so the
-MMC console as I'm sure you know are the is the framework within which tools administrative tools snap in in Windows
-so if you open an empty MMC console you can start adding snap ins and you can
-say okay Active Directory users and computers I need group policy management I need let's say DFS management and you
-can create your own tools now by doing this you can create a single console
-that you can save and when you need to run your Administrative Tools you open that one console it has all the tools
-you need and of course you need to open it with your administrative credentials so you do that one time instead of every
-time you need to launch a tool having to enter a new set of a username and passwords for your administrative credentials just have one console with
-all of your tools in it so it makes it easier to run as an administrator if you have all your tools in one place and
-what we see here is a console that I built and you can see there are a lot of snap ins that I've added Active
-Directory group policy several other Active Directory tools ADSI DNS
-everything is here in one place so this is how I administer an environment like the Olympics for example so you add your
-consoles in and then it allows you to log on one time as your administrative
-account and that's much more secure and manageable for your environment and then
-in the slides which you'll be able to download there are some pointers about how to work with these consoles more
-effectively I'm not going to detail this right now just because of time but what
-I do want to show you a couple of tricks in the console the first of which is the
-link to web address snap in and out let me up the link to web address snap in is
-designed to show you a web etre a website so if you go to add the snap in
-we find link to web address click Add and we put in a URL and that will then
-create a node in the console that shows a web page which might be helpful if we have documentation that we want to
-incorporate into the MMC or an intranet site that we want to expose in the MMC but keep in mind that your MMC console
-is running as an administrator so you don't necessarily want to be going out to BitTorrent downloading things from
-this particular webpage because it will be running with your administrative credentials now one of the tricks that
-is there that is not very well documented about this nappin is that you can add a UNC path so for example I can
-I can create a path to backslash
-backslash server a one backslash data to a share and what that does is it creates
-a node that exposes the share in the MMC console now think about why this is
-helpful if I am NOT in my console and I try to go to that share I'm connecting
-to this share as my user account and my user account probably doesn't have permissions to do what I needed to do in
-this share and Windows Explorer doesn't let you run a window and explore with different credentials you can only be
-running one set of credentials in a Windows Explorer but the console is running as administrator as my
-administrative account so now I can do things like set permissions and all of that within my administrative console
-with this link to web address and happen so that's a really nice handy way to
-work with being able to connect to a server as an administrator in addition
-you want to start using saved queries now saved queries are a way of
-virtualizing your complex environment so we already saw how complex this
-environment is we have all these different OU's with the different computers we've got user accounts split
-between contractors and employees and most Windows administrators are focused
-on o use when they do administration and they constantly have to navigate down into their environment to find the right
-account and it's tough to find things instead I encourage you to never use
-your OU's instead create saved queries saved queries allow you to create a view
-based on any criteria so for example I have a view of all computers in my
-environment it doesn't matter which oh you they're in just all computers so I can quickly find
-a computer by name without any to go deep into my oh you structure so save
-queries allow you to create a view for example all users all computers all groups you can also use saved queries to
-create reports so if my manager wants me to assess wants me to report users that
-haven't logged logged on in 90 days I can actually create a saved query to do
-that I can create a new query we'll call it users who haven't logged on in 90
-days and then I can go define the query and I can pick 90 days since last logon
-so you can create reports and then you can export these reports straight from
-the MMC console with the export actually notice further down here we can create
-other types of views that show us a subset of our environment so this is a
-view that shows me administrative accounts this shows me a certain type of set of groups so I can create very nice
-virtual views of my environment and then I can administer the objects from there
-without having to worry about how complex my öyou structure actually is does that make sense
+-UseWebLogin Windows only: Connects to SharePoint using legacy cookie based authentication. Notice this type of authentication is limited in its functionality. We will for instance not be able to acquire an access token for the Graph, and as a result none of the Graph related cmdlets will work. Also some of the functionality of the provisioning engine (Get-PnPSiteTemplate, Get-PnPTenantTemplate, Invoke-PnPSiteTemplate, Invoke-PnPTenantTemplate) will not work because of this reason. The cookies will in general expire within a few days and if you use -UseWebLogin within that time popup window will appear that will disappear immediately, this is expected. Use -ForceAuthentication to reset the authentication cookies and force a new login. Type: SwitchParameter Parameter Sets: Web Login for Multi Factor Authentication Aliases:
+
+Required: True Position: Named Default value: False Accept pipeline input: False Accept wildcard characters: False
+
+-Interactive Connects to the Azure AD using interactive login, allowing you to authenticate using multi-factor authentication. This parameter has preference over `-UseWebLogin`. Type: SwitchParameter Parameter Sets: Interactive for Multi Factor Authentication Aliases:
+
+Required: True Position: Named Default value: False Accept pipeline input: False Accept wildcard characters: False
+
+-ForceAuthentication Will clear the stored authentication information when using -UseWebLogin (Windows Only) or -Interactive (all platforms) and allows you to authenticate again towards a site with different credentials. Type: SwitchParameter Parameter Sets: Web Login for Multi Factor Authentication, Interactive for Multi Factor Authentication Aliases:
+
+Required: False Position: Named Default value: False Accept pipeline input: False Accept wildcard characters: False
+
+-ManagedIdentity Connects using an Azure Managed Identity. For use with Azure Functions, Azure Automation Runbooks (if configured to use a managed identity) or Azure Cloud Shell only. This method will acquire a token using the built-in endpoints in the Azure Cloud Shell, Azure Automation Runbooks and Azure Functions. Read up on the documentation on how to make use of this option. Type: SwitchParameter Parameter Sets: System Assigned Managed Identity, User Assigned Managed Identity by Client Id, User Assigned Managed Identity by Principal Id, User Assigned Managed Identity by Azure Resource Id Aliases:
+
+Required: True Position: Named Default value: False Accept pipeline input: False Accept wildcard characters: False
+
+-UserAssignedManagedIdentityObjectId Can be used in combination with -ManagedIdentity to specify the object/principal id of the user assigned managed identity to use. Type: String Parameter Sets: User Assigned Managed Identity by Principal Id Aliases: UserAssignedManagedIdentityPrincipalId
+
+Required: False Position: Named Default value: False Accept pipeline input: False Accept wildcard characters: False
+
+-UserAssignedManagedIdentityClientId Can be used in combination with -ManagedIdentity to specify the client id of the user assigned managed identity to use. Type: String Parameter Sets: User Assigned Managed Identity by Client Id Aliases:
+
+Required: False Position: Named Default value: False Accept pipeline input: False Accept wildcard characters: False
+
+-UserAssignedManagedIdentityAzureResourceId Can be used in combination with -ManagedIdentity to specify the Azure Resource ID of the user assigned managed identity to use. Type: String Parameter Sets: User Assigned Managed Identity by Azure Resource Id Aliases:
+
+Required: False Position: Named Default value: False Accept pipeline input: False Accept wildcard characters: False
+
+-CertificateBase64Encoded Specify a base64 encoded string as representing the private certificate. Type: String Parameter Sets: App-Only with Azure Active Directory Aliases:
+
+Required: False Position: Named Default value: None Accept pipeline input: False Accept wildcard characters: False
+
+-Verbose When provided, additional debug statements will be shown while going through setting up a connection. Type: SwitchParameter Parameter Sets: (All)
+
+Required: False Position: Named Default value: None Accept pipeline input: False Accept wildcard characters: False
+
+-EnvironmentVariable Connects using the necessary environment variables. For more information the required environment variables, please refer to this article, Azure.Identity Environment Variables here. We support only Service principal with certificate and Username with password mode for authentication. Configuration will be attempted in that order. For example, if values for a certificate and username+password are both present, the client certificate method will be used. By default, it will use the -ClientId specified in AZURE_CLIENT_ID environment variable. If that value is empty, it will fallback to the PnP Management Shell Azure AD App. Type: SwitchParameter Parameter Sets: Environment Variable
+
+Required: False Position: Named Default value: None Accept pipeline input: False Accept wildcard characters: False
+
+RELATED LINKS Microsoft 365 Patterns and Practices
+
+Back to top
+
+Generated by DocFX
