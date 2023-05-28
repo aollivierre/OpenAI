@@ -13,7 +13,7 @@ if ($existingFiles.Count -gt 0) {
 }
 
 # Read the text from the input file
-$InputText = Get-Content "C:\Code\OpenAI\Split-longDocforOpenAI\Input\Input.txt"
+$InputText = Get-Content "C:\Code\OpenAI\Split-longDocforOpenAI\Input\Input.txt" -Raw
 
 # Define maximum number of words per file
 $maxWordsPerFile = 1500
@@ -22,33 +22,38 @@ $maxWordsPerFile = 1500
 $outputFileIndex = 1
 $currentWords = 0
 
-# Iterate through each line of the input file
-foreach ($line in $InputText) {
-    # Count the number of words in the current line
-    $wordsInLine = ($line -split '\s+').Count
+# Split the text into an array of words
+$wordsArray = $InputText -split '\s+'
 
-    # If adding this line to the current file would exceed the maximum number of words, start a new output file
-    if (($currentWords + $wordsInLine) -gt $maxWordsPerFile) {
+# Start the first output file
+$outputFilePath = Join-Path $OutputDir "output-$outputFileIndex.txt"
+$outputFileContent = "This is part number $outputFileIndex`n"
+
+# Iterate through each word in the array
+foreach ($word in $wordsArray) {
+    # If adding this word to the current file would exceed the maximum number of words, start a new output file
+    if ($currentWords -ge $maxWordsPerFile) {
+        # Write the content to the current output file
+        Add-Content $outputFilePath $outputFileContent
+
         # Increment output file index and reset current number of words
         $outputFileIndex++
         $currentWords = 0
 
-        # Output summary for the previous file
-        $prevOutputFilePath = Join-Path $OutputDir "output-$($outputFileIndex-1).txt"
-        $wordCount = (Get-Content $prevOutputFilePath | Measure-Object -Word).Words
-        Write-Host "$(Get-Date) - Finished writing $prevOutputFilePath ($wordCount words)" -ForegroundColor Cyan
+        # Start a new output file
+        $outputFilePath = Join-Path $OutputDir "output-$outputFileIndex.txt"
+        $outputFileContent = "This is part number $outputFileIndex`n"
     }
 
-    # Append the current line to the current output file
-    $outputFilePath = Join-Path $OutputDir "output-$outputFileIndex.txt"
-    if (!(Test-Path $outputFilePath)) {
-        Add-Content $outputFilePath "This is part number $outputFileIndex`n"
-    }
-    Add-Content $outputFilePath $line
+    # Append the current word to the current output file content
+    $outputFileContent += "$word "
 
     # Update the current number of words
-    $currentWords += $wordsInLine
+    $currentWords++
 }
+
+# Write the content to the last output file
+Add-Content $outputFilePath $outputFileContent
 
 # Output summary for the last file
 $lastOutputFilePath = Join-Path $OutputDir "output-$outputFileIndex.txt"
