@@ -1,5 +1,5 @@
 # Set output directory
-$OutputDir = "D:\Code\OpenAI\Split-longDocforOpenAI\Output"
+$OutputDir = "C:\Code\OpenAI\Split-longDocforOpenAI\Output"
 
 # Remove any existing files in the output directory
 $existingFiles = Get-ChildItem $OutputDir -Filter "output-*.txt"
@@ -13,10 +13,10 @@ if ($existingFiles.Count -gt 0) {
 }
 
 # Read the text from the input file
-$InputText = Get-Content "D:\Code\OpenAI\Split-longDocforOpenAI\Input\Input.txt" -Raw
+$InputText = Get-Content "C:\Code\OpenAI\Split-longDocforOpenAI\Input\Input.txt" -Raw
 
 # Define maximum number of words per file
-$maxWordsPerFile = 10000
+$maxWordsPerFile = 5000
 
 # Initialize output file index and current number of words
 $outputFileIndex = 1
